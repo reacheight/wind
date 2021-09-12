@@ -10,11 +10,12 @@ class CourierProcessor {
 
   var heroMap : Map[Int, String] = Map()
   var courierLocations : Map[Int, (Float, Float)] = Map()
+  var courierOutOfFountain : Map[Int, Boolean] = Map()
 
   @OnEntityCreated(classPattern = "CDOTA_Unit_Hero_.*")
   def onHeroCreated(ctx: Context, e: Entity): Unit = {
-    val isReplicating = e.getProperty[Int]("m_hReplicatingOtherHeroModel") != nullValue
-    if (isReplicating) return
+    val isHero = e.hasProperty("m_hReplicatingOtherHeroModel") && e.getProperty[Int]("m_hReplicatingOtherHeroModel") == nullValue
+    if (!isHero) return
 
     val playerId = e.getProperty[Int]("m_iPlayerID")
     val heroName = e.getDtClass.getDtName.replace("CDOTA_Unit_Hero_", "")
@@ -37,5 +38,15 @@ class CourierProcessor {
   def onGameStartTimeChanged(ctx: Context, e: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     val startTime = e.getPropertyForFieldPath[Float](fp)
     gameStarted = startTime > 1
+
+    if (gameStarted)
+      courierOutOfFountain = courierLocations.map(item => {
+        val (playerId, location) = item
+        val (x, y): (Float, Float) = location
+
+        playerId -> isOutOfFountain(x, y)
+      })
   }
+
+  private def isOutOfFountain(x: Float, y: Float): Boolean = -x + 3600 < y && y < -x + 29080
 }

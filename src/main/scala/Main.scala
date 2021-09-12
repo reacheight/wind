@@ -16,8 +16,9 @@ object Main {
     courierProcessor.courierLocations.foreach(item => {
       val (playerId, location) = item
       val (x, y): (Float, Float) = location
+      val outOfFountain = courierProcessor.courierOutOfFountain(playerId)
 
-      println(s"${courierProcessor.heroMap(playerId)} courier: $x, $y")
+      println(s"${courierProcessor.heroMap(playerId)} courier: $x, $y (${if (outOfFountain) "out of" else "in"} fountain)")
     })
   }
 }

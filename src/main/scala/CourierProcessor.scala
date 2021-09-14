@@ -8,8 +8,8 @@ class CourierProcessor {
   private val nullValue = 16777215
   private val replicatingPropertyName = "m_hReplicatingOtherHeroModel"
 
-  var heroMap : Map[Int, String] = Map()
-  var courierOutOfFountain : Map[Int, Boolean] = Map()
+  var heroMap: Map[Int, String] = Map()
+  var courierOutOfFountain: Map[Int, Boolean] = Map()
 
   @OnEntityCreated(classPattern = "CDOTA_Unit_Hero_.*")
   def onHeroCreated(ctx: Context, e: Entity): Unit = {

@@ -13,12 +13,9 @@ object Main {
     println("Parse complete!\n")
 
     println("Couriers location at the start of the game:")
-    courierProcessor.courierLocations.foreach(item => {
-      val (playerId, location) = item
-      val (x, y): (Float, Float) = location
-      val outOfFountain = courierProcessor.courierOutOfFountain(playerId)
-
-      println(s"${courierProcessor.heroMap(playerId)} courier: $x, $y (${if (outOfFountain) "out of" else "in"} fountain)")
+    courierProcessor.courierOutOfFountain.foreach(item => {
+      val (playerId, outOfFountain) = item
+      println(s"${courierProcessor.heroMap(playerId)} courier is ${if (outOfFountain) "out of" else "in"} fountain")
     })
   }
 }

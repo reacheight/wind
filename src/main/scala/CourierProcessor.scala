@@ -24,9 +24,9 @@ class CourierProcessor {
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_flGameStartTime")
   def onGameStartTimeChanged(ctx: Context, e: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
-    val startTime = e.getPropertyForFieldPath[Float](fp)
+    val gameTimeState = Util.getGameTimeState(e)
 
-    if (startTime > 1) {
+    if (gameTimeState.gameStarted) {
       val courierEntities = ctx.getProcessor(classOf[Entities]).getAllByPredicate(e => e.getDtClass.getDtName.startsWith("CDOTA_Unit_Courier"))
       courierEntities.forEachRemaining(courier => {
         val playerId = courier.getProperty[Int]("m_nPlayerOwnerID")

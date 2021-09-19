@@ -4,6 +4,8 @@ import skadistats.clarity.model.Entity
 
 object Util {
   private val TIME_EPS: Float = 0.001f
+  private val nullValue = 16777215
+  private val replicatingPropertyName = "m_hReplicatingOtherHeroModel"
 
   def getGameTimeState(gameRulesEntity: Entity): GameTimeState = {
     if (gameRulesEntity.getDtClass.getDtName != "CDOTAGamerulesProxy") throw new IllegalArgumentException
@@ -28,6 +30,11 @@ object Util {
 
     new GameTimeState(false, false, Float.MinValue)
   }
+
+  def isHero(entity: Entity): Boolean =
+    entity.getDtClass.getDtName.startsWith("CDOTA_Unit_Hero") &&
+      entity.hasProperty(replicatingPropertyName) &&
+      entity.getProperty[Int](replicatingPropertyName) == nullValue
 }
 
 class GameTimeState(val preGameStarted: Boolean, val gameStarted: Boolean, val gameTime: Float)

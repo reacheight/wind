@@ -1,26 +1,11 @@
 package wind
 
 import skadistats.clarity.model.{Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityCreated, OnEntityPropertyChanged}
+import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.runner.Context
 
 class CourierProcessor {
-  private val nullValue = 16777215
-  private val replicatingPropertyName = "m_hReplicatingOtherHeroModel"
-
-  var heroMap: Map[Int, String] = Map()
   var courierOutOfFountain: Map[Int, Boolean] = Map()
-
-  @OnEntityCreated(classPattern = "CDOTA_Unit_Hero_.*")
-  def onHeroCreated(ctx: Context, e: Entity): Unit = {
-    val isHero = e.hasProperty(replicatingPropertyName) && e.getProperty[Int](replicatingPropertyName) == nullValue
-    if (!isHero) return
-
-    val playerId = e.getProperty[Int]("m_iPlayerID")
-    val heroName = e.getDtClass.getDtName.replace("CDOTA_Unit_Hero_", "")
-
-    heroMap += (playerId -> heroName)
-  }
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_flGameStartTime")
   def onGameStartTimeChanged(ctx: Context, e: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {

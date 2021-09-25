@@ -37,5 +37,12 @@ object Main {
       val (playerId, usageCount) = item
       println(s"${heroProcessor.heroNameMap(playerId)} power treads ability usage: total $usageCount, on Int: ${powerTreadsProcessor.powerTreadsOnIntAbilityUsageCount(playerId)}")
     })
+
+    println("\nLane stage results:")
+    laneProcessor.heroLaneStageExp.foreach(item => {
+      val (playerId, exp) = item
+      val heroName = heroProcessor.heroNameMap(playerId)
+      println(s"$heroName exp: $exp, networth: ${laneProcessor.heroLaneStageNetworth(playerId)}")
+    })
   }
 }

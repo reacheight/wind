@@ -1,4 +1,5 @@
 package wind
+package processors
 
 import skadistats.clarity.model.{CombatLogEntry, Entity}
 import skadistats.clarity.processor.entities.{Entities, OnEntityCreated}

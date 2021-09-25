@@ -1,5 +1,7 @@
 package wind
 
+import processors._
+
 import skadistats.clarity.Clarity
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource

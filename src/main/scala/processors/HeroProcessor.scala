@@ -1,4 +1,5 @@
 package wind
+package processors
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityCreated

@@ -1,4 +1,5 @@
 package wind
+package processors
 
 import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}

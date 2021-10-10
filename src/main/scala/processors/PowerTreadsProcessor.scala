@@ -34,7 +34,7 @@ class PowerTreadsProcessor {
   def onCombatLogEntry(ctx: Context, cle: CombatLogEntry): Unit = {
     if (cle.getType != DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_ABILITY) return
 
-    val userPlayerId = combatLogHeroNameToPlayerId(cle.getAttackerName)
+    val userPlayerId = combatLogHeroNameToPlayerId.getOrElse(cle.getAttackerName, -1)
     if (!powerTreadHandles.contains(userPlayerId)) return
 
     val powerTreadsEntity = ctx.getProcessor(classOf[Entities]).getByHandle(powerTreadHandles(userPlayerId))

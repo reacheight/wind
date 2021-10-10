@@ -15,9 +15,10 @@ object Main {
     val heroProcessor = new HeroProcessor(gameInfo)
     val laneProcessor = new LaneProcessor
     val powerTreadsProcessor = new PowerTreadsProcessor
+    val summonsProcessor = new SummonsProcessor
 
     println(s"Parse started..")
-    runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor)
+    runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor)
     println("Parse complete!\n")
 
     println("Couriers location at the start of the game:")
@@ -43,6 +44,13 @@ object Main {
       val (playerId, exp) = item
       val heroName = heroProcessor.heroNameMap(playerId)
       println(s"$heroName exp: $exp, networth: ${laneProcessor.heroLaneStageNetworth(playerId)}")
+    })
+
+    println("\nSummon gold fed:")
+    summonsProcessor.summonFeedGold.foreach(item => {
+      val (playerId, gold) = item
+      val heroName = heroProcessor.heroNameMap(playerId)
+      println(s"$heroName: $gold")
     })
   }
 }

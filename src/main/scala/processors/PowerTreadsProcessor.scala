@@ -20,14 +20,15 @@ class PowerTreadsProcessor {
   }
 
   @OnEntityCreated(classPattern = "CDOTA_Item_PowerTreads")
-  def onPowerTreadsCreated(ctx: Context, e: Entity): Unit = {
-    val playerId = e.getProperty[Int]("m_iPlayerOwnerID")
-    powerTreadHandles += (playerId -> e.getHandle)
+  def onPowerTreadsCreated(ctx: Context, powerTreads: Entity): Unit = {
+    val ownerHandle = powerTreads.getProperty[Int]("m_hOwnerEntity")
+    val owner = ctx.getProcessor(classOf[Entities]).getByHandle(ownerHandle)
+    if (owner == null || !Util.isHero(owner)) return
 
-    if (!powerTreadsAbilityUsageCount.contains(playerId)) {
-      powerTreadsAbilityUsageCount += (playerId -> 0)
-      powerTreadsOnIntAbilityUsageCount += (playerId -> 0)
-    }
+    val playerId = powerTreads.getProperty[Int]("m_iPlayerOwnerID")
+    powerTreadHandles += (playerId -> powerTreads.getHandle)
+    powerTreadsAbilityUsageCount += (playerId -> 0)
+    powerTreadsOnIntAbilityUsageCount += (playerId -> 0)
   }
 
   @OnCombatLogEntry
@@ -38,7 +39,10 @@ class PowerTreadsProcessor {
     if (!powerTreadHandles.contains(userPlayerId)) return
 
     val powerTreadsEntity = ctx.getProcessor(classOf[Entities]).getByHandle(powerTreadHandles(userPlayerId))
-    if (powerTreadsEntity == null) return
+    if (powerTreadsEntity == null) {
+      powerTreadHandles -= userPlayerId
+      return
+    }
 
     val ptStat = powerTreadsEntity.getProperty[Int]("m_iStat")
     if (ptStat == 1) {

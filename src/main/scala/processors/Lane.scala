@@ -3,5 +3,5 @@ package processors
 
 object Lane extends Enumeration {
   type Lane = Value
-  val RadiantTop, Middle, RadiantBot, Unknown = Value
+  val Top, Middle, Bot, Unknown = Value
 }

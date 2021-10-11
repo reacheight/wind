@@ -79,11 +79,11 @@ class LaneProcessor {
   }
 
   private def getLane(x: Float, y: Float): Lane = {
-    if (y > 10000 && x < 6000) return Lane.RadiantTop
+    if (y > 10000 && x < 6000) return Lane.Top
 
     if (y > 6000 && y < 10000 && x > 6000 && x < 10000) return Lane.Middle
 
-    if (y < 6000 && x > 10000) return Lane.RadiantBot
+    if (y < 6000 && x > 10000) return Lane.Bot
 
     Lane.Unknown
   }

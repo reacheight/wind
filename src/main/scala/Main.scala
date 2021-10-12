@@ -29,8 +29,12 @@ object Main {
 
     println("\nHeroes' lane stage location:")
     laneProcessor.heroLaneStageLocation.foreach(item => {
-      val (playerId, location) = item
-      println(s"${heroProcessor.heroNameMap(playerId)} lane stage location is $location (${laneProcessor.heroLaneMap(playerId)})")
+      val (playerId, locations) = item
+      val (firstStageLocation, secondStageLocation) = locations
+      val (firstStageLane, secondStageLane) = laneProcessor.heroLaneMap(playerId)
+
+      println(s"${heroProcessor.heroNameMap(playerId)} lane stage location is $firstStageLocation -> $secondStageLocation " +
+        s"($firstStageLane -> $secondStageLane)")
     })
 
     println("\nChanging Power Treads' main attribute to Int before ability usage:")

@@ -17,15 +17,15 @@ class LaneProcessor {
   private val LANE_STAGE_ITERATION_COUNT = 60 * LANE_STAGE_END_MINUTE / ITERATION_INTERVAL
   private var heroLocationMap = Map[Int, ArrayBuffer[(Float, Float)]]()
 
-  var heroLaneStageLocation: Map[Int, (Float, Float)] = Map()
-  var heroLaneMap: Map[Int, Lane] = Map()
+  var heroLaneStageLocation: Map[Int, ((Float, Float), (Float, Float))] = Map()
+  var heroLaneMap: Map[Int, (Lane, Lane)] = Map()
   var heroLaneStageExp: Map[Int, Int] = Map()
   var heroLaneStageNetworth: Map[Int, Int] = Map()
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
   def onGameTimeChanged(ctx: Context, gameRulesEntity: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     val gameTimeState = Util.getGameTimeState(gameRulesEntity)
-    if (!gameTimeState.gameStarted || currentIteration > LANE_STAGE_ITERATION_COUNT || currentIteration * ITERATION_INTERVAL - gameTimeState.gameTime > EPS) return
+    if (!gameTimeState.gameStarted || gameTimeState.gameTime < 30 || currentIteration > LANE_STAGE_ITERATION_COUNT || currentIteration * ITERATION_INTERVAL - gameTimeState.gameTime > EPS) return
 
     val entities = ctx.getProcessor(classOf[Entities])
     val heroEntities = entities.getAllByPredicate(Util.isHero)
@@ -39,18 +39,24 @@ class LaneProcessor {
         heroLocationMap += (playerId -> ArrayBuffer(location))
     })
 
-    if (currentIteration == LANE_STAGE_END_MINUTE) {
+    if (currentIteration == LANE_STAGE_ITERATION_COUNT) {
       heroLaneStageLocation = heroLocationMap.map(item => {
         val (playerId, locations) = item
+        val firstStageCount = locations.length / 2
+        val secondStageCount = locations.length - firstStageCount
         val xs = locations.map(_._1)
         val ys = locations.map(_._2)
 
-        playerId -> (xs.sum / xs.length, ys.sum / ys.length)
+        val (firstStageXs, secondStageXs) = (xs.take(firstStageCount), xs.takeRight(secondStageCount))
+        val (firstStageYs, secondStageYs) = (ys.take(firstStageCount), ys.takeRight(secondStageCount))
+
+        playerId -> ((firstStageXs.sum / firstStageCount, firstStageYs.sum / firstStageCount), (secondStageXs.sum / secondStageCount, secondStageYs.sum / secondStageCount))
       })
 
       heroLaneMap = heroLaneStageLocation.map(item => {
-        val (playerId, location) = item
-        playerId -> getLane(location._1, location._2)
+        val (playerId, locations) = item
+        val (firstStageLocation, secondStageLocation) = locations
+        playerId -> (getLane(firstStageLocation._1, firstStageLocation._2), getLane(secondStageLocation._1, secondStageLocation._2))
       })
 
       val radiantData = entities.getByDtName("CDOTA_DataRadiant")
@@ -81,16 +87,16 @@ class LaneProcessor {
   }
 
   private def getLane(x: Float, y: Float): Lane = {
-    if (y > 10000 && x < 6000) return Lane.Top
+    if (y > 10000 && x < 4500) return Lane.Top
 
     if (y > 6000 && y < 10000 && x > 6000 && x < 10000) return Lane.Middle
 
-    if (y > 2000 && y < 6000 && x > 4000 && x < 10000) return Lane.RadiantJungle
+    if (y > 2000 && y < 6000 && x > 4000 && x < 11800) return Lane.RadiantJungle
 
-    if (y > 10000 && y < 14000 && x > 6000 && x < 12000) return Lane.DireJungle
+    if (y > 10000 && y < 14000 && x > 4500 && x < 12000) return Lane.DireJungle
 
-    if (y < 6000 && x > 10000) return Lane.Bot
+    if (y < 6000 && x > 11800) return Lane.Bot
 
-    Lane.Unknown
+    Lane.Roaming
   }
 }

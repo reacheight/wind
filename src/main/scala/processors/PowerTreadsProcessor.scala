@@ -10,9 +10,14 @@ import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPE
 class PowerTreadsProcessor {
   private var combatLogHeroNameToPlayerId = Map[String, Int]()
   private var powerTreadHandles = Map[Int, Int]()
+  private val resourceItems: Set[String] = Set("item_bottle", "item_magic_stick", "item_magic_wand")
+
 
   var abilityUsageCount: Map[Int, Int] = Map()
   var ptOnIntAbilityUsageCount: Map[Int, Int] = Map()
+
+  var resourceItemUsages: Map[Int, Int] = Map()
+  var ptOnAgilityResourceItemUsages: Map[Int, Int] = Map()
 
   @OnEntityCreated(classPattern = "CWorld")
   def init(ctx: Context, e: Entity): Unit = {
@@ -29,12 +34,12 @@ class PowerTreadsProcessor {
     powerTreadHandles += (playerId -> powerTreads.getHandle)
     abilityUsageCount += (playerId -> 0)
     ptOnIntAbilityUsageCount += (playerId -> 0)
+    resourceItemUsages += (playerId -> 0)
+    ptOnAgilityResourceItemUsages += (playerId -> 0)
   }
 
   @OnCombatLogEntry
   def onCombatLogEntry(ctx: Context, cle: CombatLogEntry): Unit = {
-    if (cle.getType != DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_ABILITY) return
-
     val userPlayerId = combatLogHeroNameToPlayerId.getOrElse(cle.getAttackerName, -1)
     if (!powerTreadHandles.contains(userPlayerId)) return
 
@@ -45,10 +50,26 @@ class PowerTreadsProcessor {
     }
 
     val ptStat = powerTreadsEntity.getProperty[Int]("m_iStat")
+
+    if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_ABILITY)
+      incrementAbilityUsage(ptStat, userPlayerId)
+
+    if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_ITEM && resourceItems.contains(cle.getInflictorName))
+      incrementResourceItemUsage(ptStat, userPlayerId)
+  }
+
+  def incrementAbilityUsage(ptStat: Int, userPlayerId: Int): Unit = {
     if (ptStat == 1) {
       ptOnIntAbilityUsageCount += (userPlayerId ->  (ptOnIntAbilityUsageCount(userPlayerId) + 1))
     }
 
     abilityUsageCount += (userPlayerId ->  (abilityUsageCount(userPlayerId) + 1))
+  }
+
+  def incrementResourceItemUsage(ptStat: Int, userPlayerId: Int): Unit = {
+    if (ptStat == 2)
+      ptOnAgilityResourceItemUsages += (userPlayerId -> (ptOnAgilityResourceItemUsages(userPlayerId) + 1))
+
+    resourceItemUsages += (userPlayerId -> (resourceItemUsages(userPlayerId) + 1))
   }
 }

@@ -43,6 +43,12 @@ object Main {
       println(s"${heroProcessor.heroNameMap(playerId)} power treads ability usage: total $usageCount, on Int: ${powerTreadsProcessor.ptOnIntAbilityUsageCount(playerId)}")
     })
 
+    println("\nChanging Power Treads' main attribute to Agility before resource refill:")
+    powerTreadsProcessor.resourceItemUsages.foreach(item => {
+      val (playerId, usages) = item
+      println(s"${heroProcessor.heroNameMap(playerId)} power treads resource refill item usage: total $usages, on Agility: ${powerTreadsProcessor.ptOnAgilityResourceItemUsages(playerId)}")
+    })
+
     println("\nLane stage results:")
     laneProcessor.heroLaneStageExp.foreach(item => {
       val (playerId, exp) = item

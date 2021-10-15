@@ -16,9 +16,10 @@ object Main {
     val laneProcessor = new LaneProcessor
     val powerTreadsProcessor = new PowerTreadsProcessor
     val summonsProcessor = new SummonsProcessor
+    val itemStockProcessor = new ItemStockProcessor
 
     println(s"Parse started..")
-    runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor)
+    runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor)
     println("Parse complete!\n")
 
     println("Couriers location at the start of the game:")
@@ -62,5 +63,9 @@ object Main {
       val heroName = heroProcessor.heroNameMap(playerId)
       println(s"$heroName: $gold")
     })
+
+    println("\nMax smoke stock duration:")
+    println(s"Radiant: ${itemStockProcessor.radiantMaxSmokeStockDuration} sec.")
+    println(s"Dire: ${itemStockProcessor.direMaxSmokeStockDuration} sec.")
   }
 }

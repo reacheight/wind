@@ -11,8 +11,8 @@ class PowerTreadsProcessor {
   private var combatLogHeroNameToPlayerId = Map[String, Int]()
   private var powerTreadHandles = Map[Int, Int]()
 
-  var powerTreadsAbilityUsageCount: Map[Int, Int] = Map()
-  var powerTreadsOnIntAbilityUsageCount: Map[Int, Int] = Map()
+  var abilityUsageCount: Map[Int, Int] = Map()
+  var ptOnIntAbilityUsageCount: Map[Int, Int] = Map()
 
   @OnEntityCreated(classPattern = "CWorld")
   def init(ctx: Context, e: Entity): Unit = {
@@ -27,8 +27,8 @@ class PowerTreadsProcessor {
 
     val playerId = powerTreads.getProperty[Int]("m_iPlayerOwnerID")
     powerTreadHandles += (playerId -> powerTreads.getHandle)
-    powerTreadsAbilityUsageCount += (playerId -> 0)
-    powerTreadsOnIntAbilityUsageCount += (playerId -> 0)
+    abilityUsageCount += (playerId -> 0)
+    ptOnIntAbilityUsageCount += (playerId -> 0)
   }
 
   @OnCombatLogEntry
@@ -46,9 +46,9 @@ class PowerTreadsProcessor {
 
     val ptStat = powerTreadsEntity.getProperty[Int]("m_iStat")
     if (ptStat == 1) {
-      powerTreadsOnIntAbilityUsageCount += (userPlayerId ->  (powerTreadsOnIntAbilityUsageCount(userPlayerId) + 1))
+      ptOnIntAbilityUsageCount += (userPlayerId ->  (ptOnIntAbilityUsageCount(userPlayerId) + 1))
     }
 
-    powerTreadsAbilityUsageCount += (userPlayerId ->  (powerTreadsAbilityUsageCount(userPlayerId) + 1))
+    abilityUsageCount += (userPlayerId ->  (abilityUsageCount(userPlayerId) + 1))
   }
 }

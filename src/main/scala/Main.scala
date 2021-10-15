@@ -38,9 +38,9 @@ object Main {
     })
 
     println("\nChanging Power Treads' main attribute to Int before ability usage:")
-    powerTreadsProcessor.powerTreadsAbilityUsageCount.foreach(item => {
+    powerTreadsProcessor.abilityUsageCount.foreach(item => {
       val (playerId, usageCount) = item
-      println(s"${heroProcessor.heroNameMap(playerId)} power treads ability usage: total $usageCount, on Int: ${powerTreadsProcessor.powerTreadsOnIntAbilityUsageCount(playerId)}")
+      println(s"${heroProcessor.heroNameMap(playerId)} power treads ability usage: total $usageCount, on Int: ${powerTreadsProcessor.ptOnIntAbilityUsageCount(playerId)}")
     })
 
     println("\nLane stage results:")

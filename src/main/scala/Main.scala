@@ -68,5 +68,9 @@ object Main {
     println("\nMax smoke stock duration:")
     println(s"Radiant: ${itemStockProcessor.maxSmokeStockDuration(Radiant)} sec.")
     println(s"Dire: ${itemStockProcessor.maxSmokeStockDuration(Dire)} sec.")
+
+    println("\nMax obs stock duration:")
+    println(s"Radiant: ${itemStockProcessor.maxObsStockDuration(Radiant)} sec.")
+    println(s"Dire: ${itemStockProcessor.maxObsStockDuration(Dire)} sec.")
   }
 }

@@ -1,5 +1,6 @@
 package wind
 
+import processors.Team._
 import processors._
 
 import skadistats.clarity.Clarity
@@ -65,7 +66,7 @@ object Main {
     })
 
     println("\nMax smoke stock duration:")
-    println(s"Radiant: ${itemStockProcessor.radiantMaxSmokeStockDuration} sec.")
-    println(s"Dire: ${itemStockProcessor.direMaxSmokeStockDuration} sec.")
+    println(s"Radiant: ${itemStockProcessor.maxSmokeStockDuration(Radiant)} sec.")
+    println(s"Dire: ${itemStockProcessor.maxSmokeStockDuration(Dire)} sec.")
   }
 }

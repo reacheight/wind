@@ -1,11 +1,10 @@
 package wind
 
-import processors.Team._
-import processors._
-
 import skadistats.clarity.Clarity
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
+import wind.processors.Team.{Dire, Radiant}
+import wind.processors._
 
 object Main {
   def main(args: Array[String]): Unit = {

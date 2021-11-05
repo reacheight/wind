@@ -3,7 +3,7 @@ package wind
 import skadistats.clarity.Clarity
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
-import wind.processors.Team.{Dire, Radiant}
+import Team.{Dire, Radiant}
 import wind.processors._
 
 object Main {

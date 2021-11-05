@@ -1,5 +1,4 @@
 package wind
-package processors
 
 object Team extends Enumeration {
   type Team = Value

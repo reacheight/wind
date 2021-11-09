@@ -8,8 +8,9 @@ import wind.processors._
 
 object Main {
   def main(args: Array[String]): Unit = {
-    val runner = new SimpleRunner(new MappedFileSource(args(0)))
-    val gameInfo = Clarity.infoForFile(args(0))
+    ReplayDownloader.downloadReplay(args(0))
+    val runner = new SimpleRunner(new MappedFileSource("tmp/replay.dem"))
+    val gameInfo = Clarity.infoForFile("tmp/replay.dem")
 
     val courierProcessor = new CourierProcessor
     val heroProcessor = new HeroProcessor(gameInfo)

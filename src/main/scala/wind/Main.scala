@@ -6,11 +6,32 @@ import skadistats.clarity.source.MappedFileSource
 import Team.{Dire, Radiant}
 import wind.processors._
 
+import java.nio.file.{Path, Paths}
+
 object Main {
+  private val compressedReplayPath = Paths.get("tmp/replay.dem.bz2")
+  private val replayPath = Paths.get("tmp/replay.dem")
+
   def main(args: Array[String]): Unit = {
-    ReplayDownloader.downloadReplay(args(0))
-    val runner = new SimpleRunner(new MappedFileSource("tmp/replay.dem"))
-    val gameInfo = Clarity.infoForFile("tmp/replay.dem")
+    val matchId = args(0)
+    val replayLocation = OdotaClient.getReplayLocation(matchId)
+    replayLocation match {
+      case None => println(s"Can't find replay for match $matchId.")
+      case Some(location) =>
+        println("Downloading replay...")
+        ReplayDownloader.downloadReplay(location, compressedReplayPath)
+
+        println("Decompressing replay..")
+        BZip2Decompressor.decompress(compressedReplayPath, replayPath)
+
+        println("Analyzing replay...")
+        analyze(replayPath)
+    }
+  }
+
+  def analyze(replay: Path): Unit = {
+    val runner = new SimpleRunner(new MappedFileSource(replay))
+    val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
 
     val courierProcessor = new CourierProcessor
     val heroProcessor = new HeroProcessor(gameInfo)
@@ -18,10 +39,7 @@ object Main {
     val powerTreadsProcessor = new PowerTreadsProcessor
     val summonsProcessor = new SummonsProcessor
     val itemStockProcessor = new ItemStockProcessor
-
-    println(s"Parse started..")
     runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor)
-    println("Parse complete!\n")
 
     println("Couriers location at the start of the game:")
     courierProcessor.courierOutOfFountain.foreach(item => {

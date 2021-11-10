@@ -7,10 +7,12 @@ import Team.{Dire, Radiant}
 import wind.processors._
 
 import java.nio.file.{Path, Paths}
+import scala.util.Using
 
 object Main {
-  private val compressedReplayPath = Paths.get("tmp/replay.dem.bz2")
-  private val replayPath = Paths.get("tmp/replay.dem")
+  private val downloadingDirectory = Paths.get("tmp")
+  private val compressedReplayPath = Paths.get(downloadingDirectory.toString, "replay.dem.bz2")
+  private val replayPath = Paths.get(downloadingDirectory.toString, "replay.dem")
 
   def main(args: Array[String]): Unit = {
     val matchId = args(0)
@@ -26,20 +28,27 @@ object Main {
 
         println("Analyzing replay...")
         analyze(replayPath)
+
+        compressedReplayPath.toFile.delete()
+        replayPath.toFile.delete()
+        downloadingDirectory.toFile.delete()
     }
   }
 
   def analyze(replay: Path): Unit = {
-    val runner = new SimpleRunner(new MappedFileSource(replay))
     val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
-
     val courierProcessor = new CourierProcessor
     val heroProcessor = new HeroProcessor(gameInfo)
     val laneProcessor = new LaneProcessor
     val powerTreadsProcessor = new PowerTreadsProcessor
     val summonsProcessor = new SummonsProcessor
     val itemStockProcessor = new ItemStockProcessor
-    runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor)
+
+    Using.Manager { use =>
+      val source = use(new MappedFileSource(replay))(s => s.close())
+      val runner = new SimpleRunner(source)
+      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor)
+    }
 
     println("Couriers location at the start of the game:")
     courierProcessor.courierOutOfFountain.foreach(item => {

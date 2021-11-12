@@ -5,3 +5,4 @@ wind (= win dota xd) is Dota 2 replay analyzer
 * Determine heroes' lanes
 * Chek Power Treads main attribute on skill usage or resource refilling
 * Calculate how much time teams didn't buy items with max stock (wards, smokes, etc.)
+* Track if Glyph is used on T1 towers

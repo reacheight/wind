@@ -1,11 +1,14 @@
 package wind
 
 import skadistats.clarity.model.Entity
+import wind.Team._
 
 object Util {
   private val TIME_EPS: Float = 0.001f
   private val nullValue = 16777215
   private val replicatingPropertyName = "m_hReplicatingOtherHeroModel"
+  private val glyphCooldownPropertyName: Map[Team, String] =
+    Map(Radiant -> "m_pGameRules.m_fGoodGlyphCooldown", Dire -> "m_pGameRules.m_fBadGlyphCooldown")
 
   def getGameTimeState(gameRulesEntity: Entity): GameTimeState = {
     if (gameRulesEntity.getDtClass.getDtName != "CDOTAGamerulesProxy") throw new IllegalArgumentException
@@ -30,6 +33,9 @@ object Util {
 
     new GameTimeState(false, false, Float.MinValue)
   }
+
+  def isGlyphOnCooldown(gameRules: Entity, team: Team): Boolean =
+    gameRules.getProperty[Float]("m_pGameRules.m_fGameTime") < gameRules.getProperty[Float](glyphCooldownPropertyName(team))
 
   def isHero(entity: Entity): Boolean =
     entity.getDtClass.getDtName.startsWith("CDOTA_Unit_Hero") &&

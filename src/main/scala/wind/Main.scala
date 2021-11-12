@@ -43,11 +43,12 @@ object Main {
     val powerTreadsProcessor = new PowerTreadsProcessor
     val summonsProcessor = new SummonsProcessor
     val itemStockProcessor = new ItemStockProcessor
+    val glyphProcessor = new GlyphProcessor
 
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor)
+      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor, glyphProcessor)
     }
 
     println("Couriers location at the start of the game:")
@@ -99,5 +100,9 @@ object Main {
     println("\nMax obs stock duration:")
     println(s"Radiant: ${itemStockProcessor.maxObsStockDuration(Radiant)} sec.")
     println(s"Dire: ${itemStockProcessor.maxObsStockDuration(Dire)} sec.")
+
+    println("\nGlyph not used on T1 count:")
+    println(s"Radiant: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Radiant, 0)}")
+    println(s"Dire: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Dire, 0)}")
   }
 }

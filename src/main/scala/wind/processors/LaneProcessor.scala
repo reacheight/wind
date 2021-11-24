@@ -36,14 +36,13 @@ class LaneProcessor {
       heroLocationMap += playerId -> (heroLocationMap.getOrElse(playerId, Array.empty) :+ location)
     })
 
+    if (currentIteration == LaneStageIterationCount)
+      onLaneStageEnded()
+
     currentIteration += 1
   }
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
-  def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
-    val gameState = gameRules.getPropertyForFieldPath[Int](fp)
-    if (gameState != 6) return
-
+  def onLaneStageEnded(): Unit = {
     heroLaneStageLocation = heroLocationMap map {case (playerId, locations) =>
       val (firstHalf, secondHalf) = locations.splitAt(locations.length / 2)
       val firstHalfLocation = (firstHalf.map(_._1).sum / firstHalf.length, firstHalf.map(_._2).sum / firstHalf.length)

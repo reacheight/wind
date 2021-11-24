@@ -57,8 +57,8 @@ object Main {
     }
 
     println("\nHeroes' lane stage location:")
-    laneProcessor.heroLaneStageLocation foreach {case (playerId, (firstStageLocation, secondStageLocation)) =>
-      val (firstStageLane, secondStageLane) = laneProcessor.heroLaneMap(playerId)
+    laneProcessor.laneStageLocation foreach {case (playerId, (firstStageLocation, secondStageLocation)) =>
+      val (firstStageLane, secondStageLane) = laneProcessor.playerLane(playerId)
 
       println(s"${heroProcessor.heroNameMap(playerId)} lane stage location is $firstStageLocation -> $secondStageLocation " +
         s"($firstStageLane -> $secondStageLane)")
@@ -75,9 +75,14 @@ object Main {
     }
 
     println("\nLane stage results:")
-    laneProcessor.heroLaneStageExp foreach {case (playerId, exp) =>
+    laneProcessor.laneExp foreach {case (playerId, exp) =>
       val heroName = heroProcessor.heroNameMap(playerId)
-      println(s"$heroName exp: $exp, networth: ${laneProcessor.heroLaneStageNetworth(playerId)}")
+      println(s"$heroName exp: $exp, networth: ${laneProcessor.laneNetworth(playerId)}")
+    }
+
+    println()
+    laneProcessor.laneWinner foreach {case (lane, winner) =>
+      println(s"$lane winner: ${winner.getOrElse("Draw")}")
     }
 
     println("\nSummon gold fed:")

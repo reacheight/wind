@@ -2,20 +2,21 @@ package wind
 package processors
 
 import Lane.Lane
-
+import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
-import skadistats.clarity.processor.runner.Context
-
-import scala.collection.mutable.ArrayBuffer
 
 class LaneProcessor {
-  private val EPS = 0.001f
-  private val ITERATION_INTERVAL = 10
+  private val Epsilon = 0.001f
+  private val IterationInterval = 10
+  private val LaneStageEndMinute = 10
+  private val LaneStageIterationCount = 60 * LaneStageEndMinute / IterationInterval
+
+  @Insert
+  private val entities: Entities = null
+
   private var currentIteration = 1
-  private val LANE_STAGE_END_MINUTE = 10
-  private val LANE_STAGE_ITERATION_COUNT = 60 * LANE_STAGE_END_MINUTE / ITERATION_INTERVAL
-  private var heroLocationMap = Map[Int, ArrayBuffer[(Float, Float)]]()
+  private var heroLocationMap = Map[Int, Array[(Float, Float)]]()
 
   var heroLaneStageLocation: Map[Int, ((Float, Float), (Float, Float))] = Map()
   var heroLaneMap: Map[Int, (Lane, Lane)] = Map()
@@ -23,54 +24,44 @@ class LaneProcessor {
   var heroLaneStageNetworth: Map[Int, Int] = Map()
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(ctx: Context, gameRulesEntity: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     val gameTimeState = Util.getGameTimeState(gameRulesEntity)
-    if (!gameTimeState.gameStarted || gameTimeState.gameTime < 30 || currentIteration > LANE_STAGE_ITERATION_COUNT || currentIteration * ITERATION_INTERVAL - gameTimeState.gameTime > EPS) return
+    if (!gameTimeState.gameStarted || gameTimeState.gameTime < 30 || currentIteration > LaneStageIterationCount || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
 
-    val entities = ctx.getProcessor(classOf[Entities])
     val heroEntities = entities.getAllByPredicate(Util.isHero)
     heroEntities.forEachRemaining(heroEntity => {
       val playerId = heroEntity.getProperty[Int]("m_iPlayerID")
       val location = Util.getLocation(heroEntity)
 
-      if (heroLocationMap.contains(playerId))
-        heroLocationMap(playerId) += location
-      else
-        heroLocationMap += (playerId -> ArrayBuffer(location))
+      heroLocationMap += playerId -> (heroLocationMap.getOrElse(playerId, Array.empty) :+ location)
     })
 
-    if (currentIteration == LANE_STAGE_ITERATION_COUNT) {
-      heroLaneStageLocation = heroLocationMap.map(item => {
-        val (playerId, locations) = item
-        val firstStageCount = locations.length / 2
-        val secondStageCount = locations.length - firstStageCount
-        val xs = locations.map(_._1)
-        val ys = locations.map(_._2)
+    currentIteration += 1
+  }
 
-        val (firstStageXs, secondStageXs) = (xs.take(firstStageCount), xs.takeRight(secondStageCount))
-        val (firstStageYs, secondStageYs) = (ys.take(firstStageCount), ys.takeRight(secondStageCount))
+  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
+  def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+    val gameState = gameRules.getPropertyForFieldPath[Int](fp)
+    if (gameState != 6) return
 
-        playerId -> ((firstStageXs.sum / firstStageCount, firstStageYs.sum / firstStageCount), (secondStageXs.sum / secondStageCount, secondStageYs.sum / secondStageCount))
-      })
+    heroLaneStageLocation = heroLocationMap map {case (playerId, locations) =>
+      val (firstHalf, secondHalf) = locations.splitAt(locations.length / 2)
+      val firstHalfLocation = (firstHalf.map(_._1).sum / firstHalf.length, firstHalf.map(_._2).sum / firstHalf.length)
+      val secondHalfLocation = (secondHalf.map(_._1).sum / secondHalf.length, secondHalf.map(_._2).sum / secondHalf.length)
 
-      heroLaneMap = heroLaneStageLocation.map(item => {
-        val (playerId, locations) = item
-        val (firstStageLocation, secondStageLocation) = locations
-        playerId -> (getLane(firstStageLocation._1, firstStageLocation._2), getLane(secondStageLocation._1, secondStageLocation._2))
-      })
-
-      val radiantData = entities.getByDtName("CDOTA_DataRadiant")
-      val direData = entities.getByDtName("CDOTA_DataDire")
-      (getPlayersExpAndNetworth(radiantData) ++ getPlayersExpAndNetworth(direData)).foreach(item => {
-        val (playerId, stats) = item
-        val (exp, networth) = stats
-
-        heroLaneStageExp += (playerId -> exp)
-        heroLaneStageNetworth += (playerId -> networth)
-      })
+      playerId -> (firstHalfLocation, secondHalfLocation)
     }
 
-    currentIteration += 1
+    heroLaneMap = heroLaneStageLocation map {case (playerId, (firstStageLocation, secondStageLocation)) =>
+      playerId -> ((getLane _).tupled(firstStageLocation), (getLane _).tupled(secondStageLocation))
+    }
+
+    val radiantData = entities.getByDtName("CDOTA_DataRadiant")
+    val direData = entities.getByDtName("CDOTA_DataDire")
+    (getPlayersExpAndNetworth(radiantData) ++ getPlayersExpAndNetworth(direData)) foreach {case (playerId, (exp, networth)) =>
+      heroLaneStageExp += (playerId -> exp)
+      heroLaneStageNetworth += (playerId -> networth)
+    }
   }
 
   private def getPlayersExpAndNetworth(data: Entity): Map[Int, (Int, Int)] = {
@@ -86,17 +77,12 @@ class LaneProcessor {
     }).toMap
   }
 
-  private def getLane(x: Float, y: Float): Lane = {
-    if (y > 10000 && x < 4500) return Lane.Top
-
-    if (y > 6000 && y < 10000 && x > 6000 && x < 10000) return Lane.Middle
-
-    if (y > 2000 && y < 6000 && x > 4000 && x < 11800) return Lane.RadiantJungle
-
-    if (y > 10000 && y < 14000 && x > 4500 && x < 12000) return Lane.DireJungle
-
-    if (y < 6000 && x > 11800) return Lane.Bot
-
-    Lane.Roaming
-  }
+  private def getLane(x: Float, y: Float): Lane = (x, y) match {
+      case _ if y > 10000 && x < 4500 => Lane.Top
+      case _ if y > 6000 && y < 10000 && x > 6000 && x < 10000 => Lane.Middle
+      case _ if y > 2000 && y < 6000 && x > 4000 && x < 11800 => Lane.RadiantJungle
+      case _ if y > 10000 && y < 14000 && x > 4500 && x < 12000 => Lane.DireJungle
+      case _ if y < 6000 && x > 11800 => Lane.Bot
+      case _ => Lane.Roaming
+    }
 }

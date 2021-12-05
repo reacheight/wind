@@ -6,7 +6,8 @@ import skadistats.clarity.source.MappedFileSource
 import Team.{Dire, Radiant}
 import wind.processors._
 
-import java.nio.file.{Path, Paths}
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Path, Paths}
 import scala.util.Using
 
 object Main {
@@ -44,11 +45,12 @@ object Main {
     val summonsProcessor = new SummonsProcessor
     val itemStockProcessor = new ItemStockProcessor
     val glyphProcessor = new GlyphProcessor
+    val winProbabilityProcessor = new WinProbabilityProcessor
 
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor, glyphProcessor)
+      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor, glyphProcessor, winProbabilityProcessor)
     }
 
     println("Couriers location at the start of the game:")
@@ -102,5 +104,12 @@ object Main {
     println("\nGlyph not used on T1 count:")
     println(s"Radiant: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Radiant, 0)}")
     println(s"Dire: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Dire, 0)}")
+
+    val winner = gameInfo.getGameInfo.getDota.getGameWinner
+    val content = winProbabilityProcessor.networth.toSeq.sortBy(_._1) map { case (time, (radiantGold, direGold)) =>
+      val (radiantXP, direXP) = winProbabilityProcessor.experience(time)
+      s"$time $radiantGold $direGold $radiantXP $direXP $winner"
+    }
+    Files.write(Paths.get("win_prob.txt"), content.mkString("\n").getBytes(StandardCharsets.UTF_8))
   }
 }

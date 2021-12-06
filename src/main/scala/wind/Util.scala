@@ -3,6 +3,8 @@ package wind
 import skadistats.clarity.model.Entity
 import wind.Team._
 
+import scala.collection.mutable.ArrayBuffer
+
 object Util {
   private val TIME_EPS: Float = 0.001f
   private val nullValue = 16777215
@@ -52,6 +54,12 @@ object Util {
     val (vecX, vecY) = (entity.getProperty[Float]("CBodyComponent.m_vecX"), entity.getProperty[Float]("CBodyComponent.m_vecY"))
 
     (x * 128 + vecX - 8192, y * 128 + vecY - 8192)
+  }
+
+  def toList[T](iterator: java.util.Iterator[T]): List[T] = {
+    val result = ArrayBuffer.empty[T]
+    iterator.forEachRemaining(i => { result += i })
+    result.toList
   }
 }
 

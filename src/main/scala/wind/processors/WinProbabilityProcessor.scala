@@ -3,11 +3,13 @@ package wind.processors
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.runner.Context
-import wind.Util
+import wind.{Util, WinProbabilityDataEntry}
+import wind.Team._
+
+import scala.collection.mutable.ArrayBuffer
 
 class WinProbabilityProcessor {
-  var networth: Map[Float, (Int, Int)] = Map()
-  var experience: Map[Float, (Int, Int)] = Map()
+  var data: ArrayBuffer[WinProbabilityDataEntry] = ArrayBuffer.empty
 
   private val IterationInterval = 60
   private val Epsilon = 0.001f
@@ -22,11 +24,17 @@ class WinProbabilityProcessor {
     val radiantData = entities.getByDtName("CDOTA_DataRadiant")
     val direData = entities.getByDtName("CDOTA_DataDire")
 
-    val getNetworth: Entity => Int = data => (0 to 4).map(player => data.getProperty[Int](s"m_vecDataTeam.000$player.m_iNetWorth")).sum
-    networth += gameTimeState.gameTime -> (getNetworth(radiantData), getNetworth(direData))
+    val getNetworth: Entity => Seq[Int] = data => (0 to 4).map(player => data.getProperty[Int](s"m_vecDataTeam.000$player.m_iNetWorth"))
+    val getExperience: Entity => Seq[Int] = data => (0 to 4).map(player => data.getProperty[Int](s"m_vecDataTeam.000$player.m_iTotalEarnedXP"))
 
-    val getExperience: Entity => Int = data => (0 to 4).map(player => data.getProperty[Int](s"m_vecDataTeam.000$player.m_iTotalEarnedXP")).sum
-    experience += gameTimeState.gameTime -> (getExperience(radiantData), getExperience(direData))
+    val networth = Map(Radiant -> getNetworth(radiantData), Dire -> getNetworth(direData))
+    val experience = Map(Radiant -> getExperience(radiantData), Dire -> getExperience(direData))
+
+    val (radiantTowers, direTowers) = Util.toList(entities.getAllByDtName("CDOTA_BaseNPC_Tower")).partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
+    val countTowers: List[Entity] => Seq[Int] = towers => (1 to 4).map(lvl => towers.count(t => t.getProperty[Int]("m_iCurrentLevel") == lvl))
+    val towers = Map(Radiant -> countTowers(radiantTowers), Dire -> countTowers(direTowers))
+
+    data += WinProbabilityDataEntry(gameTimeState.gameTime.toInt, networth, experience, towers)
 
     currentIteration += 1
   }

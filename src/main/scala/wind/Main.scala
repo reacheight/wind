@@ -106,10 +106,7 @@ object Main {
     println(s"Dire: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Dire, 0)}")
 
     val winner = gameInfo.getGameInfo.getDota.getGameWinner
-    val content = winProbabilityProcessor.networth.toSeq.sortBy(_._1) map { case (time, (radiantGold, direGold)) =>
-      val (radiantXP, direXP) = winProbabilityProcessor.experience(time)
-      s"$time $radiantGold $direGold $radiantXP $direXP $winner"
-    }
-    Files.write(Paths.get("win_prob.txt"), content.mkString("\n").getBytes(StandardCharsets.UTF_8))
+    val content = winProbabilityProcessor.data.map(_.toString + s" $winner").mkString("\n")
+    Files.write(Paths.get("win_prob.txt"), content.getBytes(StandardCharsets.UTF_8))
   }
 }

@@ -21,21 +21,36 @@ class WinProbabilityProcessor {
     if (!gameTimeState.preGameStarted || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
 
     val entities = ctx.getProcessor(classOf[Entities])
+
     val radiantData = entities.getByDtName("CDOTA_DataRadiant")
     val direData = entities.getByDtName("CDOTA_DataDire")
-
-    val getNetworth: Entity => Seq[Int] = data => (0 to 4).map(player => data.getProperty[Int](s"m_vecDataTeam.000$player.m_iNetWorth"))
-    val getExperience: Entity => Seq[Int] = data => (0 to 4).map(player => data.getProperty[Int](s"m_vecDataTeam.000$player.m_iTotalEarnedXP"))
 
     val networth = Map(Radiant -> getNetworth(radiantData), Dire -> getNetworth(direData))
     val experience = Map(Radiant -> getExperience(radiantData), Dire -> getExperience(direData))
 
     val (radiantTowers, direTowers) = Util.toList(entities.getAllByDtName("CDOTA_BaseNPC_Tower")).partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
-    val countTowers: List[Entity] => Seq[Int] = towers => (1 to 4).map(lvl => towers.count(t => t.getProperty[Int]("m_iCurrentLevel") == lvl))
     val towers = Map(Radiant -> countTowers(radiantTowers), Dire -> countTowers(direTowers))
 
-    data += WinProbabilityDataEntry(gameTimeState.gameTime.toInt, networth, experience, towers)
+    val (radiantBarracks, direBarracks) = Util.toList(entities.getAllByDtName("CDOTA_BaseNPC_Barracks")).partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
+    val barracks = Map(Radiant -> countBarracks(radiantBarracks), Dire -> countBarracks(direBarracks))
+
+    val heroProcessor = ctx.getProcessor(classOf[HeroProcessor])
+    val radiantHeroes = (0 to 4).map(id => entities.getByHandle(heroProcessor.heroHandleMap(id)))
+    val direHeroes = (5 to 9).map(id => entities.getByHandle(heroProcessor.heroHandleMap(id)))
+    val isAlive = Map( Radiant -> getLifeStates(radiantHeroes), Dire -> getLifeStates(direHeroes))
+
+    data += WinProbabilityDataEntry(gameTimeState.gameTime.toInt, networth, experience, towers, barracks, isAlive)
 
     currentIteration += 1
   }
+
+  private def getNetworth(dataEntity: Entity): Seq[Int] = (0 to 4).map(player => dataEntity.getProperty[Int](s"m_vecDataTeam.000$player.m_iNetWorth"))
+
+  private def getExperience(dataEntity: Entity): Seq[Int] = (0 to 4).map(player => dataEntity.getProperty[Int](s"m_vecDataTeam.000$player.m_iTotalEarnedXP"))
+
+  private def countTowers(towers: Seq[Entity]): Seq[Int] = (1 to 4).map(lvl => towers.count(t => t.getProperty[Int]("m_iCurrentLevel") == lvl))
+
+  private def countBarracks(barracks: Seq[Entity]): Seq[Int] = Seq(1300, 2200).map(hp => barracks.count(b => b.getProperty[Int]("m_iMaxHealth") == hp))
+
+  private def getLifeStates(heroes: Seq[Entity]): Seq[Boolean] = heroes.map(hero => hero.getProperty[Int]("m_lifeState") == 0)
 }

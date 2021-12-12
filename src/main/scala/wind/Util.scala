@@ -44,6 +44,8 @@ object Util {
       entity.hasProperty(replicatingPropertyName) &&
       entity.getProperty[Int](replicatingPropertyName) == nullValue
 
+  def isVisibleByEnemies(entity: Entity): Boolean = entity.getProperty[Int]("m_iTaggedAsVisibleByTeam") > 10
+
   def getLocation(entity: Entity): (Float, Float) = {
     if (!entity.hasProperty("CBodyComponent.m_cellX") || !entity.hasProperty("CBodyComponent.m_cellY") ||
       !entity.hasProperty("CBodyComponent.m_vecX") || !entity.hasProperty("CBodyComponent.m_vecY")) {

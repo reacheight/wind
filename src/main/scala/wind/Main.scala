@@ -46,11 +46,13 @@ object Main {
     val itemStockProcessor = new ItemStockProcessor
     val glyphProcessor = new GlyphProcessor
     val winProbabilityProcessor = new WinProbabilityProcessor
+    val visionProcessor = new VisionProcessor
 
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor, itemStockProcessor, glyphProcessor, winProbabilityProcessor)
+      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
+        itemStockProcessor, glyphProcessor, winProbabilityProcessor, visionProcessor)
     }
 
     println("Couriers location at the start of the game:")
@@ -104,6 +106,20 @@ object Main {
     println("\nGlyph not used on T1 count:")
     println(s"Radiant: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Radiant, 0)}")
     println(s"Dire: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Dire, 0)}")
+
+    if (visionProcessor.smokeUsedOnVision.nonEmpty) {
+      println("\nSmoke used on enemy vision:")
+      visionProcessor.smokeUsedOnVision.foreach {case (id, time) =>
+        println(s"${heroProcessor.heroName(id)} ${time / 60}:${time % 60}")
+      }
+    }
+
+    if (visionProcessor.observerPlacedOnVision.nonEmpty) {
+      println("\nObserver wards placed on enemy vision:")
+      visionProcessor.observerPlacedOnVision.foreach {case (id, time) =>
+        println(s"${heroProcessor.heroName(id)} ${time / 60}:${time % 60}")
+      }
+    }
 
     val winner = gameInfo.getGameInfo.getDota.getGameWinner
     val content = winProbabilityProcessor.data.map(_.toString + s" $winner").mkString("\n")

@@ -35,8 +35,8 @@ class WinProbabilityProcessor {
     val barracks = Map(Radiant -> countBarracks(radiantBarracks), Dire -> countBarracks(direBarracks))
 
     val heroProcessor = ctx.getProcessor(classOf[HeroProcessor])
-    val radiantHeroes = (0 to 4).map(id => entities.getByHandle(heroProcessor.heroHandleMap(id)))
-    val direHeroes = (5 to 9).map(id => entities.getByHandle(heroProcessor.heroHandleMap(id)))
+    val radiantHeroes = (0 to 4).map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
+    val direHeroes = (5 to 9).map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
     val respawnTime = Map(Radiant -> getSpawnTimes(radiantHeroes, gameTimeState.gameTime), Dire -> getSpawnTimes(direHeroes, gameTimeState.gameTime))
 
     val buybackState = Map(

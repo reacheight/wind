@@ -62,23 +62,23 @@ object Main {
     laneProcessor.laneStageLocation foreach {case (playerId, (firstStageLocation, secondStageLocation)) =>
       val (firstStageLane, secondStageLane) = laneProcessor.playerLane(playerId)
 
-      println(s"${heroProcessor.heroNameMap(playerId)} lane stage location is $firstStageLocation -> $secondStageLocation " +
+      println(s"${heroProcessor.heroName(playerId)} lane stage location is $firstStageLocation -> $secondStageLocation " +
         s"($firstStageLane -> $secondStageLane)")
     }
 
     println("\nChanging Power Treads' main attribute to Int before ability usage:")
     powerTreadsProcessor.abilityUsageCount foreach {case (playerId, usageCount) =>
-      println(s"${heroProcessor.heroNameMap(playerId)} power treads ability usage: total $usageCount, on Int: ${powerTreadsProcessor.ptOnIntAbilityUsageCount(playerId)}")
+      println(s"${heroProcessor.heroName(playerId)} power treads ability usage: total $usageCount, on Int: ${powerTreadsProcessor.ptOnIntAbilityUsageCount(playerId)}")
     }
 
     println("\nChanging Power Treads' main attribute to Agility before resource refill:")
     powerTreadsProcessor.resourceItemUsages foreach {case (playerId, usages) =>
-      println(s"${heroProcessor.heroNameMap(playerId)} power treads resource refill item usage: total $usages, on Agility: ${powerTreadsProcessor.ptOnAgilityResourceItemUsages(playerId)}")
+      println(s"${heroProcessor.heroName(playerId)} power treads resource refill item usage: total $usages, on Agility: ${powerTreadsProcessor.ptOnAgilityResourceItemUsages(playerId)}")
     }
 
     println("\nLane stage results:")
     laneProcessor.laneExp foreach {case (playerId, exp) =>
-      val heroName = heroProcessor.heroNameMap(playerId)
+      val heroName = heroProcessor.heroName(playerId)
       println(s"$heroName exp: $exp, networth: ${laneProcessor.laneNetworth(playerId)}")
     }
 
@@ -89,7 +89,7 @@ object Main {
 
     println("\nSummon gold fed:")
     summonsProcessor.summonFeedGold foreach {case (playerId, gold) =>
-      val heroName = heroProcessor.heroNameMap(playerId)
+      val heroName = heroProcessor.heroName(playerId)
       println(s"$heroName: $gold")
     }
 

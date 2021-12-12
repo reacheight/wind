@@ -21,7 +21,7 @@ class PowerTreadsProcessor {
 
   @OnEntityCreated(classPattern = "CWorld")
   def init(ctx: Context, e: Entity): Unit = {
-    combatLogHeroNameToPlayerId = ctx.getProcessor(classOf[HeroProcessor]).combatLogHeroNameToPlayerId
+    combatLogHeroNameToPlayerId = ctx.getProcessor(classOf[HeroProcessor]).combatLogNameToPlayerId
   }
 
   @OnEntityCreated(classPattern = "CDOTA_Item_PowerTreads")

@@ -7,11 +7,11 @@ import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 
 class ItemStockProcessor {
-  private var maxSmokeStockStart: Map[Team, Float] = Map(Radiant -> -1, Dire -> -1)
-  private var maxObsStockStart: Map[Team, Float] = Map(Radiant -> -1, Dire -> -1)
+  private var maxSmokeStockStart: Map[Team, Int] = Map(Radiant -> -1, Dire -> -1)
+  private var maxObsStockStart: Map[Team, Int] = Map(Radiant -> -1, Dire -> -1)
 
-  var maxSmokeStockDuration: Map[Team, Float] = Map(Radiant -> 0, Dire -> 0)
-  var maxObsStockDuration: Map[Team, Float] = Map(Radiant -> 0, Dire -> 0)
+  var maxSmokeStockDuration: Map[Team, Int] = Map(Radiant -> 0, Dire -> 0)
+  var maxObsStockDuration: Map[Team, Int] = Map(Radiant -> 0, Dire -> 0)
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
   def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
@@ -21,16 +21,16 @@ class ItemStockProcessor {
     val timeState = Util.getGameTimeState(gameRules)
 
     if (maxSmokeStockStart(Radiant) > 0)
-      incrementMaxSmokeStockDuration(Radiant, timeState.gameTime)
+      incrementMaxSmokeStockDuration(Radiant, timeState.gameTime.toInt)
 
     if (maxSmokeStockStart(Dire) > 0)
-      incrementMaxSmokeStockDuration(Dire, timeState.gameTime)
+      incrementMaxSmokeStockDuration(Dire, timeState.gameTime.toInt)
 
     if (maxObsStockStart(Radiant) > 0)
-      incrementMaxObsStockDuration(Radiant, timeState.gameTime)
+      incrementMaxObsStockDuration(Radiant, timeState.gameTime.toInt)
 
     if (maxObsStockStart(Dire) > 0)
-      incrementMaxObsStockDuration(Dire, timeState.gameTime)
+      incrementMaxObsStockDuration(Dire, timeState.gameTime.toInt)
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_vecItemStockInfo.0010.iStockCount")
@@ -54,11 +54,11 @@ class ItemStockProcessor {
     val timeState = Util.getGameTimeState(gameRules)
 
     if (smokeStockCount == 3) {
-      maxSmokeStockStart += (team -> timeState.gameTime)
+      maxSmokeStockStart += (team -> timeState.gameTime.toInt)
     }
 
     if (smokeStockCount == 2 && maxSmokeStockStart(team) > 0) {
-      incrementMaxSmokeStockDuration(team, timeState.gameTime)
+      incrementMaxSmokeStockDuration(team, timeState.gameTime.toInt)
       maxSmokeStockStart += (team -> -1)
     }
   }
@@ -68,18 +68,18 @@ class ItemStockProcessor {
     val timeState = Util.getGameTimeState(gameRules)
 
     if (obsStockCount == 4) {
-      maxObsStockStart += (team -> timeState.gameTime)
+      maxObsStockStart += (team -> timeState.gameTime.toInt)
     }
 
     if (obsStockCount == 3 && maxObsStockStart(team) > 0) {
-      incrementMaxObsStockDuration(team, timeState.gameTime)
+      incrementMaxObsStockDuration(team, timeState.gameTime.toInt)
       maxObsStockStart += (team -> -1)
     }
   }
 
-  def incrementMaxSmokeStockDuration(team: Team, currentTime: Float): Unit =
+  def incrementMaxSmokeStockDuration(team: Team, currentTime: Int): Unit =
     maxSmokeStockDuration += (team -> (maxSmokeStockDuration(team) + currentTime - maxSmokeStockStart(team)))
 
-  def incrementMaxObsStockDuration(team: Team, currentTime: Float): Unit =
+  def incrementMaxObsStockDuration(team: Team, currentTime: Int): Unit =
     maxObsStockDuration += (team -> (maxObsStockDuration(team) + currentTime - maxObsStockStart(team)))
 }

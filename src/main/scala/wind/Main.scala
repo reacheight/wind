@@ -1,14 +1,8 @@
 package wind
 
-import skadistats.clarity.Clarity
-import skadistats.clarity.processor.runner.SimpleRunner
-import skadistats.clarity.source.MappedFileSource
-import Team.{Dire, Radiant}
-import wind.processors._
+import wind.Team.{Dire, Radiant}
 
-import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path, Paths}
-import scala.util.Using
+import java.nio.file.{Path, Paths}
 
 object Main {
   private val downloadingDirectory = Paths.get("tmp")
@@ -37,92 +31,58 @@ object Main {
   }
 
   def analyze(replay: Path): Unit = {
-    val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
-    val courierProcessor = new CourierProcessor
-    val heroProcessor = new HeroProcessor(gameInfo)
-    val laneProcessor = new LaneProcessor
-    val powerTreadsProcessor = new PowerTreadsProcessor
-    val summonsProcessor = new SummonsProcessor
-    val itemStockProcessor = new ItemStockProcessor
-    val glyphProcessor = new GlyphProcessor
-    val winProbabilityProcessor = new WinProbabilityProcessor
-    val visionProcessor = new VisionProcessor
-
-    Using.Manager { use =>
-      val source = use(new MappedFileSource(replay))(s => s.close())
-      val runner = new SimpleRunner(source)
-      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
-        itemStockProcessor, glyphProcessor, winProbabilityProcessor, visionProcessor)
-    }
+    val analyzer = ReplayAnalyzer
+    val result = analyzer.analyze(replay)
 
     println("Couriers location at the start of the game:")
-    courierProcessor.courierIsOut foreach {case (playerId, outOfFountain) =>
-      println(s"${heroProcessor.heroName(playerId)} courier is ${if (outOfFountain) "out of" else "in"} fountain")
+    result.couriers foreach { case (playerId, isOut) =>
+      println(s"${result.heroName(playerId)} courier is ${if (isOut) "out of" else "in"} fountain")
     }
 
-    println("\nHeroes' lane stage location:")
-    laneProcessor.laneStageLocation foreach {case (playerId, (firstStageLocation, secondStageLocation)) =>
-      val (firstStageLane, secondStageLane) = laneProcessor.playerLane(playerId)
-
-      println(s"${heroProcessor.heroName(playerId)} lane stage location is $firstStageLocation -> $secondStageLocation " +
-        s"($firstStageLane -> $secondStageLane)")
+    println("\nHeroes' lanes:")
+    result.lanes foreach { case (playerId, (firstStageLane, secondStageLane)) =>
+      println(s"${result.heroName(playerId)}: $firstStageLane -> $secondStageLane")
     }
 
-    println("\nChanging Power Treads' main attribute to Int before ability usage:")
-    powerTreadsProcessor.abilityUsageCount foreach {case (playerId, usageCount) =>
-      println(s"${heroProcessor.heroName(playerId)} power treads ability usage: total $usageCount, on Int: ${powerTreadsProcessor.ptOnIntAbilityUsageCount(playerId)}")
+    if (result.abilityUsagesWithPT.nonEmpty) println("\nChanging Power Treads' main attribute to Int before ability usage:")
+    result.abilityUsagesWithPT foreach { case (playerId, (total, onInt)) =>
+      println(s"${result.heroName(playerId)} power treads ability usage: total $total, on Int: $onInt")
     }
 
-    println("\nChanging Power Treads' main attribute to Agility before resource refill:")
-    powerTreadsProcessor.resourceItemUsages foreach {case (playerId, usages) =>
-      println(s"${heroProcessor.heroName(playerId)} power treads resource refill item usage: total $usages, on Agility: ${powerTreadsProcessor.ptOnAgilityResourceItemUsages(playerId)}")
+    if (result.resourceItemsUsagesWithPT.nonEmpty) println("\nChanging Power Treads' main attribute to Agility before resource refill:")
+    result.resourceItemsUsagesWithPT foreach { case (playerId, (total, onAgility)) =>
+      println(s"${result.heroName(playerId)} power treads resource refill item usage: total $total, on Agility: ${onAgility}")
     }
 
-    println("\nLane stage results:")
-    laneProcessor.laneExp foreach {case (playerId, exp) =>
-      val heroName = heroProcessor.heroName(playerId)
-      println(s"$heroName exp: $exp, networth: ${laneProcessor.laneNetworth(playerId)}")
+    result.laneOutcomes foreach { case (lane, outcome) =>
+      println(s"$lane winner: ${outcome.getOrElse("Draw")}")
     }
 
-    println()
-    laneProcessor.laneWinner foreach {case (lane, winner) =>
-      println(s"$lane winner: ${winner.getOrElse("Draw")}")
-    }
-
-    println("\nSummon gold fed:")
-    summonsProcessor.summonFeedGold foreach {case (playerId, gold) =>
-      val heroName = heroProcessor.heroName(playerId)
-      println(s"$heroName: $gold")
+    if (result.goldFedWithSummons.nonEmpty) println("\nSummon gold fed:")
+    result.goldFedWithSummons foreach { case (playerId, gold) =>
+      println(s"${result.heroName(playerId)}: $gold")
     }
 
     println("\nMax smoke stock duration:")
-    println(s"Radiant: ${itemStockProcessor.maxSmokeStockDuration(Radiant)} sec.")
-    println(s"Dire: ${itemStockProcessor.maxSmokeStockDuration(Dire)} sec.")
+    println(s"Radiant: ${result.maxStockSmokesDuration(Radiant)} sec.")
+    println(s"Dire: ${result.maxStockSmokesDuration(Dire)} sec.")
 
     println("\nMax obs stock duration:")
-    println(s"Radiant: ${itemStockProcessor.maxObsStockDuration(Radiant)} sec.")
-    println(s"Dire: ${itemStockProcessor.maxObsStockDuration(Dire)} sec.")
+    println(s"Radiant: ${result.maxStockObsDuration(Radiant)} sec.")
+    println(s"Dire: ${result.maxStockObsDuration(Dire)} sec.")
 
     println("\nGlyph not used on T1 count:")
-    println(s"Radiant: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Radiant, 0)}")
-    println(s"Dire: ${glyphProcessor.glyphNotUsedOnT1.getOrElse(Dire, 0)}")
+    println(s"Radiant: ${result.glyphNotUsedOnT1.getOrElse(Radiant, 0)}")
+    println(s"Dire: ${result.glyphNotUsedOnT1.getOrElse(Dire, 0)}")
 
-    if (visionProcessor.smokeUsedOnVision.nonEmpty) {
-      println("\nSmoke used on enemy vision:")
-      visionProcessor.smokeUsedOnVision.foreach {case (id, time) =>
-        println(s"${heroProcessor.heroName(id)} ${time.toString}")
-      }
+    if (result.smokesUsedOnVision.nonEmpty) println("\nSmoke used on enemy vision:")
+    result.smokesUsedOnVision.foreach { case (id, time) =>
+      println(s"${result.heroName(id)} ${time.toString}")
     }
 
-    if (visionProcessor.observerPlacedOnVision.nonEmpty) {
-      println("\nObserver wards placed on enemy vision:")
-      visionProcessor.observerPlacedOnVision.foreach {case (id, time) =>
-        println(s"${heroProcessor.heroName(id)} ${time.toString}")
-      }
+    if (result.obsPlacedOnVision.nonEmpty) println("\nObserver wards placed on enemy vision:")
+    result.obsPlacedOnVision.foreach { case (id, time) =>
+      println(s"${result.heroName(id)} ${time.toString}")
     }
-
-    val winner = gameInfo.getGameInfo.getDota.getGameWinner
-    val content = winProbabilityProcessor.data.map(_.toString + s" $winner").mkString("\n")
-    Files.write(Paths.get("win_prob.txt"), content.getBytes(StandardCharsets.UTF_8))
   }
 }

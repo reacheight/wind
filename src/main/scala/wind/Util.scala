@@ -3,6 +3,7 @@ package wind
 import skadistats.clarity.model.Entity
 import wind.Team._
 
+import java.time.{Duration, Period}
 import scala.collection.mutable.ArrayBuffer
 
 object Util {
@@ -65,4 +66,10 @@ object Util {
   }
 }
 
-class GameTimeState(val preGameStarted: Boolean, val gameStarted: Boolean, val gameTime: Float)
+class GameTimeState(val preGameStarted: Boolean, val gameStarted: Boolean, val gameTime: Float) {
+  override def toString: String = {
+    val minutes = gameTime.toInt.sign * gameTime.toInt.abs / 60
+    val seconds = gameTime.toInt.abs % 60
+    if (preGameStarted) s"$minutes:$seconds" else "not started"
+  }
+}

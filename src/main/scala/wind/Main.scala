@@ -110,14 +110,14 @@ object Main {
     if (visionProcessor.smokeUsedOnVision.nonEmpty) {
       println("\nSmoke used on enemy vision:")
       visionProcessor.smokeUsedOnVision.foreach {case (id, time) =>
-        println(s"${heroProcessor.heroName(id)} ${time / 60}:${time % 60}")
+        println(s"${heroProcessor.heroName(id)} ${time.toString}")
       }
     }
 
     if (visionProcessor.observerPlacedOnVision.nonEmpty) {
       println("\nObserver wards placed on enemy vision:")
       visionProcessor.observerPlacedOnVision.foreach {case (id, time) =>
-        println(s"${heroProcessor.heroName(id)} ${time / 60}:${time % 60}")
+        println(s"${heroProcessor.heroName(id)} ${time.toString}")
       }
     }
 

@@ -54,8 +54,8 @@ object Main {
     }
 
     println("Couriers location at the start of the game:")
-    courierProcessor.courierOutOfFountain foreach {case (playerId, outOfFountain) =>
-      println(s"${heroProcessor.heroNameMap(playerId)} courier is ${if (outOfFountain) "out of" else "in"} fountain")
+    courierProcessor.courierIsOut foreach {case (playerId, outOfFountain) =>
+      println(s"${heroProcessor.heroName(playerId)} courier is ${if (outOfFountain) "out of" else "in"} fountain")
     }
 
     println("\nHeroes' lane stage location:")

@@ -6,7 +6,7 @@ import skadistats.clarity.source.MappedFileSource
 import wind.models.Lane.Lane
 import wind.models.Team.Team
 import wind.models._
-import wind.processors.{CourierProcessor, GlyphProcessor, HeroProcessor, ItemStockProcessor, LaneProcessor, PowerTreadsProcessor, SummonsProcessor, VisionProcessor, WinProbabilityProcessor}
+import wind.processors._
 
 import java.nio.file.Path
 import scala.util.Using

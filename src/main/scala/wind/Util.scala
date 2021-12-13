@@ -1,7 +1,7 @@
 package wind
 
 import skadistats.clarity.model.Entity
-import wind.Team._
+import wind.models.Team._
 
 import java.time.{Duration, Period}
 import scala.collection.mutable.ArrayBuffer

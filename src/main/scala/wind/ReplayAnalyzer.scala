@@ -3,8 +3,9 @@ package wind
 import skadistats.clarity.Clarity
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
-import wind.Lane.Lane
-import wind.Team.Team
+import wind.models.Lane.Lane
+import wind.models.Team.Team
+import wind.models._
 import wind.processors.{CourierProcessor, GlyphProcessor, HeroProcessor, ItemStockProcessor, LaneProcessor, PowerTreadsProcessor, SummonsProcessor, VisionProcessor, WinProbabilityProcessor}
 
 import java.nio.file.Path
@@ -61,5 +62,3 @@ case class AnalysisResult(
   obsPlacedOnVision: List[(PlayerId, GameTimeState)],
   heroName: Map[PlayerId, String]
 )
-
-case class PlayerId(id: Int)

@@ -1,4 +1,4 @@
-package wind
+package wind.models
 
 object Team extends Enumeration {
   type Team = Value

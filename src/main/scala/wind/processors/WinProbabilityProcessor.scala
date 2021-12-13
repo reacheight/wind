@@ -4,7 +4,7 @@ import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.runner.Context
 import wind.{Util, WinProbabilityDataEntry}
-import wind.Team._
+import wind.models.Team._
 
 import scala.collection.mutable.ArrayBuffer
 

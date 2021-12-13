@@ -1,4 +1,4 @@
-package wind
+package wind.models
 
 object Lane extends Enumeration {
   type Lane = Value

@@ -1,11 +1,12 @@
 package wind
 package processors
 
-import Lane._
-import Team._
+import wind.models.Lane._
+import wind.models.Team._
 import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
+import wind.models.Lane
 
 class LaneProcessor {
   private val Epsilon = 0.001f

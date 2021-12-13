@@ -1,6 +1,6 @@
 package wind
 
-import wind.Team.{Dire, Radiant}
+import wind.models.Team.{Dire, Radiant}
 
 import java.nio.file.{Path, Paths}
 

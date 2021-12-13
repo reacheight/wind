@@ -1,6 +1,6 @@
 package wind
 
-import wind.Team._
+import wind.models.Team._
 
 case class WinProbabilityDataEntry(
   time: Int,

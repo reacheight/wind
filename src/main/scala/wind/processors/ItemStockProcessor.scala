@@ -1,7 +1,7 @@
 package wind
 package processors
 
-import Team._
+import wind.models.Team._
 
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged

@@ -3,7 +3,7 @@ package wind.processors
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.runner.Context
-import wind.Team._
+import wind.models.Team._
 import wind.Util
 
 import scala.collection.{immutable, mutable}

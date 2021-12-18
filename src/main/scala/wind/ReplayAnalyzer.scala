@@ -21,14 +21,13 @@ object ReplayAnalyzer {
     val summonsProcessor = new SummonsProcessor
     val itemStockProcessor = new ItemStockProcessor
     val glyphProcessor = new GlyphProcessor
-    val winProbabilityProcessor = new WinProbabilityProcessor
     val visionProcessor = new VisionProcessor
 
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
-        itemStockProcessor, glyphProcessor, winProbabilityProcessor, visionProcessor)
+        itemStockProcessor, glyphProcessor, visionProcessor)
     }
 
     AnalysisResult(

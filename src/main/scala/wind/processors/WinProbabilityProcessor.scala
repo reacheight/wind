@@ -11,7 +11,7 @@ import scala.collection.mutable.ArrayBuffer
 class WinProbabilityProcessor {
   var data: ArrayBuffer[WinProbabilityDataEntry] = ArrayBuffer.empty
 
-  private val IterationInterval = 60
+  private val IterationInterval = 10
   private val Epsilon = 0.001f
   private var currentIteration = 1
 

@@ -13,6 +13,9 @@ object WinProbabilityDataCollector {
   private val directory = Paths.get("win_prob_data")
 
   def collect(replay: Path, matchId: String): Unit = {
+    if (Files.exists(Paths.get(directory.toString, matchId)))
+      return
+
     val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
     val winProbabilityProcessor = new WinProbabilityProcessor
     val heroProcessor = new HeroProcessor(gameInfo)

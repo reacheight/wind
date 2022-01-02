@@ -41,6 +41,7 @@ object Main {
         val replayLocation = OdotaClient.getReplayLocation(m.match_id.toString)
         replayLocation match {
           case Some(location) =>
+            println(s"Processing match ${m.match_id}")
             downloadReplay(location)
             println("Collecting data..")
             collector.collect(replayPath, m.match_id.toString)

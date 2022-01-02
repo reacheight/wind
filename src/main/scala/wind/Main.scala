@@ -10,23 +10,31 @@ object Main {
   private val replayPath = Paths.get(downloadingDirectory.toString, "replay.dem")
 
   def main(args: Array[String]): Unit = {
-    val matchId = args(0)
-    val replayLocation = OdotaClient.getReplayLocation(matchId)
-    replayLocation match {
-      case None => println(s"Can't find replay for match $matchId.")
-      case Some(location) =>
-        println("Downloading replay...")
-        ReplayDownloader.downloadReplay(location, compressedReplayPath)
+    if (args(0) == "analyze") {
+      val `match` = args(1)
+      if (`match`.forall(_.isDigit)) {
+        val replayLocation = OdotaClient.getReplayLocation(`match`)
+        replayLocation match {
+          case None => println(s"Can't find replay for match ${`match`}.")
+          case Some(location) =>
+            println("Downloading replay...")
+            ReplayDownloader.downloadReplay(location, compressedReplayPath)
 
-        println("Decompressing replay..")
-        BZip2Decompressor.decompress(compressedReplayPath, replayPath)
+            println("Decompressing replay..")
+            BZip2Decompressor.decompress(compressedReplayPath, replayPath)
 
+            println("Analyzing replay...")
+            analyze(replayPath)
+
+            compressedReplayPath.toFile.delete()
+            replayPath.toFile.delete()
+            downloadingDirectory.toFile.delete()
+        }
+      }
+      else {
         println("Analyzing replay...")
-        analyze(replayPath)
-
-        compressedReplayPath.toFile.delete()
-        replayPath.toFile.delete()
-        downloadingDirectory.toFile.delete()
+        analyze(Paths.get(`match`))
+      }
     }
   }
 

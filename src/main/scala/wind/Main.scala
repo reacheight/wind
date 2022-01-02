@@ -37,7 +37,7 @@ object Main {
     val collector = WinProbabilityDataCollector
     val matches = OdotaClient.getPublicMatches
     matches match {
-      case Some(matches) => matches.filter(m => m.avg_mmr.getOrElse(0) > 3000).foreach(m => {
+      case Some(matches) => matches.foreach(m => {
         val replayLocation = OdotaClient.getReplayLocation(m.match_id.toString)
         replayLocation match {
           case Some(location) =>

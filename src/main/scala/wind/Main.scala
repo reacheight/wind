@@ -29,25 +29,36 @@ object Main {
       }
     }
     else if (args(0) == "collect") {
-      collect()
+      var prevLastMatchId = if (args.length < 2) "" else args(1)
+      for (_ <- 1 to 10) {
+        prevLastMatchId = collect(prevLastMatchId)
+      }
     }
   }
 
-  def collect(): Unit = {
+  def collect(lastMatchId: String = ""): String = {
     val collector = WinProbabilityDataCollector
-    val matches = OdotaClient.getPublicMatches
+    val matches = OdotaClient.getPublicMatches(lastMatchId)
     matches match {
-      case Some(matches) => matches.foreach(m => {
-        val replayLocation = OdotaClient.getReplayLocation(m.match_id.toString)
-        replayLocation match {
-          case Some(location) =>
-            println(s"Processing match ${m.match_id}")
-            downloadReplay(location)
-            println("Collecting data..")
-            collector.collect(replayPath, m.match_id.toString)
-            deleteReplayFolder()
-        }
-      })
+      case Some(matches) =>
+        matches.foreach(m => {
+          val replayLocation = OdotaClient.getReplayLocation(m.match_id.toString)
+          replayLocation match {
+            case Some(location) =>
+              println(s"Processing match ${m.match_id}")
+              downloadReplay(location)
+              println("Collecting data..\n")
+              collector.collect(replayPath, m.match_id.toString)
+              deleteReplayFolder()
+            case _ => println(s"Can't find replay for match ${m.match_id}")
+          }
+        })
+
+        matches.last.match_id.toString
+
+      case _ =>
+        println(s"Can't find matches less than match $lastMatchId")
+        ""
     }
   }
 

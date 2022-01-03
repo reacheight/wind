@@ -24,9 +24,9 @@ object OdotaClient {
     response.body.toOption.flatMap(list => list.headOption)
   }
 
-  def getPublicMatches: Option[List[Match]] = {
+  def getPublicMatches(lessThanMatchId: String = ""): Option[List[Match]] = {
     val response = quickRequest
-      .get(uri"https://api.opendota.com/api/publicMatches?mmr_descending=1")
+      .get(uri"https://api.opendota.com/api/publicMatches?mmr_descending=1&less_than_match_id=$lessThanMatchId")
       .response(asJson[List[Match]])
       .send(backend)
 

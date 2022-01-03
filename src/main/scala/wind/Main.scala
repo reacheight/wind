@@ -110,13 +110,13 @@ object Main {
     println(s"Dire: ${result.glyphNotUsedOnT1.getOrElse(Dire, 0)}")
 
     if (result.smokesUsedOnVision.nonEmpty) println("\nSmoke used on enemy vision:")
-    result.smokesUsedOnVision.foreach { case (id, time) =>
-      println(s"${result.heroName(id)} ${time.toString}")
+    result.smokesUsedOnVision.foreach { case (id, times) =>
+      println(s"${result.heroName(id)}: ${times.map(_.toString).mkString(", ")}")
     }
 
     if (result.obsPlacedOnVision.nonEmpty) println("\nObserver wards placed on enemy vision:")
-    result.obsPlacedOnVision.foreach { case (id, time) =>
-      println(s"${result.heroName(id)} ${time.toString}")
+    result.obsPlacedOnVision.foreach { case (id, times) =>
+      println(s"${result.heroName(id)}: ${times.map(_.toString).mkString(", ")}")
     }
   }
 

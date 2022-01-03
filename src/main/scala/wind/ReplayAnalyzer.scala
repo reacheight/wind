@@ -40,8 +40,8 @@ object ReplayAnalyzer {
       itemStockProcessor.maxSmokeStockDuration,
       itemStockProcessor.maxObsStockDuration,
       glyphProcessor.glyphNotUsedOnT1,
-      visionProcessor.smokeUsedOnVision.map { case (id, time) => PlayerId(id)  -> time },
-      visionProcessor.observerPlacedOnVision.map { case (id, time) => PlayerId(id)  -> time },
+      visionProcessor.smokeUsedOnVision.map { case (id, times) => PlayerId(id)  -> times },
+      visionProcessor.observerPlacedOnVision.map { case (id, times) => PlayerId(id)  -> times },
       heroProcessor.heroName.map { case(id, name) => PlayerId(id) -> name }
     )
   }
@@ -57,7 +57,7 @@ case class AnalysisResult(
   maxStockSmokesDuration: Map[Team, Int],
   maxStockObsDuration: Map[Team, Int],
   glyphNotUsedOnT1: Map[Team, Int],
-  smokesUsedOnVision: List[(PlayerId, GameTimeState)],
-  obsPlacedOnVision: List[(PlayerId, GameTimeState)],
+  smokesUsedOnVision: Map[PlayerId, List[GameTimeState]],
+  obsPlacedOnVision: Map[PlayerId, List[GameTimeState]],
   heroName: Map[PlayerId, String]
 )

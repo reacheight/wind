@@ -13,7 +13,8 @@ object WinProbabilityDataCollector {
   private val directory = Paths.get("win_prob_data")
 
   def collect(replay: Path, matchId: String): Unit = {
-    if (Files.exists(Paths.get(directory.toString, matchId)))
+    val destinationPath = Paths.get(directory.toString, s"$matchId.txt")
+    if (Files.exists(destinationPath))
       return
 
     val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
@@ -28,6 +29,6 @@ object WinProbabilityDataCollector {
 
     val winner = gameInfo.getGameInfo.getDota.getGameWinner - 2
     val content = winProbabilityProcessor.data.map(_.toString + s" $winner").mkString("\n")
-    Files.write(Paths.get(directory.toString, s"$matchId.txt"), content.getBytes(StandardCharsets.UTF_8))
+    Files.write(destinationPath, content.getBytes(StandardCharsets.UTF_8))
   }
 }

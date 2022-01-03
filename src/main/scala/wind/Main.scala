@@ -17,10 +17,11 @@ object Main {
         replayLocation match {
           case None => println(s"Can't find replay for match ${`match`}.")
           case Some(location) =>
-            downloadReplay(location)
-            println("Analyzing replay...")
-            analyze(replayPath)
-            deleteReplayFolder()
+            if (downloadReplay(location)) {
+              println("Analyzing replay...")
+              analyze(replayPath)
+              deleteReplayFolder()
+            }
         }
       }
       else {
@@ -46,10 +47,11 @@ object Main {
           replayLocation match {
             case Some(location) =>
               println(s"Processing match ${m.match_id}")
-              downloadReplay(location)
-              println("Collecting data..\n")
-              collector.collect(replayPath, m.match_id.toString)
-              deleteReplayFolder()
+              if (downloadReplay(location)) {
+                println("Collecting data..\n")
+                collector.collect(replayPath, m.match_id.toString)
+                deleteReplayFolder()
+              }
             case _ => println(s"Can't find replay for match ${m.match_id}")
           }
         })
@@ -118,12 +120,19 @@ object Main {
     }
   }
 
-  def downloadReplay(location: ReplayLocation): Unit = {
+  def downloadReplay(location: ReplayLocation): Boolean = {
     println(s"Downloading replay..")
-    ReplayDownloader.downloadReplay(location, compressedReplayPath)
+    val isDownloaded = ReplayDownloader.downloadReplay(location, compressedReplayPath)
 
-    println("Decompressing replay..")
-    BZip2Decompressor.decompress(compressedReplayPath, replayPath)
+    if (!isDownloaded) {
+      println(s"Failed to download replay for match ${location.matchId}")
+      false
+    }
+    else {
+      println("Decompressing replay..")
+      BZip2Decompressor.decompress(compressedReplayPath, replayPath)
+      true
+    }
   }
 
   def deleteReplayFolder(): Unit = {

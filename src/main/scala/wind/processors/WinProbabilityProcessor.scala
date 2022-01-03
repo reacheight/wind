@@ -18,7 +18,7 @@ class WinProbabilityProcessor {
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
   def onGameTimeChanged(ctx: Context, gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     val gameTimeState = Util.getGameTimeState(gameRules)
-    val gameOver = gameRules.getProperty[Int]("m_pGameRules.m_nGameState") == 6
+    val gameOver = gameRules.getProperty[Int]("m_pGameRules.m_nGameState") > 5
     if (gameOver || !gameTimeState.preGameStarted || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
 
     val entities = ctx.getProcessor(classOf[Entities])

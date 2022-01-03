@@ -70,6 +70,7 @@ class GameTimeState(val preGameStarted: Boolean, val gameStarted: Boolean, val g
   override def toString: String = {
     val minutes = gameTime.toInt.sign * gameTime.toInt.abs / 60
     val seconds = gameTime.toInt.abs % 60
-    if (preGameStarted) s"$minutes:$seconds" else "not started"
+    val secondsStr = if (seconds < 10) s"0$seconds" else seconds
+    if (preGameStarted) s"$minutes:$secondsStr" else "not started"
   }
 }

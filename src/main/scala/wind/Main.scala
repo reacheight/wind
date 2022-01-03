@@ -122,7 +122,7 @@ object Main {
 
   def downloadReplay(location: ReplayLocation): Boolean = {
     println(s"Downloading replay..")
-    val isDownloaded = ReplayDownloader.downloadReplay(location, compressedReplayPath)
+    val isDownloaded = ReplayDownloader.downloadReplay(location, compressedReplayPath).nonEmpty
 
     if (!isDownloaded) {
       println(s"Failed to download replay for match ${location.matchId}")

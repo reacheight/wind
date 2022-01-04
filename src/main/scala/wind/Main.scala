@@ -30,8 +30,8 @@ object Main {
       }
     }
     else if (args(0) == "collect") {
-      var prevLastMatchId = if (args.length < 2) "" else args(1)
-      for (_ <- 1 to 10) {
+      var prevLastMatchId = if (args.length < 3) "" else args(2)
+      for (_ <- 1 to args(1).toInt) {
         prevLastMatchId = collect(prevLastMatchId)
       }
     }

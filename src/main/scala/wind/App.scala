@@ -1,5 +1,6 @@
 package wind
 
+import cask.Response
 import ujson.Obj
 
 import java.nio.file.Paths
@@ -9,7 +10,7 @@ object App extends cask.MainRoutes{
   private val DownloadingDirectory = "replays"
 
   @cask.get("/analysis/:matchId")
-  def analyze(matchId: String): Option[Obj] = {
+  def analyze(matchId: String): Response[Obj] = {
     val replayLocation = OdotaClient.getReplayLocation(matchId)
     val compressedReplayPath = Paths.get(DownloadingDirectory, s"${matchId}_compressed")
     val replayPath = Paths.get(DownloadingDirectory, matchId)
@@ -22,7 +23,7 @@ object App extends cask.MainRoutes{
         compressedReplayPath.toFile.delete()
         replayPath.toFile.delete()
 
-        ujson.Obj(
+        val responseData = ujson.Obj(
           "couriers" -> result.couriers.map { case (id, isOut) => id.toString -> isOut },
           "lanes" -> result.lanes.map { case (id, (firstLane, secondLane)) => id.toString -> Seq(firstLane.id, secondLane.id) },
           "outcome" -> result.laneOutcomes.map { case (lane, team) => lane.id.toString -> (if (team.isEmpty) 2 else team.get.id) },
@@ -35,8 +36,13 @@ object App extends cask.MainRoutes{
           "smokes_used_on_vision" -> result.smokesUsedOnVision.map { case (id, times) => id.toString -> times.map(_.toString) },
           "obs_placed_on_vision" -> result.obsPlacedOnVision.map( { case (id, times) => id.toString -> times.map(_.toString) })
         )
+
+        cask.Response(responseData, headers = Seq(("Access-Control-Allow-Origin", "http://127.0.0.1:5500")))
       })
-    })
+    }) match {
+      case Some(response) => response
+      case _ => cask.Response(ujson.Obj(), 400, headers = Seq(("Access-Control-Allow-Origin", "http://127.0.0.1:5500")))
+    }
   }
 
   initialize()

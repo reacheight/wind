@@ -7,6 +7,7 @@ class App extends React.Component {
     this.state = {
       matchId: '',
       analysis: {},
+      error: false
     };
 
     this.handleChange = this.handleChange.bind(this)
@@ -19,9 +20,17 @@ class App extends React.Component {
 
   handleSubmit(event) {
     fetch(`http://localhost:8080/analysis/${this.state.matchId}`)
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          this.setState({ error: true })
+        }
+        response.json()
+      })
       .then(json => {
         this.setState({ analysis: json })
+      })
+      .catch(e => {
+        this.setState({ error: true })
       })
     event.preventDefault()
   }
@@ -42,10 +51,12 @@ class App extends React.Component {
       <div className="App">
         <form onSubmit={this.handleSubmit}>
           <input placeholder="Enter match id" type="text" value={this.state.matchId} onChange={this.handleChange} />
-          <input type="submit" value="Analyze" />
         </form>
         {analysisLoaded &&
           <ul>{courierInfo}</ul>
+        }
+        {this.state.error &&
+          <div> Error occured :( </div>
         }
       </div>
     );

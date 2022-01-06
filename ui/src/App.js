@@ -1,5 +1,8 @@
-import './App.css';
 import React from 'react';
+
+import Form from 'react-bootstrap/Form';
+
+import './App.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -19,12 +22,13 @@ class App extends React.Component {
   }
 
   handleSubmit(event) {
+    this.setState({ error: false })
     fetch(`http://localhost:8080/analysis/${this.state.matchId}`)
       .then(response => {
         if (!response.ok) {
           this.setState({ error: true })
         }
-        response.json()
+        return response.json()
       })
       .then(json => {
         this.setState({ analysis: json })
@@ -49,8 +53,8 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <form onSubmit={this.handleSubmit}>
-          <input placeholder="Enter match id" type="text" value={this.state.matchId} onChange={this.handleChange} />
+        <form className="MatchInput" onSubmit={this.handleSubmit}>
+          <Form.Control type="text" placeholder="Enter match id" value={this.state.matchId} onChange={this.handleChange} />
         </form>
         {analysisLoaded &&
           <ul>{courierInfo}</ul>

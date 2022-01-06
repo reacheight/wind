@@ -38,11 +38,11 @@ object App extends cask.MainRoutes{
           "heroes" -> result.heroName.map { case(id, name) => id.toString -> name }
         )
 
-        cask.Response(responseData, headers = Seq(("Access-Control-Allow-Origin", "http://127.0.0.1:5500")))
+        cask.Response(responseData, headers = Seq(("Access-Control-Allow-Origin", "*")))
       })
     }) match {
       case Some(response) => response
-      case _ => cask.Response(ujson.Obj(), 400, headers = Seq(("Access-Control-Allow-Origin", "http://127.0.0.1:5500")))
+      case _ => cask.Response(ujson.Obj(), 400, headers = Seq(("Access-Control-Allow-Origin", "*")))
     }
   }
 

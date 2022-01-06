@@ -40,25 +40,41 @@ class App extends React.Component {
   }
 
   render() {
+    const green = {
+      color: "green"
+    }
+
+    const red = {
+      color: "red"
+    }
+
     const analysis = this.state.analysis
     const analysisLoaded = analysis && Object.keys(analysis).length !== 0
     let courierInfo
     if (analysisLoaded) {
       courierInfo = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) =>
         <li key={id.toString}>
-          {analysis.heroes[id]} courier is {analysis.couriers[id] ? "out of" : "in"} fountain
+          {analysis.heroes[id]}'s courier is {analysis.couriers[id] ? <span style={green}>out of</span> : <span style={red}>in</span>} fountain
         </li>
       )
     }
+
+    const paddingTop = {
+      paddingTop: 20
+    }
+
+
 
     return (
       <div className="App">
         <form className="MatchInput" onSubmit={this.handleSubmit}>
           <Form.Control type="text" placeholder="Enter match id" value={this.state.matchId} onChange={this.handleChange} />
         </form>
-        {analysisLoaded &&
-          <ul>{courierInfo}</ul>
-        }
+        <div style={paddingTop}>
+          {analysisLoaded &&
+            <ul>{courierInfo}</ul>
+          }
+        </div>
         {this.state.error &&
           <div> Error occured :( </div>
         }

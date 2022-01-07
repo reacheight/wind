@@ -4,6 +4,7 @@ import Analysis from './Analysis/Analysis'
 import Form from 'react-bootstrap/Form';
 
 import './App.css';
+import Header from './Header/Header';
 
 class App extends React.Component {
   constructor(props) {
@@ -45,6 +46,7 @@ class App extends React.Component {
 
     return (
       <div className="App">
+        <Header />
         <form className="MatchInput" onSubmit={this.handleSubmit}>
           <Form.Control type="text" placeholder="Enter match id" value={this.state.matchId} onChange={this.handleChange} />
         </form>

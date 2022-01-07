@@ -1,0 +1,14 @@
+.header {
+  text-align: left;
+  padding-left: 10px;
+  height: 10%;
+}
+
+.title {
+  font-size: 36px;
+  font-family: 'JetBrains Mono';
+}
+
+.description {
+  font-size: 12px;
+}

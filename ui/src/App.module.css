@@ -1,4 +1,4 @@
-.App {
+.app {
   text-align: center;
   background-color: #000000;
   font-size: 20px;
@@ -10,7 +10,7 @@
   font-family: 'JetBrains Mono Light'
 }
 
-.MatchInput {
+.input {
   width: 20%;
   margin-left: auto;
   margin-right: auto;

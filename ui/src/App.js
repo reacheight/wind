@@ -1,10 +1,10 @@
 import React from 'react';
 
 import Analysis from './Analysis/Analysis'
+import Header from './Header/Header';
 import Form from 'react-bootstrap/Form';
 
-import './App.css';
-import Header from './Header/Header';
+import styles from './App.module.css'
 
 class App extends React.Component {
   constructor(props) {
@@ -42,15 +42,13 @@ class App extends React.Component {
   }
 
   render() {
-    const analysis = this.state.analysis
-
     return (
-      <div className="App">
+      <div className={styles.app}>
         <Header />
-        <form className="MatchInput" onSubmit={this.handleSubmit}>
+        <form className={styles.input} onSubmit={this.handleSubmit}>
           <Form.Control type="text" placeholder="Enter match id" value={this.state.matchId} onChange={this.handleChange} />
         </form>
-        <Analysis analysis={analysis} />
+        <Analysis analysis={this.state.analysis} />
         {this.state.error &&
           <div> Error occured :( </div>
         }

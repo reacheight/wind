@@ -3,6 +3,7 @@ import React from 'react';
 import Analysis from './Analysis/Analysis'
 import Header from './Header/Header';
 import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
 
 import styles from './App.module.css'
 
@@ -12,6 +13,7 @@ class App extends React.Component {
     this.state = {
       matchId: '',
       analysis: {},
+      loading: false,
       error: false
     };
 
@@ -24,7 +26,7 @@ class App extends React.Component {
   }
 
   handleSubmit(event) {
-    this.setState({ error: false })
+    this.setState({ analysis: {}, loading: true, error: false })
     fetch(`http://localhost:8080/analysis/${this.state.matchId}`)
       .then(response => {
         if (!response.ok) {
@@ -33,10 +35,10 @@ class App extends React.Component {
         return response.json()
       })
       .then(json => {
-        this.setState({ analysis: json })
+        this.setState({ loading: false, analysis: json })
       })
       .catch(e => {
-        this.setState({ error: true })
+        this.setState({ loading: false, error: true })
       })
     event.preventDefault()
   }
@@ -48,6 +50,11 @@ class App extends React.Component {
         <form className={styles.input} onSubmit={this.handleSubmit}>
           <Form.Control type="text" placeholder="Enter match id" value={this.state.matchId} onChange={this.handleChange} />
         </form>
+        {this.state.loading &&
+          <div className={styles.spinner}>
+            <Spinner variant="light" animation="border" role="status"></Spinner>
+          </div>
+        }
         <Analysis analysis={this.state.analysis} />
         {this.state.error &&
           <div> Error occured :( </div>

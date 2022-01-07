@@ -12,6 +12,10 @@ export default class Observers extends React.Component {
         </li>
       )
     
+    if (obsInfo.length === 0) {
+      return <></>
+    }
+    
     return (
       <>
         <h5 className={styles.analysisTitle}><span className={styles.observer}>Observers</span> placed on enemy vision 👀</h5>

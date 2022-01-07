@@ -1,6 +1,7 @@
 import React from 'react';
 import Couriers from '../Couriers/Couriers';
 import Observers from '../Observers/Observers';
+import Smokes from '../Smokes/Smokes';
 import { formatHeroName } from '../util';
 
 import styles from './Analysis.module.css'
@@ -23,6 +24,9 @@ export default class Analysis extends React.Component {
           </li>
           <li>
             <Observers heroes={heroes} observers={analysis.obs_placed_on_vision} />
+          </li>
+          <li>
+            <Smokes heroes={heroes} smokes={analysis.smokes_used_on_vision} />
           </li>
         </ul>
       </div>

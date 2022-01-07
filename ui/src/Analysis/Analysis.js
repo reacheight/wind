@@ -2,7 +2,8 @@ import React from 'react';
 import Couriers from '../Couriers/Couriers';
 import Observers from '../Observers/Observers';
 import Smokes from '../Smokes/Smokes';
-import { formatHeroName } from '../util';
+import Summons from '../Summons/Summons';
+import { formatHeroName, isEmpty } from '../util';
 
 import styles from './Analysis.module.css'
 
@@ -19,15 +20,22 @@ export default class Analysis extends React.Component {
     return (
       <div className={styles.analysis}>
         <ul className={styles.list}>
+          {!isEmpty(analysis.couriers) &&
           <li>
             <Couriers heroes={heroes} couriers={analysis.couriers} />
-          </li>
+          </li>}
+          {!isEmpty(analysis.obs_placed_on_vision) &&
           <li>
             <Observers heroes={heroes} observers={analysis.obs_placed_on_vision} />
-          </li>
+          </li>}
+          {!isEmpty(analysis.smokes_used_on_vision) &&
           <li>
             <Smokes heroes={heroes} smokes={analysis.smokes_used_on_vision} />
-          </li>
+          </li>}
+          {!isEmpty(analysis.summon_gold) &&
+          <li>
+            <Summons heroes={heroes} summons={analysis.summon_gold} />
+          </li>}
         </ul>
       </div>
     )

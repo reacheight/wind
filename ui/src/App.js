@@ -57,7 +57,7 @@ class App extends React.Component {
         }
         <Analysis analysis={this.state.analysis} />
         {this.state.error &&
-          <div> Error occured :( </div>
+          <div className={styles.error}> Error occured :( </div>
         }
       </div>
     );

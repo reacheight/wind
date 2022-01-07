@@ -16,10 +16,28 @@ export default class Analysis extends React.Component {
         <span className={styles.heroName}>{formatHeroName(analysis.heroes[id])}</span>'s courier is {analysis.couriers[id] ? <span className={styles.green}>out of</span> : <span className={styles.red}>in</span>} fountain
       </li>
     )
+
+    const observersOnVision = analysis.obs_placed_on_vision
+    const obsInfo = Object.keys(observersOnVision).map((id) =>
+      observersOnVision[id].map((time) => [id, time])
+    ).flat().map((pair) =>
+      <li key={pair[1]}>
+        <span className={styles.heroName}>{formatHeroName(analysis.heroes[pair[0]])}</span> at {pair[1]}
+      </li>
+    )
     
     return (
       <div className={styles.analysis}>
-        <ul>{courierInfo}</ul>
+        <ul className={styles.list}>
+          <li>
+            <h5 className={styles.analysisTitle}>Couriers 🐔</h5>
+            <ul>{courierInfo}</ul>
+          </li>
+          <li>
+            <h5 className={styles.analysisTitle}>Observers placed on enemy vision 👀</h5>
+            <ul>{obsInfo}</ul>
+          </li>
+        </ul>
       </div>
     )
   }

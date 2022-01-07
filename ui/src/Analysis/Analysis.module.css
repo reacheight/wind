@@ -13,3 +13,15 @@
 .heroName {
   text-shadow: 0 0 5px #ffffff;
 }
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, calc(50% - 15px));
+  grid-gap: 35px 30px;
+  align-items: start;
+  padding: 0;
+}
+
+.analysisTitle {
+  text-align: center;
+}

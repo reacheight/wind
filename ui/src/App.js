@@ -1,12 +1,13 @@
 import React from 'react';
 
+import Analysis from './Analysis/Analysis'
 import Form from 'react-bootstrap/Form';
 
 import './App.css';
 
 class App extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       matchId: '',
       analysis: {},
@@ -40,41 +41,14 @@ class App extends React.Component {
   }
 
   render() {
-    const green = {
-      color: "green"
-    }
-
-    const red = {
-      color: "red"
-    }
-
     const analysis = this.state.analysis
-    const analysisLoaded = analysis && Object.keys(analysis).length !== 0
-    let courierInfo
-    if (analysisLoaded) {
-      courierInfo = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) =>
-        <li key={id.toString}>
-          {analysis.heroes[id]}'s courier is {analysis.couriers[id] ? <span style={green}>out of</span> : <span style={red}>in</span>} fountain
-        </li>
-      )
-    }
-
-    const paddingTop = {
-      paddingTop: 20
-    }
-
-
 
     return (
       <div className="App">
         <form className="MatchInput" onSubmit={this.handleSubmit}>
           <Form.Control type="text" placeholder="Enter match id" value={this.state.matchId} onChange={this.handleChange} />
         </form>
-        <div style={paddingTop}>
-          {analysisLoaded &&
-            <ul>{courierInfo}</ul>
-          }
-        </div>
+        <Analysis analysis={analysis} />
         {this.state.error &&
           <div> Error occured :( </div>
         }

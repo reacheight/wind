@@ -3,7 +3,7 @@
   font-size: 17px;
   color: white;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   font-family: 'JetBrains Mono Light'

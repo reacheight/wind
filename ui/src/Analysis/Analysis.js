@@ -13,7 +13,7 @@ export default class Analysis extends React.Component {
 
     const courierInfo = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) =>
       <li key={id.toString}>
-        {formatHeroName(analysis.heroes[id])}'s courier is {analysis.couriers[id] ? <span className={styles.green}>out of</span> : <span className={styles.red}>in</span>} fountain
+        <span className={styles.heroName}>{formatHeroName(analysis.heroes[id])}</span>'s courier is {analysis.couriers[id] ? <span className={styles.green}>out of</span> : <span className={styles.red}>in</span>} fountain
       </li>
     )
     

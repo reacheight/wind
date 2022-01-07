@@ -14,7 +14,7 @@ export default class Observers extends React.Component {
     
     return (
       <>
-        <h5 className={styles.analysisTitle}>Observers placed on enemy vision 👀</h5>
+        <h5 className={styles.analysisTitle}><span className={styles.observer}>Observers</span> placed on enemy vision 👀</h5>
         <ul>{obsInfo}</ul>
       </>
     )

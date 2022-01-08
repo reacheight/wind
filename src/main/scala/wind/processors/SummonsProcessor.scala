@@ -1,41 +1,50 @@
 package wind
 package processors
 
-import skadistats.clarity.model.{Entity, FieldPath}
-import skadistats.clarity.processor.entities.{OnEntityCreated, OnEntityPropertyChanged}
+import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
+import skadistats.clarity.processor.entities.{Entities, OnEntityCreated, OnEntityPropertyChanged}
+import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
+
+import scala.collection.mutable
 
 class SummonsProcessor {
   var summonFeedGold: Map[Int, Int] = Map()
-  private var summons = Set[Int]()
+  private val gold = mutable.Map.empty[Float, (Int, Int)]
+  private val deaths = mutable.Map.empty[Float, (String, Int)]
 
-  @OnEntityCreated()
-  def onSummonCreated(ctx: Context, summon: Entity): Unit = {
-    val isSummoned = summon.hasProperty("m_bIsSummoned") && summon.getProperty[Boolean]("m_bIsSummoned")
-    if (!isSummoned) return
+  @OnCombatLogEntry
+  def onCombatLog(ctx: Context, cle: CombatLogEntry): Unit = {
+    if (isSummonKilled(cle))
+      deaths.addOne(cle.getTimestamp, (cle.getTargetSourceName, cle.getAttackerNameIdx))
 
-    val playerId = summon.getProperty[Int]("m_nPlayerOwnerID")
-    if (playerId < 0) return
-
-    summons += summon.getHandle
+    if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_GOLD)
+      gold.addOne(cle.getTimestamp, (cle.getTargetNameIdx, cle.getValue))
   }
 
-  @OnEntityPropertyChanged(propertyPattern = "m_lifeState")
-  def onSummonLifeStateChanged(ctx: Context, summon: Entity,  fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
-    if (!summons.contains(summon.getHandle)) return
+  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
+  def onGameEnded(ctx: Context, gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+    val gameState = gameRules.getPropertyForFieldPath[Int](fp)
+    if (gameState != 6) return
 
-    val lifeState = summon.getProperty[Int]("m_lifeState")
-    if (lifeState != 2) return
+    val heroes = ctx.getProcessor(classOf[HeroProcessor])
 
-    val playerId = summon.getProperty[Int]("m_nPlayerOwnerID")
-    val gold = summon.getProperty[Int]("m_iGoldBountyMin")
-
-    // todo: check if unit was actually killed
-    if (summonFeedGold.contains(playerId))
-      summonFeedGold += playerId -> (summonFeedGold(playerId) + gold)
-    else
-      summonFeedGold += playerId -> gold
-
-    summons -= summon.getHandle
+    deaths.foreach { case (deathTime, (target, attacker)) =>
+      gold
+        .find { case (goldTime, (receiver, _)) => deathTime == goldTime && attacker == receiver }
+        .foreach { case (_, (_, gold)) =>
+          val playerId = heroes.combatLogNameToPlayerId(target)
+          summonFeedGold += playerId -> (summonFeedGold.getOrElse(playerId, 0) + gold)
+        }
+    }
   }
+
+  private def isSummonKilled(cle: CombatLogEntry): Boolean =
+    cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DEATH &&
+      isHeroName(cle.getTargetSourceName) && isHeroName(cle.getAttackerName) &&
+      cle.getTargetSourceNameIdx != cle.getAttackerNameIdx && cle.getTargetSourceNameIdx != cle.getTargetNameIdx &&
+      !cle.getTargetName.contains("sentry_wards") && !cle.getTargetName.contains("courier")
+
+  private def isHeroName(name: String): Boolean = name.startsWith("npc_dota_hero")
 }

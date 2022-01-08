@@ -1,7 +1,9 @@
 import React from 'react';
 import Couriers from '../Couriers/Couriers';
 import Observers from '../Observers/Observers';
+import ObserversMaxStock from '../ObserversMaxStock/ObserversMaxStock';
 import Smokes from '../Smokes/Smokes';
+import SmokesMaxStock from '../SmokesMaxStock/SmokesMaxStock';
 import Summons from '../Summons/Summons';
 import { formatHeroName, isEmpty } from '../util';
 
@@ -20,6 +22,14 @@ export default class Analysis extends React.Component {
     return (
       <div className={styles.analysis}>
         <ul className={styles.list}>
+          {!isEmpty(analysis.obs_max_count_time) &&
+          <li>
+            <ObserversMaxStock observersMaxStock={analysis.obs_max_count_time} />
+          </li>}
+          {!isEmpty(analysis.smoke_max_count_time) &&
+          <li>
+            <SmokesMaxStock smokesMaxStock={analysis.smoke_max_count_time} />
+          </li>}
           {!isEmpty(analysis.couriers) &&
           <li>
             <Couriers heroes={heroes} couriers={analysis.couriers} />

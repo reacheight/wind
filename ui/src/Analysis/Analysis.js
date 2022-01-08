@@ -2,6 +2,7 @@ import React from 'react';
 import Couriers from '../Couriers/Couriers';
 import Observers from '../Observers/Observers';
 import ObserversMaxStock from '../ObserversMaxStock/ObserversMaxStock';
+import PowerTreads from '../PowerThreads/PowerTreads';
 import Smokes from '../Smokes/Smokes';
 import SmokesMaxStock from '../SmokesMaxStock/SmokesMaxStock';
 import Summons from '../Summons/Summons';
@@ -33,6 +34,10 @@ export default class Analysis extends React.Component {
           {!isEmpty(analysis.couriers) &&
           <li>
             <Couriers heroes={heroes} couriers={analysis.couriers} />
+          </li>}
+          {!isEmpty(analysis.ability_pt) &&
+          <li>
+            <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.ability_pt} />
           </li>}
           {!isEmpty(analysis.obs_placed_on_vision) &&
           <li>

@@ -23,6 +23,22 @@ export default class Analysis extends React.Component {
     return (
       <div className={styles.analysis}>
         <ul className={styles.list}>
+          {!isEmpty(analysis.obs_placed_on_vision) &&
+          <li>
+            <Observers heroes={heroes} observers={analysis.obs_placed_on_vision} />
+          </li>}
+          {!isEmpty(analysis.smokes_used_on_vision) &&
+          <li>
+            <Smokes heroes={heroes} smokes={analysis.smokes_used_on_vision} />
+          </li>}
+          {!isEmpty(analysis.ability_pt) &&
+          <li>
+            <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.ability_pt} />
+          </li>}
+          {!isEmpty(analysis.summon_gold) &&
+          <li>
+            <Summons heroes={heroes} summons={analysis.summon_gold} />
+          </li>}
           {!isEmpty(analysis.obs_max_count_time) &&
           <li>
             <ObserversMaxStock observersMaxStock={analysis.obs_max_count_time} />
@@ -34,22 +50,6 @@ export default class Analysis extends React.Component {
           {!isEmpty(analysis.couriers) &&
           <li>
             <Couriers heroes={heroes} couriers={analysis.couriers} />
-          </li>}
-          {!isEmpty(analysis.ability_pt) &&
-          <li>
-            <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.ability_pt} />
-          </li>}
-          {!isEmpty(analysis.obs_placed_on_vision) &&
-          <li>
-            <Observers heroes={heroes} observers={analysis.obs_placed_on_vision} />
-          </li>}
-          {!isEmpty(analysis.smokes_used_on_vision) &&
-          <li>
-            <Smokes heroes={heroes} smokes={analysis.smokes_used_on_vision} />
-          </li>}
-          {!isEmpty(analysis.summon_gold) &&
-          <li>
-            <Summons heroes={heroes} summons={analysis.summon_gold} />
           </li>}
         </ul>
       </div>

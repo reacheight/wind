@@ -40,14 +40,6 @@ export default class Analysis extends React.Component {
           <li>
             <Summons heroes={heroes} summons={analysis.summon_gold} />
           </li>}
-          {!isEmpty(analysis.obs_max_count_time) &&
-          <li>
-            <ObserversMaxStock observersMaxStock={analysis.obs_max_count_time} />
-          </li>}
-          {!isEmpty(analysis.smoke_max_count_time) &&
-          <li>
-            <SmokesMaxStock smokesMaxStock={analysis.smoke_max_count_time} />
-          </li>}
           {!isEmpty(analysis.deathsWithBKB) &&
           <li>
             <UnusedItems heroes={heroes} deathsWithBKB={analysis.deathsWithBKB} />
@@ -55,6 +47,14 @@ export default class Analysis extends React.Component {
           {!isEmpty(analysis.couriers) &&
           <li>
             <Couriers heroes={heroes} couriers={analysis.couriers} />
+          </li>}
+          {!isEmpty(analysis.obs_max_count_time) &&
+          <li>
+            <ObserversMaxStock observersMaxStock={analysis.obs_max_count_time} />
+          </li>}
+          {!isEmpty(analysis.smoke_max_count_time) &&
+          <li>
+            <SmokesMaxStock smokesMaxStock={analysis.smoke_max_count_time} />
           </li>}
         </ul>
       </div>

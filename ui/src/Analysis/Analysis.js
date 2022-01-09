@@ -6,6 +6,7 @@ import PowerTreads from '../PowerThreads/PowerTreads';
 import Smokes from '../Smokes/Smokes';
 import SmokesMaxStock from '../SmokesMaxStock/SmokesMaxStock';
 import Summons from '../Summons/Summons';
+import UnusedItems from '../UnusedItems/UnusedItems';
 import { formatHeroName, isEmpty } from '../util';
 
 import styles from './Analysis.module.css'
@@ -46,6 +47,10 @@ export default class Analysis extends React.Component {
           {!isEmpty(analysis.smoke_max_count_time) &&
           <li>
             <SmokesMaxStock smokesMaxStock={analysis.smoke_max_count_time} />
+          </li>}
+          {!isEmpty(analysis.deathsWithBKB) &&
+          <li>
+            <UnusedItems heroes={heroes} deathsWithBKB={analysis.deathsWithBKB} />
           </li>}
           {!isEmpty(analysis.couriers) &&
           <li>

@@ -7,8 +7,8 @@ import java.time.{Duration, Period}
 import scala.collection.mutable.ArrayBuffer
 
 object Util {
+  val NullValue = 16777215
   private val TIME_EPS: Float = 0.001f
-  private val nullValue = 16777215
   private val replicatingPropertyName = "m_hReplicatingOtherHeroModel"
   private val glyphCooldownPropertyName: Map[Team, String] =
     Map(Radiant -> "m_pGameRules.m_fGoodGlyphCooldown", Dire -> "m_pGameRules.m_fBadGlyphCooldown")
@@ -43,7 +43,7 @@ object Util {
   def isHero(entity: Entity): Boolean =
     entity.getDtClass.getDtName.startsWith("CDOTA_Unit_Hero") &&
       entity.hasProperty(replicatingPropertyName) &&
-      entity.getProperty[Int](replicatingPropertyName) == nullValue
+      entity.getProperty[Int](replicatingPropertyName) == NullValue
 
   def isVisibleByEnemies(entity: Entity): Boolean = entity.getProperty[Int]("m_iTaggedAsVisibleByTeam") > 10
 

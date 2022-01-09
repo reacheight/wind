@@ -118,6 +118,11 @@ object Main {
     result.obsPlacedOnVision.foreach { case (id, times) =>
       println(s"${result.heroName(id)}: ${times.map(_.toString).mkString(", ")}")
     }
+
+    if (result.deathsWithBKB.nonEmpty) println("\nBKB not used before death:")
+    result.deathsWithBKB.foreach { case (time, id) =>
+      println(s"${result.heroName(id)}: ${time.toString}")
+    }
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

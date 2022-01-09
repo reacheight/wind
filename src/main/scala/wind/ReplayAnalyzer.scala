@@ -22,12 +22,13 @@ object ReplayAnalyzer {
     val itemStockProcessor = new ItemStockProcessor
     val glyphProcessor = new GlyphProcessor
     val visionProcessor = new VisionProcessor
+    val itemUsageProcessor = new ItemUsageProcessor
 
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
-        itemStockProcessor, glyphProcessor, visionProcessor)
+        itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor)
     }
 
     AnalysisResult(
@@ -42,7 +43,8 @@ object ReplayAnalyzer {
       glyphProcessor.glyphNotUsedOnT1,
       visionProcessor.smokeUsedOnVision.map { case (id, times) => PlayerId(id)  -> times },
       visionProcessor.observerPlacedOnVision.map { case (id, times) => PlayerId(id)  -> times },
-      heroProcessor.heroName.map { case(id, name) => PlayerId(id) -> name }
+      heroProcessor.heroName.map { case(id, name) => PlayerId(id) -> name },
+      itemUsageProcessor.deathsWithBKB
     )
   }
 }
@@ -59,5 +61,6 @@ case class AnalysisResult(
   glyphNotUsedOnT1: Map[Team, Int],
   smokesUsedOnVision: Map[PlayerId, List[GameTimeState]],
   obsPlacedOnVision: Map[PlayerId, List[GameTimeState]],
-  heroName: Map[PlayerId, String]
+  heroName: Map[PlayerId, String],
+  deathsWithBKB: Seq[(GameTimeState, PlayerId)]
 )

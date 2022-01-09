@@ -44,7 +44,8 @@ object ReplayAnalyzer {
       visionProcessor.smokeUsedOnVision.map { case (id, times) => PlayerId(id)  -> times },
       visionProcessor.observerPlacedOnVision.map { case (id, times) => PlayerId(id)  -> times },
       heroProcessor.heroName.map { case(id, name) => PlayerId(id) -> name },
-      itemUsageProcessor.deathsWithBKB
+      itemUsageProcessor.deathsWithBKB,
+      itemUsageProcessor.deathsWithEssenceRing
     )
   }
 }
@@ -62,5 +63,6 @@ case class AnalysisResult(
   smokesUsedOnVision: Map[PlayerId, List[GameTimeState]],
   obsPlacedOnVision: Map[PlayerId, List[GameTimeState]],
   heroName: Map[PlayerId, String],
-  deathsWithBKB: Seq[(GameTimeState, PlayerId)]
+  deathsWithBKB: Seq[(GameTimeState, PlayerId)],
+  deathsWithEssenceRing: Seq[(GameTimeState, PlayerId)]
 )

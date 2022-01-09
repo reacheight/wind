@@ -123,6 +123,11 @@ object Main {
     result.deathsWithBKB.foreach { case (time, id) =>
       println(s"${result.heroName(id)}: ${time.toString}")
     }
+
+    if (result.deathsWithEssenceRing.nonEmpty) println("\nEssence Ring not used before death:")
+    result.deathsWithEssenceRing.foreach { case (time, id) =>
+      println(s"${result.heroName(id)}: ${time.toString}")
+    }
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

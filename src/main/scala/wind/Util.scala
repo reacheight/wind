@@ -64,6 +64,19 @@ object Util {
     iterator.forEachRemaining(i => { result += i })
     result.toList
   }
+
+  def getPlayersExpAndNetworth(data: Entity): Map[Int, (Int, Int)] = {
+    val isRadiant = data.getDtClass.getDtName == "CDOTA_DataRadiant"
+
+    (0 to 4).map(playerNumber => {
+      val playerId = if (isRadiant) playerNumber else playerNumber + 5
+      val propertyPrefix = s"m_vecDataTeam.000$playerNumber."
+      val exp = data.getProperty[Int](propertyPrefix + "m_iTotalEarnedXP")
+      val networth = data.getProperty[Int](propertyPrefix + "m_iNetWorth")
+
+      playerId -> (exp, networth)
+    }).toMap
+  }
 }
 
 class GameTimeState(val preGameStarted: Boolean, val gameStarted: Boolean, val gameTime: Float) {

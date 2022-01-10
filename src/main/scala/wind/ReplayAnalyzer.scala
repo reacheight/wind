@@ -4,6 +4,7 @@ import skadistats.clarity.Clarity
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
 import wind.models.Lane.Lane
+import wind.models.Role.Role
 import wind.models.Team.Team
 import wind.models._
 import wind.processors._
@@ -23,17 +24,19 @@ object ReplayAnalyzer {
     val glyphProcessor = new GlyphProcessor
     val visionProcessor = new VisionProcessor
     val itemUsageProcessor = new ItemUsageProcessor
+    val rolesProcessor = new RolesProcessor
 
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
-        itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor)
+        itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor)
     }
 
     AnalysisResult(
       courierProcessor.courierIsOut.map { case (id, isOut) => PlayerId(id) -> isOut },
       laneProcessor.playerLane.map { case (id, lane) => PlayerId(id) -> lane },
+      rolesProcessor.roles,
       laneProcessor.laneWinner,
       powerTreadsProcessor.abilityUsageCount.map { case (id, total) => PlayerId(id) -> (total, powerTreadsProcessor.ptOnIntAbilityUsageCount(id)) },
       powerTreadsProcessor.resourceItemUsages.map { case (id, total) => PlayerId(id) -> (total, powerTreadsProcessor.ptOnAgilityResourceItemUsages(id)) },
@@ -54,6 +57,7 @@ object ReplayAnalyzer {
 case class AnalysisResult(
   couriers: Map[PlayerId, Boolean],
   lanes: Map[PlayerId, (Lane, Lane)],
+  roles: Map[PlayerId, Role],
   laneOutcomes: Map[Lane, Option[Team]],
   abilityUsagesWithPT: Map[PlayerId, (Int, Int)],
   resourceItemsUsagesWithPT: Map[PlayerId, (Int, Int)],

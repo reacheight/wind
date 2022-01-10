@@ -26,6 +26,7 @@ object App extends cask.MainRoutes{
         val responseData = ujson.Obj(
           "couriers" -> result.couriers.map { case (id, isOut) => id.toString -> isOut },
           "lanes" -> result.lanes.map { case (id, (firstLane, secondLane)) => id.toString -> Seq(firstLane.id, secondLane.id) },
+          "roles" -> result.roles.map { case (id, role) => id.toString -> role.id },
           "outcome" -> result.laneOutcomes.map { case (lane, team) => lane.id.toString -> (if (team.isEmpty) 2 else team.get.id) },
           "ability_pt" -> result.abilityUsagesWithPT.map { case (id, (total, onInt)) => id.toString -> Seq(total, onInt) },
           "resource_pt" -> result.resourceItemsUsagesWithPT.map { case (id, (total, onAg)) => id.toString -> Seq(total, onAg) },

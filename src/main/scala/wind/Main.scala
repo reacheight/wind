@@ -78,6 +78,11 @@ object Main {
       println(s"${result.heroName(playerId)}: $firstStageLane -> $secondStageLane")
     }
 
+    println("\nHeroes' roles:")
+    result.roles foreach { case (playerId, role) =>
+      println(s"${result.heroName(playerId)}: $role")
+    }
+
     if (result.abilityUsagesWithPT.nonEmpty) println("\nChanging Power Treads' main attribute to Int before ability usage:")
     result.abilityUsagesWithPT foreach { case (playerId, (total, onInt)) =>
       println(s"${result.heroName(playerId)} power treads ability usage: total $total, on Int: $onInt")

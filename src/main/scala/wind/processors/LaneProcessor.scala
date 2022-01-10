@@ -60,7 +60,7 @@ class LaneProcessor {
 
     val radiantData = entities.getByDtName("CDOTA_DataRadiant")
     val direData = entities.getByDtName("CDOTA_DataDire")
-    (getPlayersExpAndNetworth(radiantData) ++ getPlayersExpAndNetworth(direData)) foreach {case (playerId, (exp, networth)) =>
+    (Util.getPlayersExpAndNetworth(radiantData) ++ Util.getPlayersExpAndNetworth(direData)) foreach {case (playerId, (exp, networth)) =>
       laneExp += (playerId -> exp)
       laneNetworth += (playerId -> networth)
     }
@@ -83,19 +83,6 @@ class LaneProcessor {
       case score if score < -1000 => Some(Dire)
       case _ => None
     }
-  }
-
-  private def getPlayersExpAndNetworth(data: Entity): Map[Int, (Int, Int)] = {
-    val isRadiant = data.getDtClass.getDtName == "CDOTA_DataRadiant"
-
-    (0 to 4).map(playerNumber => {
-      val playerId = if (isRadiant) playerNumber else playerNumber + 5
-      val propertyPrefix = s"m_vecDataTeam.000$playerNumber."
-      val exp = data.getProperty[Int](propertyPrefix + "m_iTotalEarnedXP")
-      val networth = data.getProperty[Int](propertyPrefix + "m_iNetWorth")
-
-      playerId -> (exp, networth)
-    }).toMap
   }
 
   private def getLane(x: Float, y: Float): Lane = (x, y) match {

@@ -40,9 +40,9 @@ export default class Analysis extends React.Component {
           <li>
             <Summons heroes={heroes} summons={analysis.summon_gold} />
           </li>}
-          {(!isEmpty(analysis.deathsWithBKB) || !isEmpty(analysis.deathsWithEssenceRing)) &&
+          {(!isEmpty(analysis.deathsWithBKB) || !isEmpty(analysis.deathsWithEssenceRing) || !isEmpty(analysis.deathsWithMekansm)) &&
           <li>
-            <UnusedItems heroes={heroes} deathsWithBKB={analysis.deathsWithBKB} deathsWithEssenceRing={analysis.deathsWithEssenceRing} />
+            <UnusedItems heroes={heroes} deathsWithBKB={analysis.deathsWithBKB} deathsWithEssenceRing={analysis.deathsWithEssenceRing} deathsWithMekansm={analysis.deathsWithMekansm} />
           </li>}
           {!isEmpty(analysis.couriers) &&
           <li>

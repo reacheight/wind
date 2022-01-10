@@ -128,6 +128,11 @@ object Main {
     result.deathsWithEssenceRing.foreach { case (time, id) =>
       println(s"${result.heroName(id)}: ${time.toString}")
     }
+
+    if (result.deathsWithMekansm.nonEmpty) println("\nMekansm not used before death:")
+    result.deathsWithMekansm.foreach { case (time, id) =>
+      println(s"${result.heroName(id)}: ${time.toString}")
+    }
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

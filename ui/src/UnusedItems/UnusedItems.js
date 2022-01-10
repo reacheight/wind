@@ -18,8 +18,16 @@ export default class UnusedItems extends React.Component {
       </li>]
     )
 
+    const mekansmInfo = this.props.deathsWithMekansm.map((entry) =>
+      [entry[0],
+      <li key={"unusedMekanms" + entry[0]}>
+        <span className={styles.heroName}>{this.props.heroes[entry[1]]}</span> <span className={styles.gray}>died</span> without using <span className={styles.mekansm}>Mekansm</span> at {entry[0]}
+      </li>]
+    )
+
     const unusedItems = bkbInfo
       .concat(essenceRingInfo)
+      .concat(mekansmInfo)
       .sort((first, second) => compareTime(first[0], second[0]))
       .map(pair => pair[1])
 

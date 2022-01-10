@@ -25,9 +25,17 @@ export default class UnusedItems extends React.Component {
       </li>]
     )
 
+    const greavesInfo = this.props.deathsWithGreaves.map((entry) =>
+      [entry[0],
+      <li key={"unusedGreaves" + entry[0]}>
+        <span className={styles.heroName}>{this.props.heroes[entry[1]]}</span> <span className={styles.gray}>died</span> without using <span className={styles.essenceRing}>Guardian Greaves</span> at {entry[0]}
+      </li>]
+    )
+
     const unusedItems = bkbInfo
       .concat(essenceRingInfo)
       .concat(mekansmInfo)
+      .concat(greavesInfo)
       .sort((first, second) => compareTime(first[0], second[0]))
       .map(pair => pair[1])
 

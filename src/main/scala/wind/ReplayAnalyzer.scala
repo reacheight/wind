@@ -49,7 +49,8 @@ object ReplayAnalyzer {
       heroProcessor.heroName.map { case(id, name) => PlayerId(id) -> name },
       itemUsageProcessor.deathsWithBKB,
       itemUsageProcessor.deathsWithEssenceRing,
-      itemUsageProcessor.deathsWithMekansm
+      itemUsageProcessor.deathsWithMekansm,
+      itemUsageProcessor.deathsWithGreaves,
     )
   }
 }
@@ -70,5 +71,6 @@ case class AnalysisResult(
   heroName: Map[PlayerId, String],
   deathsWithBKB: Seq[(GameTimeState, PlayerId)],
   deathsWithEssenceRing: Seq[(GameTimeState, PlayerId)],
-  deathsWithMekansm: Seq[(GameTimeState, PlayerId)]
+  deathsWithMekansm: Seq[(GameTimeState, PlayerId)],
+  deathsWithGreaves: Seq[(GameTimeState, PlayerId)],
 )

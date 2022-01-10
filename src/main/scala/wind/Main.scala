@@ -138,6 +138,11 @@ object Main {
     result.deathsWithMekansm.foreach { case (time, id) =>
       println(s"${result.heroName(id)}: ${time.toString}")
     }
+
+    if (result.deathsWithMekansm.nonEmpty) println("\nGuardian Greaves not used before death:")
+    result.deathsWithGreaves.foreach { case (time, id) =>
+      println(s"${result.heroName(id)}: ${time.toString}")
+    }
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

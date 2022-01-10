@@ -16,6 +16,7 @@ class ItemUsageProcessor {
   def deathsWithBKB: Seq[(GameTimeState, PlayerId)] = _deathsWithBKB.toSeq
   def deathsWithEssenceRing: Seq[(GameTimeState, PlayerId)] = _deathsWithEssenceRing.toSeq
   def deathsWithMekansm: Seq[(GameTimeState, PlayerId)] = _deathsWithMekansm.toSeq
+  def deathsWithGreaves: Seq[(GameTimeState, PlayerId)] = _deathsWithGreaves.toSeq
 
   @Insert
   private val entities: Entities = null
@@ -27,6 +28,7 @@ class ItemUsageProcessor {
   private val _deathsWithBKB: ListBuffer[(GameTimeState, PlayerId)] = ListBuffer.empty
   private val _deathsWithEssenceRing: ListBuffer[(GameTimeState, PlayerId)] = ListBuffer.empty
   private val _deathsWithMekansm: ListBuffer[(GameTimeState, PlayerId)] = ListBuffer.empty
+  private val _deathsWithGreaves: ListBuffer[(GameTimeState, PlayerId)] = ListBuffer.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
@@ -39,6 +41,7 @@ class ItemUsageProcessor {
     findUnusedItem(hero, items, "item_black_king_bar").foreach(_ => _deathsWithBKB.addOne(time, playerId))
     findUnusedItem(hero, items, "CDOTA_Item_Essence_Ring").foreach(_ => _deathsWithEssenceRing.addOne(time, playerId))
     findUnusedItem(hero, items, "CDOTA_Item_Mekansm").foreach(_ => _deathsWithMekansm.addOne(time, playerId))
+    findUnusedItem(hero, items, "CDOTA_Item_Guardian_Greaves").foreach(_ => _deathsWithGreaves.addOne(time, playerId))
   }
 
   private def findUnusedItem(hero: Entity, items: Seq[Entity], name: String): Option[Entity] = {

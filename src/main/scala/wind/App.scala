@@ -37,11 +37,8 @@ object App extends cask.MainRoutes{
           "smokes_used_on_vision" -> result.smokesUsedOnVision.map { case (id, times) => id.toString -> times.map(_.toString) },
           "obs_placed_on_vision" -> result.obsPlacedOnVision.map{ case (id, times) => id.toString -> times.map(_.toString) },
           "heroes" -> result.heroName.map { case(id, name) => id.toString -> name },
-          "deathsWithBKB" -> result.deathsWithBKB.map { case (time, id) => Seq(time.toString, id.toString) },
-          "deathsWithEssenceRing" -> result.deathsWithEssenceRing.map { case (time, id) => Seq(time.toString, id.toString) },
-          "deathsWithMekansm" -> result.deathsWithMekansm.map { case (time, id) => Seq(time.toString, id.toString) },
-          "deathsWithGreaves" -> result.deathsWithGreaves.map { case (time, id) => Seq(time.toString, id.toString) },
           "unusedAbilities" -> result.unusedAbilities.map { case (time, id, name) => Seq(time.toString, id.toString, name) },
+          "unusedItems" -> result.unusedItems.map { case (time, id, name) => Seq(time.toString, id.toString, name) },
         )
 
         cask.Response(responseData, headers = Seq(("Access-Control-Allow-Origin", "*")))

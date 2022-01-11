@@ -124,28 +124,13 @@ object Main {
       println(s"${result.heroName(id)}: ${times.map(_.toString).mkString(", ")}")
     }
 
-    if (result.deathsWithBKB.nonEmpty) println("\nBKB not used before death:")
-    result.deathsWithBKB.foreach { case (time, id) =>
-      println(s"${result.heroName(id)}: ${time.toString}")
-    }
-
-    if (result.deathsWithEssenceRing.nonEmpty) println("\nEssence Ring not used before death:")
-    result.deathsWithEssenceRing.foreach { case (time, id) =>
-      println(s"${result.heroName(id)}: ${time.toString}")
-    }
-
-    if (result.deathsWithMekansm.nonEmpty) println("\nMekansm not used before death:")
-    result.deathsWithMekansm.foreach { case (time, id) =>
-      println(s"${result.heroName(id)}: ${time.toString}")
-    }
-
-    if (result.deathsWithMekansm.nonEmpty) println("\nGuardian Greaves not used before death:")
-    result.deathsWithGreaves.foreach { case (time, id) =>
-      println(s"${result.heroName(id)}: ${time.toString}")
-    }
-
     if (result.unusedAbilities.nonEmpty) println("\nAbilities not used before death:")
     result.unusedAbilities.foreach { case (time, id, name) =>
+      println(s"${time.toString} ${result.heroName(id)} didn't use $name")
+    }
+
+    if (result.unusedItems.nonEmpty) println("\nItems not used before death:")
+    result.unusedItems.foreach { case (time, id, name) =>
       println(s"${time.toString} ${result.heroName(id)} didn't use $name")
     }
   }

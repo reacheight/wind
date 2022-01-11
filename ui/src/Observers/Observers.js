@@ -1,5 +1,6 @@
 import React from "react";
 import styles from '../Analysis/Analysis.module.css'
+import '../items.css'
 import { compareTime } from "../util";
 
 export default class Observers extends React.Component {
@@ -20,7 +21,7 @@ export default class Observers extends React.Component {
     
     return (
       <>
-        <h5 className={styles.analysisTitle}><span className={styles.observer}>Observers</span> placed on enemy vision 👀</h5>
+        <h5 className={styles.analysisTitle}><span className="observer">Observers</span> placed on enemy vision 👀</h5>
         <ul>{obsInfo}</ul>
       </>
     )

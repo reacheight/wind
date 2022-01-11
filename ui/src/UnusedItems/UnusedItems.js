@@ -1,49 +1,21 @@
 import React from "react";
 import styles from "../Analysis/Analysis.module.css"
-import { compareTime } from "../util";
+import "../items.css"
+import { getItemClassName } from "../util";
 
 export default class UnusedItems extends React.Component {
   render() {
-    const bkbInfo = this.props.deathsWithBKB.map((entry) =>
-      [entry[0],
-      <li key={"unusedBkb" + entry[0]}>
-        <span className={styles.heroName}>{this.props.heroes[entry[1]]}</span> <span className={styles.gray}>died</span> without using <span className={styles.gold}>BKB</span> at {entry[0]}
-      </li>]
+    const unusedItemsInfo = this.props.unusedItems.map(entry =>
+      <li key={"unused" + entry[2] + entry[0]}>
+        <span className={styles.heroName}>{this.props.heroes[entry[1]]}</span> <span className={styles.gray}>died</span> without using <span className={getItemClassName(entry[2])}>{entry[2]}</span> at {entry[0]}
+      </li>
     )
-
-    const essenceRingInfo = this.props.deathsWithEssenceRing.map((entry) =>
-      [entry[0],
-      <li key={"unusedER" + entry[0]}>
-        <span className={styles.heroName}>{this.props.heroes[entry[1]]}</span> <span className={styles.gray}>died</span> without using <span className={styles.essenceRing}>Essence Ring</span> at {entry[0]}
-      </li>]
-    )
-
-    const mekansmInfo = this.props.deathsWithMekansm.map((entry) =>
-      [entry[0],
-      <li key={"unusedMekanms" + entry[0]}>
-        <span className={styles.heroName}>{this.props.heroes[entry[1]]}</span> <span className={styles.gray}>died</span> without using <span className={styles.mekansm}>Mekansm</span> at {entry[0]}
-      </li>]
-    )
-
-    const greavesInfo = this.props.deathsWithGreaves.map((entry) =>
-      [entry[0],
-      <li key={"unusedGreaves" + entry[0]}>
-        <span className={styles.heroName}>{this.props.heroes[entry[1]]}</span> <span className={styles.gray}>died</span> without using <span className={styles.essenceRing}>Guardian Greaves</span> at {entry[0]}
-      </li>]
-    )
-
-    const unusedItems = bkbInfo
-      .concat(essenceRingInfo)
-      .concat(mekansmInfo)
-      .concat(greavesInfo)
-      .sort((first, second) => compareTime(first[0], second[0]))
-      .map(pair => pair[1])
 
     return (
       <>
         <h5 className={styles.analysisTitle}>Unused items ⚰️</h5>
         <ul>
-          {unusedItems}
+          {unusedItemsInfo}
         </ul>
       </>
     )

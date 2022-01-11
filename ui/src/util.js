@@ -16,3 +16,7 @@ export function compareTime(first, second) {
 
   return firstTokens[0] - secondTokens[0]
 }
+
+export function getItemClassName(name) {
+  return name.toLowerCase().replace(" ", "-")
+}

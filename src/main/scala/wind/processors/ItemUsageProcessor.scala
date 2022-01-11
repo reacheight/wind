@@ -53,6 +53,7 @@ class ItemUsageProcessor {
       .map(i => hero.getProperty[Int](s"m_hItems.000$i"))
       .filter(_ != Util.NullValue)
       .map(entities.getByHandle)
+      .filter(_ != null)
   }
 
   private def findItem(items: Seq[Entity], name: String): Option[Entity] = {

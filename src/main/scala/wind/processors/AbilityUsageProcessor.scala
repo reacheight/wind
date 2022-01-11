@@ -46,6 +46,7 @@ class AbilityUsageProcessor {
       .map(i => hero.getProperty[Int](s"m_hAbilities.000$i"))
       .filter(_ != Util.NullValue)
       .map(entities.getByHandle)
+      .filter(_ != null)
   }
 
   private def findUnusedAbility(hero: Entity, abilities: Seq[Entity], name: String): Option[Entity] = {

@@ -10,7 +10,7 @@ export function compareTime(first, second) {
   let firstTokens = first.split(':').map((t) => parseInt(t))
   let secondTokens = second.split(':').map((t) => parseInt(t))
 
-  if (firstTokens[0] == secondTokens[0]) {
+  if (firstTokens[0] === secondTokens[0]) {
     return firstTokens[1] - secondTokens[1]
   }
 

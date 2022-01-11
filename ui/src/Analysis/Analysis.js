@@ -6,6 +6,7 @@ import PowerTreads from '../PowerThreads/PowerTreads';
 import Smokes from '../Smokes/Smokes';
 import SmokesMaxStock from '../SmokesMaxStock/SmokesMaxStock';
 import Summons from '../Summons/Summons';
+import UnusedAbilities from '../UnusedAbilities/UnusedAbilities';
 import UnusedItems from '../UnusedItems/UnusedItems';
 import { formatHeroName, isEmpty } from '../util';
 
@@ -43,6 +44,10 @@ export default class Analysis extends React.Component {
           {(!isEmpty(analysis.deathsWithBKB) || !isEmpty(analysis.deathsWithEssenceRing) || !isEmpty(analysis.deathsWithMekansm) || !isEmpty(analysis.deathsWithGreaves)) &&
           <li>
             <UnusedItems heroes={heroes} deathsWithBKB={analysis.deathsWithBKB} deathsWithEssenceRing={analysis.deathsWithEssenceRing} deathsWithMekansm={analysis.deathsWithMekansm} deathsWithGreaves={analysis.deathsWithGreaves} />
+          </li>}
+          {!isEmpty(analysis.unusedAbilities) &&
+          <li>
+            <UnusedAbilities heroes={heroes} unusedAbilities={analysis.unusedAbilities} />
           </li>}
           {!isEmpty(analysis.couriers) &&
           <li>

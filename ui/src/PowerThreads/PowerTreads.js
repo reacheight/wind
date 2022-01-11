@@ -18,7 +18,7 @@ export default class PowerTreads extends React.Component {
 
     return (
       <>
-        <h5 className={styles.analysisTitle}>Switching Power Treads</h5>
+        <h5 className={styles.analysisTitle}>Switching Power Treads ❤️💙💚</h5>
         <ul>{ptInfo}</ul>
         <ul>{notOnStrengthInfo}</ul>
       </>

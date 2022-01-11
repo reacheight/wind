@@ -133,6 +133,11 @@ object Main {
     result.unusedItems.foreach { case (time, id, name) =>
       println(s"${time.toString} ${result.heroName(id)} didn't use $name")
     }
+
+    if (result.ptNotOnStrength.nonEmpty) println("\nPower Treads not on strength:")
+    result.ptNotOnStrength.foreach { case (time, id) =>
+      println(s"$time ${result.heroName(id)} didn't switch PT to Strength before death")
+    }
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

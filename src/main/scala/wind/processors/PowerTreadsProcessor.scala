@@ -1,11 +1,14 @@
 package wind
 package processors
 
-import skadistats.clarity.model.{CombatLogEntry, Entity}
-import skadistats.clarity.processor.entities.{Entities, OnEntityCreated}
+import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
+import skadistats.clarity.processor.entities.{Entities, OnEntityCreated, OnEntityPropertyChanged}
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
+import wind.models.PlayerId
+
+import scala.collection.mutable.ListBuffer
 
 class PowerTreadsProcessor {
   private var combatLogHeroNameToPlayerId = Map[String, Int]()
@@ -18,6 +21,9 @@ class PowerTreadsProcessor {
 
   var resourceItemUsages: Map[Int, Int] = Map()
   var ptOnAgilityResourceItemUsages: Map[Int, Int] = Map()
+
+  def ptNotOnStrength: Seq[(GameTimeState, PlayerId)] = _ptNotOnStrength.toSeq
+  private val _ptNotOnStrength: ListBuffer[(GameTimeState, PlayerId)] = ListBuffer.empty
 
   @OnEntityCreated(classPattern = "CWorld")
   def init(ctx: Context, e: Entity): Unit = {
@@ -36,6 +42,29 @@ class PowerTreadsProcessor {
     ptOnIntAbilityUsageCount += (playerId -> 0)
     resourceItemUsages += (playerId -> 0)
     ptOnAgilityResourceItemUsages += (playerId -> 0)
+  }
+
+  @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
+  def onHeroDied(ctx: Context, hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+    if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+
+    val playerId = hero.getProperty[Int]("m_iPlayerID")
+    if (!powerTreadHandles.contains(playerId)) return
+
+    val entities = ctx.getProcessor(classOf[Entities])
+    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
+
+    val powerTreadsEntity = entities.getByHandle(powerTreadHandles(playerId))
+    if (powerTreadsEntity == null) {
+      powerTreadHandles -= playerId
+      return
+    }
+
+    val time = Util.getGameTimeState(gameRules)
+    val ptStat = powerTreadsEntity.getProperty[Int]("m_iStat")
+    if (ptStat != 0)
+      _ptNotOnStrength.addOne((time, PlayerId(playerId)))
   }
 
   @OnCombatLogEntry

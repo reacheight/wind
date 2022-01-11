@@ -30,6 +30,7 @@ object App extends cask.MainRoutes{
           "outcome" -> result.laneOutcomes.map { case (lane, team) => lane.id.toString -> (if (team.isEmpty) 2 else team.get.id) },
           "ability_pt" -> result.abilityUsagesWithPT.map { case (id, (total, onInt)) => id.toString -> Seq(total, onInt) },
           "resource_pt" -> result.resourceItemsUsagesWithPT.map { case (id, (total, onAg)) => id.toString -> Seq(total, onAg) },
+          "ptNotOnStrength" -> result.ptNotOnStrength.map { case (time, id) => Seq(time.toString, id.toString) },
           "summon_gold" -> result.goldFedWithSummons.map { case (id, gold) => id.toString -> gold },
           "smoke_max_count_time" -> result.maxStockSmokesDuration.map { case (team, time) => team.toString -> time },
           "obs_max_count_time" -> result.maxStockObsDuration.map { case (team, time) => team.toString -> time },

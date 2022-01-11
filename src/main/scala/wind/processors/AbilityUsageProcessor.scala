@@ -3,11 +3,14 @@ package wind.processors
 import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
+import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.processor.stringtables.{StringTables, UsesStringTable}
 import wind.{GameTimeState, Util}
 import wind.models.PlayerId
 
 import scala.collection.mutable.ListBuffer
 
+@UsesStringTable("EntityNames")
 class AbilityUsageProcessor {
   def unusedAbilities: Seq[(GameTimeState, PlayerId, String)] = _unusedAbilities.toSeq
 
@@ -15,6 +18,8 @@ class AbilityUsageProcessor {
 
   @Insert
   private val entities: Entities = null
+  @Insert
+  private val ctx: Context = null
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
@@ -35,6 +40,7 @@ class AbilityUsageProcessor {
     addUnusedAbility("CDOTA_Ability_Life_Stealer_Rage", "Rage")
     addUnusedAbility("CDOTA_Ability_Juggernaut_BladeFury", "Blade Fury")
     addUnusedAbility("CDOTA_Ability_DarkWillow_ShadowRealm", "Shadow Realm")
+    addUnusedAbility("templar_assassin_refraction", "Refraction")
 
     def addUnusedAbility(entityName: String, realName: String): Unit =
       findUnusedAbility(hero, abilities, entityName)
@@ -50,8 +56,10 @@ class AbilityUsageProcessor {
   }
 
   private def findUnusedAbility(hero: Entity, abilities: Seq[Entity], name: String): Option[Entity] = {
+    val stringTable = ctx.getProcessor(classOf[StringTables]).forName("EntityNames")
     abilities
-      .find(ability => ability.getDtClass.getDtName == name)
+      .find(ability => ability.getDtClass.getDtName == name ||
+        stringTable.getNameByIndex(ability.getProperty[Int]("m_pEntity.m_nameStringableIndex")) == name)
       .filter(ability => ability.getProperty[Int]("m_iLevel") > 0)
       .filter(ability => Util.hasEnoughMana(hero, ability))
       .filterNot(Util.isOnCooldown)

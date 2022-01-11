@@ -25,14 +25,16 @@ class AbilityUsageProcessor {
 
     val abilities = getAbilities(hero)
 
-    findUnusedAbility(hero, abilities, "CDOTA_Ability_Slark_ShadowDance")
-      .foreach(_ => _unusedAbilities.addOne((time, playerId, "Shadow Dance")))
-    findUnusedAbility(hero, abilities, "CDOTA_Ability_Dazzle_Shallow_Grave")
-      .foreach(_ => _unusedAbilities.addOne((time, playerId, "Shallow Grave")))
-    findUnusedAbility(hero, abilities, "CDOTA_Ability_Terrorblade_Sunder")
-      .foreach(_ => _unusedAbilities.addOne((time, playerId, "Sunder")))
-    findUnusedAbility(hero, abilities, "CDOTA_Ability_Life_Stealer_Rage")
-      .foreach(_ => _unusedAbilities.addOne((time, playerId, "Rage")))
+    addUnusedAbility("CDOTA_Ability_Slark_ShadowDance", "Shadow Dance")
+    addUnusedAbility("CDOTA_Ability_Dazzle_Shallow_Grave", "Shallow Grave")
+    addUnusedAbility("CDOTA_Ability_Terrorblade_Sunder", "Sunder")
+    addUnusedAbility("CDOTA_Ability_Life_Stealer_Rage", "Rage")
+    addUnusedAbility("CDOTA_Ability_Juggernaut_BladeFury", "Blade Fury")
+    addUnusedAbility("CDOTA_Ability_DarkWillow_ShadowRealm", "Shadow Realm")
+
+    def addUnusedAbility(entityName: String, realName: String): Unit =
+      findUnusedAbility(hero, abilities, entityName)
+        .foreach(_ => _unusedAbilities.addOne((time, playerId, realName)))
   }
 
   private def getAbilities(hero: Entity): Seq[Entity] = {

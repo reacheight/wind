@@ -32,14 +32,14 @@ class ItemUsageProcessor {
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
     val items = getItems(hero)
 
-    findUnusedItem(hero, items, "item_black_king_bar")
-      .foreach(_ => _unusedItems.addOne(time, playerId, "BKB"))
-    findUnusedItem(hero, items, "CDOTA_Item_Essence_Ring")
-      .foreach(_ => _unusedItems.addOne(time, playerId, "Essence Ring"))
-    findUnusedItem(hero, items, "CDOTA_Item_Mekansm")
-      .foreach(_ => _unusedItems.addOne(time, playerId, "Mekansm"))
-    findUnusedItem(hero, items, "CDOTA_Item_Guardian_Greaves")
-      .foreach(_ => _unusedItems.addOne(time, playerId, "Guardian Greaves"))
+    addUnusedItem("item_black_king_bar", "BKB")
+    addUnusedItem("CDOTA_Item_Essence_Ring", "Essence Ring")
+    addUnusedItem("CDOTA_Item_Mekansm", "Mekansm")
+    addUnusedItem("CDOTA_Item_Guardian_Greaves", "Guardian Greaves")
+
+    def addUnusedItem(entityName: String, realName: String): Unit =
+      findUnusedItem(hero, items, entityName)
+        .foreach(_ => _unusedItems.addOne((time, playerId, realName)))
   }
 
   private def findUnusedItem(hero: Entity, items: Seq[Entity], name: String): Option[Entity] = {

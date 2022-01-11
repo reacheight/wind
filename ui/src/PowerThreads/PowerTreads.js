@@ -10,10 +10,17 @@ export default class PowerTreads extends React.Component {
       </li>
     })
 
+    const notOnStrengthInfo = this.props.ptNotOnStrength.map(entry =>
+      <li key={"ptNotOnStrength" + entry[0]}>
+        <span className={styles.heroName}>{this.props.heroes[entry[1]]}</span> <span className={styles.gray}>died</span> with PT not on <span className={styles.red}>Strength</span> at {entry[0]}
+      </li>
+    )
+
     return (
       <>
         <h5 className={styles.analysisTitle}>Switching Power Treads</h5>
         <ul>{ptInfo}</ul>
+        <ul>{notOnStrengthInfo}</ul>
       </>
     )
   }

@@ -33,9 +33,9 @@ export default class Analysis extends React.Component {
           <li>
             <Smokes heroes={heroes} smokes={analysis.smokes_used_on_vision} />
           </li>}
-          {!isEmpty(analysis.ability_pt) &&
+          {(!isEmpty(analysis.ability_pt) || !isEmpty(analysis.ptNotOnStrength)) &&
           <li>
-            <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.ability_pt} />
+            <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.ability_pt} ptNotOnStrength={analysis.ptNotOnStrength} />
           </li>}
           {!isEmpty(analysis.summon_gold) &&
           <li>

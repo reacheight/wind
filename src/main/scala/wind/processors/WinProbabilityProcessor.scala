@@ -35,10 +35,11 @@ class WinProbabilityProcessor {
     val (radiantBarracks, direBarracks) = Util.toList(entities.getAllByDtName("CDOTA_BaseNPC_Barracks")).partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
     val barracks = Map(Radiant -> countBarracks(radiantBarracks), Dire -> countBarracks(direBarracks))
 
+    val time = gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")
     val heroProcessor = ctx.getProcessor(classOf[HeroProcessor])
     val radiantHeroes = (0 to 4).map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
     val direHeroes = (5 to 9).map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
-    val respawnTime = Map(Radiant -> getSpawnTimes(radiantHeroes, gameTimeState.gameTime), Dire -> getSpawnTimes(direHeroes, gameTimeState.gameTime))
+    val respawnTime = Map(Radiant -> getSpawnTimes(radiantHeroes, time), Dire -> getSpawnTimes(direHeroes, time))
 
     val buybackState = Map(
       Radiant -> getBuybackStates(radiantData, networth(Radiant), gameTimeState.gameTime),

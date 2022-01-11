@@ -77,6 +77,12 @@ object Util {
       playerId -> (exp, networth)
     }).toMap
   }
+
+  def isOnCooldown(item: Entity): Boolean =
+    item.getProperty[Float]("m_fCooldown") > 0.0001
+
+  def hasEnoughMana(hero: Entity, item: Entity): Boolean =
+    item.getProperty[Int]("m_iManaCost") <= hero.getProperty[Float]("m_flMana")
 }
 
 class GameTimeState(val preGameStarted: Boolean, val gameStarted: Boolean, val gameTime: Float) {

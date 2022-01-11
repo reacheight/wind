@@ -46,15 +46,9 @@ class ItemUsageProcessor {
 
   private def findUnusedItem(hero: Entity, items: Seq[Entity], name: String): Option[Entity] = {
     findItem(items, name)
-      .filter(item => hasEnoughMana(hero, item))
-      .filterNot(isOnCooldown)
+      .filter(item => Util.hasEnoughMana(hero, item))
+      .filterNot(Util.isOnCooldown)
   }
-
-  private def isOnCooldown(item: Entity): Boolean =
-    item.getProperty[Float]("m_fCooldown") > 0.0001
-
-  private def hasEnoughMana(hero: Entity, item: Entity): Boolean =
-    item.getProperty[Int]("m_iManaCost") <= hero.getProperty[Float]("m_flMana")
 
   private def getItems(hero: Entity): Seq[Entity] = {
     ((0 to 5) ++ Seq(16))

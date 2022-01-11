@@ -143,6 +143,11 @@ object Main {
     result.deathsWithGreaves.foreach { case (time, id) =>
       println(s"${result.heroName(id)}: ${time.toString}")
     }
+
+    if (result.unusedAbilities.nonEmpty) println("\nAbilities not used before death:")
+    result.unusedAbilities.foreach { case (time, id, name) =>
+      println(s"${time.toString} ${result.heroName(id)} didn't use $name")
+    }
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

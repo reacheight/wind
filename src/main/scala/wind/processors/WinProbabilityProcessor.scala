@@ -58,10 +58,7 @@ class WinProbabilityProcessor {
 
   private def countBarracks(barracks: Seq[Entity]): Seq[Int] = Seq(1300, 2200).map(hp => barracks.count(b => b.getProperty[Int]("m_iMaxHealth") == hp))
 
-  private def getSpawnTimes(heroes: Seq[Entity], time: Float): Seq[Float] = heroes.map(hero => {
-    val respawnTime = hero.getProperty[Float]("m_flRespawnTime")
-    if (respawnTime < 0) 0 else math.max(respawnTime - time, 0)
-  })
+  private def getSpawnTimes(heroes: Seq[Entity], time: Float): Seq[Float] = heroes.map(hero => Util.getSpawnTime(hero, time))
 
   private def getBuybackStates(dataEntity: Entity, networth: IndexedSeq[Int], time: Float): Seq[Boolean] = (0 to 4).map(player => {
     val buybackCooldown = dataEntity.getProperty[Float](s"m_vecDataTeam.000$player.m_flBuybackCooldownTime")

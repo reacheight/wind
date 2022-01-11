@@ -19,8 +19,12 @@ class AbilityUsageProcessor {
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+    if (hero.getProperty[Float]("m_flRespawnTime") < 10) return
 
-    val time = Util.getGameTimeState(entities.getByDtName("CDOTAGamerulesProxy"))
+    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
+
+    val time = Util.getGameTimeState(gameRules)
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
     val abilities = getAbilities(hero)

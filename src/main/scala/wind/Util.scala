@@ -83,6 +83,11 @@ object Util {
 
   def hasEnoughMana(hero: Entity, item: Entity): Boolean =
     item.getProperty[Int]("m_iManaCost") <= hero.getProperty[Float]("m_flMana")
+
+  def getSpawnTime(hero: Entity, time: Float): Float = {
+    val respawnTime = hero.getProperty[Float]("m_flRespawnTime")
+    if (respawnTime < 0) 0 else math.max(respawnTime - time, 0)
+  }
 }
 
 class GameTimeState(val preGameStarted: Boolean, val gameStarted: Boolean, val gameTime: Float) {

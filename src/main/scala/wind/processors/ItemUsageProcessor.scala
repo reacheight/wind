@@ -28,7 +28,10 @@ class ItemUsageProcessor {
   def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
-    val time = Util.getGameTimeState(entities.getByDtName("CDOTAGamerulesProxy"))
+    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
+
+    val time = Util.getGameTimeState(gameRules)
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
     val items = getItems(hero)
 

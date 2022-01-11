@@ -31,6 +31,8 @@ class AbilityUsageProcessor {
       .foreach(_ => _unusedAbilities.addOne((time, playerId, "Shallow Grave")))
     findUnusedAbility(hero, abilities, "CDOTA_Ability_Terrorblade_Sunder")
       .foreach(_ => _unusedAbilities.addOne((time, playerId, "Sunder")))
+    findUnusedAbility(hero, abilities, "CDOTA_Ability_Life_Stealer_Rage")
+      .foreach(_ => _unusedAbilities.addOne((time, playerId, "Rage")))
   }
 
   private def getAbilities(hero: Entity): Seq[Entity] = {

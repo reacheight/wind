@@ -6,7 +6,7 @@ export default class SmokesMaxStock extends React.Component {
   render() {
     return (
       <>
-        <h5 className={styles.analysisTitle}><span className="observer">Smokes</span> max stock duration</h5>
+        <h5 className={styles.analysisTitle}><span className="smoke">Smokes</span> max stock duration</h5>
         <ul>
           <li key={"smokesMaxStockRadiant"}>
             <span className={styles.green}>Radiant</span> — {this.props.smokesMaxStock.Radiant} sec

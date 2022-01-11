@@ -21,7 +21,7 @@ export default class Smokes extends React.Component {
     
     return (
       <>
-        <h5 className={styles.analysisTitle}><span className="observer">Smokes</span> used on enemy vision 💨</h5>
+        <h5 className={styles.analysisTitle}><span className="smoke">Smokes</span> used on enemy vision 💨</h5>
         <ul>{smokeInfo}</ul>
       </>
     )

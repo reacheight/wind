@@ -26,6 +26,7 @@ class AbilityUsageProcessor {
     val abilities = getAbilities(hero)
 
     addUnusedAbility("CDOTA_Ability_Slark_ShadowDance", "Shadow Dance")
+    addUnusedAbility("CDOTA_Ability_Slark_Depth_Shroud", "Depths Shroud")
     addUnusedAbility("CDOTA_Ability_Dazzle_Shallow_Grave", "Shallow Grave")
     addUnusedAbility("CDOTA_Ability_Terrorblade_Sunder", "Sunder")
     addUnusedAbility("CDOTA_Ability_Life_Stealer_Rage", "Rage")

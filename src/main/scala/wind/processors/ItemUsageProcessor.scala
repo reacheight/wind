@@ -26,7 +26,7 @@ class ItemUsageProcessor {
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
-    if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 2) return
+    if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val time = Util.getGameTimeState(entities.getByDtName("CDOTAGamerulesProxy"))
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))

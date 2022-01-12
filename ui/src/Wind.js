@@ -7,7 +7,7 @@ import Spinner from 'react-bootstrap/Spinner';
 
 import styles from './App.module.css'
 
-class App extends React.Component {
+class Wind extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -64,4 +64,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Wind;

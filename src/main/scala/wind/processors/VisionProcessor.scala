@@ -5,6 +5,7 @@ import skadistats.clarity.processor.entities.Entities
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
+import wind.models.PlayerId
 import wind.{GameTimeState, Util}
 
 import scala.collection.mutable
@@ -12,12 +13,12 @@ import scala.collection.mutable.ListBuffer
 
 class VisionProcessor {
   private val itemUsages = mutable.Map(
-    "item_smoke_of_deceit" -> mutable.Map.empty[Int, ListBuffer[GameTimeState]],
-    "item_ward_observer" -> mutable.Map.empty[Int, ListBuffer[GameTimeState]]
+    "item_smoke_of_deceit" -> ListBuffer.empty[(GameTimeState, PlayerId)],
+    "item_ward_observer" -> ListBuffer.empty[(GameTimeState, PlayerId)]
   )
 
-  def smokeUsedOnVision: Map[Int, List[GameTimeState]] = itemUsages("item_smoke_of_deceit").map { case(id, times) => id -> times.toList }.toMap
-  def observerPlacedOnVision: Map[Int, List[GameTimeState]] = itemUsages("item_ward_observer").map { case(id, times) => id -> times.toList }.toMap
+  def smokeUsedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_smoke_of_deceit").toSeq
+  def observerPlacedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_ward_observer").toSeq
 
   @OnCombatLogEntry
   private def onCombatLogEntry(ctx: Context, cle: CombatLogEntry): Unit = {
@@ -25,11 +26,11 @@ class VisionProcessor {
       val heroProcessor = ctx.getProcessor(classOf[HeroProcessor])
       val entities = ctx.getProcessor(classOf[Entities])
 
-      val playerId = heroProcessor.combatLogNameToPlayerId.getOrElse(cle.getAttackerName, -1)
-      if (playerId >= 0) {
+      val playerId = heroProcessor.combatLogNameToPlayerId.get(cle.getAttackerName)
+      playerId.foreach(id => {
         val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
-        itemUsages(cle.getInflictorName).getOrElseUpdate(playerId, ListBuffer.empty).addOne(Util.getGameTimeState(gameRules))
-      }
+        itemUsages(cle.getInflictorName).addOne(Util.getGameTimeState(gameRules), PlayerId(id))
+      })
     }
   }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Analysis from './Analysis/Analysis'
 import Header from './Header/Header';
@@ -7,61 +7,53 @@ import Spinner from 'react-bootstrap/Spinner';
 
 import styles from './App.module.css'
 
-class Wind extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      matchId: '',
-      analysis: {},
-      loading: false,
-      error: false
-    };
+const Wind = () => {
+  const [matchId, setMatchId] = useState('')
+  const [analysis, setAnalysis] = useState({})
+  const [loading, setLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
+  const getAnalysis = event => {
+    setAnalysis({})
+    setLoading(true)
+    setIsError(false)
 
-  handleChange(event) {
-    this.setState({ matchId: event.target.value })
-  }
-
-  handleSubmit(event) {
-    this.setState({ analysis: {}, loading: true, error: false })
-    fetch(`http://localhost:8080/analysis/${this.state.matchId}`)
+    fetch(`http://localhost:8080/analysis/${matchId}`)
       .then(response => {
         if (!response.ok) {
-          this.setState({ error: true })
+          setIsError(true)
         }
         return response.json()
       })
       .then(json => {
-        this.setState({ loading: false, analysis: json })
+        setLoading(false)
+        setAnalysis(json)
       })
       .catch(e => {
-        this.setState({ loading: false, error: true })
+        setLoading(false)
+        setIsError(true)
       })
+      
     event.preventDefault()
   }
 
-  render() {
-    return (
-      <div className={styles.app}>
-        <Header />
-        <form className={styles.input} onSubmit={this.handleSubmit}>
-          <Form.Control type="text" placeholder="Enter match id" value={this.state.matchId} onChange={this.handleChange} />
-        </form>
-        {this.state.loading &&
-          <div className={styles.spinner}>
-            <Spinner variant="light" animation="border" role="status"></Spinner>
-          </div>
-        }
-        <Analysis analysis={this.state.analysis} />
-        {this.state.error &&
-          <div className={styles.error}> Error occured :( </div>
-        }
-      </div>
-    );
-  }
+  return (
+    <div className={styles.app}>
+      <Header />
+      <form className={styles.input} onSubmit={getAnalysis}>
+        <Form.Control type="text" placeholder="Enter match id" value={matchId} onChange={event => setMatchId(event.target.value)} />
+      </form>
+      {loading &&
+        <div className={styles.spinner}>
+          <Spinner variant="light" animation="border" role="status"></Spinner>
+        </div>
+      }
+      <Analysis analysis={analysis} />
+      {isError &&
+        <div className={styles.error}> Error occured :( </div>
+      }
+    </div>
+  )
 }
 
-export default Wind;
+export default Wind

@@ -1,5 +1,5 @@
 export function formatHeroName(heroName) {
-  return heroName.replace("_", " ").replace(/([A-Z])/g, " $1").slice(1)
+  return heroName.replace('_', ' ').replace(/([A-Z])/g, ' $1').slice(1)
 }
 
 export function isEmpty(obj) {
@@ -18,5 +18,5 @@ export function compareTime(first, second) {
 }
 
 export function getItemClassName(name) {
-  return name.toLowerCase().replace(" ", "-")
+  return name.toLowerCase().replace(' ', '-')
 }

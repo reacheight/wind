@@ -1,18 +1,18 @@
-import React from "react"
+import React from 'react'
 import styles from '../Analysis/Analysis.module.css'
 import '../items.css'
 
 const Smokes = (props) => {
   const smokeInfo = props.smokes
     .map((entry) =>
-      <li key={"smoke" + entry[0]}>
+      <li key={'smoke' + entry[0]}>
         <span className={styles.heroName}>{props.heroes[entry[1]]}</span> at {entry[0]}
       </li>
     )
 
   return (
     <>
-      <h5 className={styles.analysisTitle}><span className="smoke">Smokes</span> used on enemy vision 💨</h5>
+      <h5 className={styles.analysisTitle}><span className='smoke'>Smokes</span> used on enemy vision 💨</h5>
       <ul>{smokeInfo}</ul>
     </>
   )

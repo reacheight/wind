@@ -41,11 +41,11 @@ const Wind = () => {
     <div className={styles.app}>
       <Header />
       <form className={styles.input} onSubmit={getAnalysis}>
-        <Form.Control type="text" placeholder="Enter match id" value={matchId} onChange={event => setMatchId(event.target.value)} />
+        <Form.Control type='text' placeholder='Enter match id' value={matchId} onChange={event => setMatchId(event.target.value)} />
       </form>
       {loading &&
         <div className={styles.spinner}>
-          <Spinner variant="light" animation="border" role="status"></Spinner>
+          <Spinner variant='light' animation='border' role='status'></Spinner>
         </div>
       }
       <Analysis analysis={analysis} />

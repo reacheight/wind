@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import styles from '../Analysis/Analysis.module.css'
 
 const Couriers = (props) => {

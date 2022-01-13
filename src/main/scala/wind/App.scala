@@ -12,7 +12,7 @@ object App extends cask.MainRoutes{
   @cask.get("/analysis/:matchId")
   def analyze(matchId: String): Response[Obj] = {
     val compressedReplayPath = Paths.get(DownloadingDirectory, s"${matchId}_compressed")
-    val replayPath = Paths.get(DownloadingDirectory, matchId)
+    val replayPath = Paths.get(DownloadingDirectory, s"$matchId.dem")
     if (!Files.exists(replayPath)) {
       val replayLocation = OdotaClient.getReplayLocation(matchId)
       replayLocation

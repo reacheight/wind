@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DotaItems, DotaHeroes, formatName, isEmpty } from '../util';
+import { DotaItems, DotaHeroes, formatName, isEmpty, formatTime } from '../util';
 import styles from '../Analysis/Analysis.module.css'
 
 const ItemTimings = (props) => {
@@ -25,14 +25,18 @@ const ItemTimings = (props) => {
 
   const getTimingGrade = (playerTiming, averageTimings) => {
     if (playerTiming <= averageTimings.q1) {
-      return <span className={styles.green}>Early</span>
+      return <span className={styles.green}>Early ({"<="} {formatTime(averageTimings.q1)})</span>
+    }
+
+    if (playerTiming <= averageTimings.median) {
+      return <span className={styles.lightgreen}>Average ({"<="} {formatTime(averageTimings.median)})</span>
     }
 
     if (playerTiming < averageTimings.critical_time) {
-      return <span className={styles.yellow}>Average</span>
+      return <span className={styles.yellow}>Later than average ({">"} {formatTime(averageTimings.median)})</span>
     }
     
-    return <span className={styles.red}>Late</span>
+    return <span className={styles.red}>Late ({">="} {formatTime(averageTimings.critical_time)})</span>
   }
 
   const itemInfo = playerPurchases.map(purchase => {
@@ -42,7 +46,7 @@ const ItemTimings = (props) => {
     let itemName = formatName(DotaItems.find(i => i.id.toString() === itemId).name)
 
     return <li key={"timings" + "hero" + itemId}>
-      {itemName} - {getTimingGrade(playerTiming, averageTimings)}
+      {itemName} - {formatTime(playerTiming)} - {getTimingGrade(playerTiming, averageTimings)}
     </li>
   })
 

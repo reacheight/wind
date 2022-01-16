@@ -1,3 +1,11 @@
+export function formatTime(time) {
+  let minutes = Math.floor(time / 60)
+  let seconds = time % 60
+  let filler = seconds < 10 ? '0' : ''
+
+  return `${minutes}:${filler}${seconds}`
+}
+
 export function formatHeroName(heroName) {
   return heroName.replace('_', ' ').replace(/([A-Z])/g, ' $1').slice(1)
 }

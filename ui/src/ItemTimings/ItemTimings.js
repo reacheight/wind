@@ -1,28 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { items, heroes, formatName } from '../util';
+import { DotaItems, DotaHeroes, formatName, isEmpty } from '../util';
 import styles from '../Analysis/Analysis.module.css'
 
 const ItemTimings = (props) => {
-  const heroId = heroes.result.heroes.find(h => h.name === props.hero).id
-  const [timings, setTimings] = useState({})
+  const heroId = DotaHeroes.find(h => h.name === props.hero).id
+  const [heroTimingsData, setTimings] = useState({})
 
   useEffect(() => {
     fetch(`https://stats.spectral.gg/lrg2/api/?league=imm_ranked_meta_last_7&mod=items/icritical-heroid${heroId}`)
-      .then(resp => resp.json())
-      .then(data => setTimings(data))
+      .then(response => response.json())
+      .then(data => setTimings(data.result.items))
   }, [heroId])
 
-  if (Object.keys(timings).length === 0) {
+  if (isEmpty(heroTimingsData)) {
     return <></>
   }
 
-  const timingItems = Object.keys(timings.result.items)
-  const heroItems = props.purchases.map(entry => {
-    let item = entry[0]
-    let time = entry[1]
+  const playerPurchases = props.purchases.map(purchase => {
+    let item = purchase[0]
+    let time = purchase[1]
 
-    return [items.result.items.find(i => i.name === item).id.toString(), time]
-  }).filter(entry => timingItems.includes(entry[0]))
+    return [DotaItems.find(i => i.name === item).id.toString(), time]
+  }).filter(entry => Object.keys(heroTimingsData).includes(entry[0]))
 
   const getTimingGrade = (playerTiming, averageTimings) => {
     if (playerTiming <= averageTimings.q1) {
@@ -36,14 +35,14 @@ const ItemTimings = (props) => {
     return <span className={styles.red}>Late</span>
   }
 
-  const itemInfo = heroItems.map(entry => {
-    let itemId = entry[0]
-    let playerTiming = entry[1]
-    let heroTimings = timings.result.items[entry[0]]
-    let itemName = formatName(items.result.items.find(i => i.id.toString() === itemId).name)
+  const itemInfo = playerPurchases.map(purchase => {
+    let itemId = purchase[0]
+    let playerTiming = purchase[1]
+    let averageTimings = heroTimingsData[itemId]
+    let itemName = formatName(DotaItems.find(i => i.id.toString() === itemId).name)
 
     return <li key={"timings" + "hero" + itemId}>
-      {itemName} - {getTimingGrade(playerTiming, heroTimings)}
+      {itemName} - {getTimingGrade(playerTiming, averageTimings)}
     </li>
   })
 

@@ -31,7 +31,7 @@ export function getItemClassName(name) {
   return name.toLowerCase().replace(' ', '-')
 }
 
-export const heroes = JSON.parse(`{
+export const DotaHeroes = JSON.parse(`{
   "result":{
   "heroes":[
   {
@@ -527,9 +527,9 @@ export const heroes = JSON.parse(`{
   "status":200,
   "count":122
   }
-  }`)
+  }`).result.heroes
 
-export const items = JSON.parse(`{
+export const DotaItems = JSON.parse(`{
   "result":{
   "items":[
   {
@@ -3888,4 +3888,4 @@ export const items = JSON.parse(`{
   ,
   "status":200
   }
-  }`)
+  }`).result.items

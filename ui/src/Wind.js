@@ -6,7 +6,6 @@ import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 
 import styles from './App.module.css'
-import ItemTimings from './ItemTimings/ItemTimings';
 
 const Wind = () => {
   const [matchId, setMatchId] = useState('')

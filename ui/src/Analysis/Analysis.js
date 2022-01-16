@@ -1,5 +1,6 @@
 import React from 'react';
 import Couriers from '../Couriers/Couriers';
+import ItemTimings from '../ItemTimings/ItemTimings';
 import Observers from '../Observers/Observers';
 import ObserversMaxStock from '../ObserversMaxStock/ObserversMaxStock';
 import PowerTreads from '../PowerThreads/PowerTreads';
@@ -8,7 +9,7 @@ import SmokesMaxStock from '../SmokesMaxStock/SmokesMaxStock';
 import Summons from '../Summons/Summons';
 import UnusedAbilities from '../UnusedAbilities/UnusedAbilities';
 import UnusedItems from '../UnusedItems/UnusedItems';
-import { formatHeroName, isEmpty } from '../util';
+import { formatHeroName, formatName, isEmpty } from '../util';
 
 import styles from './Analysis.module.css'
 
@@ -21,6 +22,11 @@ export default class Analysis extends React.Component {
     }
 
     const heroes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => formatHeroName(analysis.heroes[id]))
+    const itemTimings = Object.keys(analysis.purchases).map(hero =>
+      <li key={"timings" + hero}>
+        <ItemTimings hero={hero} purchases={analysis.purchases[hero]} />
+      </li>
+    )
 
     return (
       <div className={styles.analysis}>
@@ -61,6 +67,7 @@ export default class Analysis extends React.Component {
           <li>
             <SmokesMaxStock smokesMaxStock={analysis.smoke_max_count_time} />
           </li>}
+          {itemTimings}
         </ul>
       </div>
     )

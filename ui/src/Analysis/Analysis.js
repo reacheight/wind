@@ -12,6 +12,7 @@ import UnusedItems from '../UnusedItems/UnusedItems';
 import { formatHeroName, formatName, isEmpty } from '../util';
 
 import styles from './Analysis.module.css'
+import MidasEfficiency from "../MidassEfficiency/MidasEfficiency";
 
 export default class Analysis extends React.Component {
   render() {
@@ -66,6 +67,10 @@ export default class Analysis extends React.Component {
           {!isEmpty(analysis.smoke_max_count_time) &&
           <li>
             <SmokesMaxStock smokesMaxStock={analysis.smoke_max_count_time} />
+          </li>}
+          {!isEmpty(analysis.midasEfficiency) &&
+          <li>
+            <MidasEfficiency heroes={heroes} midasEfficiency={analysis.midasEfficiency} />
           </li>}
           {itemTimings}
         </ul>

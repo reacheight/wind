@@ -143,6 +143,10 @@ object Main {
     result.midasEfficiency.foreach { case (id, efficiency) =>
       println(s"${result.heroName(id)}: $efficiency")
     }
+
+    println("\nScan usage count:")
+    println(s"Radiant: ${result.scanUsageCount(Radiant)}")
+    println(s"Dire: ${result.scanUsageCount(Dire)}")
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

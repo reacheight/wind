@@ -27,13 +27,14 @@ object ReplayAnalyzer {
     val rolesProcessor = new RolesProcessor
     val abilityUsageProcessor = new AbilityUsageProcessor
     val purchasesProcessor = new PurchasesProcessor
+    val midasProcessor = new MidasEfficiencyProcessor
 
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
         itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor, abilityUsageProcessor,
-        purchasesProcessor)
+        purchasesProcessor, midasProcessor)
     }
 
     AnalysisResult(
@@ -54,6 +55,7 @@ object ReplayAnalyzer {
       abilityUsageProcessor.unusedAbilities,
       itemUsageProcessor.unusedItems,
       purchasesProcessor.purchases,
+      midasProcessor.midasEfficiency,
     )
   }
 }
@@ -76,4 +78,5 @@ case class AnalysisResult(
   unusedAbilities: Seq[(GameTimeState, PlayerId, String)],
   unusedItems: Seq[(GameTimeState, PlayerId, String)],
   purchases: Map[String, Seq[(String, Int)]],
+  midasEfficiency: Map[PlayerId, Float],
 )

@@ -138,6 +138,11 @@ object Main {
     result.ptNotOnStrength.foreach { case (time, id) =>
       println(s"$time ${result.heroName(id)} didn't switch PT to Strength before death")
     }
+
+    if (result.midasEfficiency.nonEmpty) println("\nMidas efficiency:")
+    result.midasEfficiency.foreach { case (id, efficiency) =>
+      println(s"${result.heroName(id)}: $efficiency")
+    }
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

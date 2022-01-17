@@ -1,6 +1,6 @@
 export function formatTime(time) {
-  let minutes = Math.floor(time / 60)
-  let seconds = time % 60
+  let minutes = Math.sign(time) * Math.floor(Math.abs(time) / 60)
+  let seconds = Math.abs(time) % 60
   let filler = seconds < 10 ? '0' : ''
 
   return `${minutes}:${filler}${seconds}`

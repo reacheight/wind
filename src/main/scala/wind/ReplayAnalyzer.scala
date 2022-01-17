@@ -26,14 +26,14 @@ object ReplayAnalyzer {
     val itemUsageProcessor = new ItemUsageProcessor
     val rolesProcessor = new RolesProcessor
     val abilityUsageProcessor = new AbilityUsageProcessor
-    val itemProcessor = new ItemProcessor
+    val purchasesProcessor = new PurchasesProcessor
 
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
         itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor, abilityUsageProcessor,
-        itemProcessor)
+        purchasesProcessor)
     }
 
     AnalysisResult(
@@ -53,7 +53,7 @@ object ReplayAnalyzer {
       heroProcessor.heroName.map { case(id, name) => PlayerId(id) -> name },
       abilityUsageProcessor.unusedAbilities,
       itemUsageProcessor.unusedItems,
-      itemProcessor.purchases,
+      purchasesProcessor.purchases,
     )
   }
 }

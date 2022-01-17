@@ -10,7 +10,7 @@ import wind.Util
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class ItemProcessor {
+class PurchasesProcessor {
   def purchases: Map[String, Seq[(String, Int)]] = _purchases.map { case (hero, list) => hero -> list.toSeq }.toMap
 
   private val _purchases: mutable.Map[String, ListBuffer[(String, Int)]] = mutable.Map.empty

@@ -1,7 +1,7 @@
 package wind.processors
 
-import skadistats.clarity.model.CombatLogEntry
-import skadistats.clarity.processor.entities.Entities
+import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
+import skadistats.clarity.processor.entities.{Entities, OnEntityCreated, OnEntityPropertyChanged}
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
@@ -12,13 +12,31 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class VisionProcessor {
+  def smokeUsedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_smoke_of_deceit").toSeq
+  def observerPlacedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_ward_observer").toSeq
+
+  def observers: Seq[((Float, Float), GameTimeState, GameTimeState)] = _observers.toMap.values.toSeq
+
   private val itemUsages = mutable.Map(
     "item_smoke_of_deceit" -> ListBuffer.empty[(GameTimeState, PlayerId)],
     "item_ward_observer" -> ListBuffer.empty[(GameTimeState, PlayerId)]
   )
 
-  def smokeUsedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_smoke_of_deceit").toSeq
-  def observerPlacedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_ward_observer").toSeq
+  private val _observers = mutable.Map.empty[Int, ((Float, Float), GameTimeState, GameTimeState)]
+
+  @OnEntityCreated(classPattern = "CDOTA_NPC_Observer_Ward")
+  private def onObserverPlaced(ctx: Context, observer: Entity): Unit = {
+    val time = Util.getGameTimeState(ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy"))
+    val location = Util.getLocation(observer)
+    _observers(observer.getHandle) = (location, time, time)
+  }
+
+  @OnEntityPropertyChanged(classPattern = "CDOTA_NPC_Observer_Ward", propertyPattern = "m_lifeState")
+  private def onObserverEnded(ctx: Context, observer: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+    val time = Util.getGameTimeState(ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy"))
+    val current = _observers(observer.getHandle)
+    _observers(observer.getHandle) = current.copy(_3 = time)
+  }
 
   @OnCombatLogEntry
   private def onCombatLogEntry(ctx: Context, cle: CombatLogEntry): Unit = {

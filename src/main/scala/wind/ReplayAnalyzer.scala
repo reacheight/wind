@@ -31,6 +31,7 @@ object ReplayAnalyzer {
     val scanProcessor = new ScanProcessor
     val creepwaveProcessor = new CreepwaveProcessor
 
+    val start = System.currentTimeMillis()
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
@@ -38,6 +39,7 @@ object ReplayAnalyzer {
         itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor, abilityUsageProcessor,
         purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor)
     }
+    println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
 
     AnalysisResult(
       courierProcessor.courierIsOut.map { case (id, isOut) => PlayerId(id) -> isOut },

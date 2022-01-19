@@ -147,6 +147,11 @@ object Main {
     println("\nScan usage count:")
     println(s"Radiant: ${result.scanUsageCount(Radiant)}")
     println(s"Dire: ${result.scanUsageCount(Dire)}")
+
+    if (result.wastedCreepwaves.nonEmpty) println("\nWasted creepwaves:")
+    result.wastedCreepwaves.foreach { case (time, tower) =>
+      println(s"$time: $tower")
+    }
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

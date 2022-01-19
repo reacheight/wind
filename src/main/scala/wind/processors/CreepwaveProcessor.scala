@@ -23,18 +23,14 @@ class CreepwaveProcessor {
 
     _wastedCreepwaves = creepDeaths.map { case (tower, deaths) =>
       val formattedTower = formatTowerName(tower)
-      val (ranges, last) = deaths.foldLeft((ListBuffer.empty[mutable.Buffer[GameTimeState]], mutable.Buffer.empty[GameTimeState])) { case ((all, cur), newTime) =>
-        if (cur.isEmpty || newTime.gameTime - cur.last.gameTime <= 10) {
-          cur.addOne(newTime)
-          (all, cur)
-        } else {
-          all.addOne(cur)
-          (all, mutable.Buffer(newTime))
-        }
+      val (ranges, last) = deaths.foldLeft(Seq.empty[Seq[GameTimeState]], Seq.empty[GameTimeState]) { case ((all, cur), death) =>
+        if (cur.isEmpty || death.gameTime - cur.last.gameTime <= 10)
+          (all, cur :+ death)
+        else
+          (all :+ cur, Seq(death))
       }
 
-      ranges.addOne(last)
-      ranges
+      (ranges :+ last)
         .filter(range => range.length >= 4)
         .map(range => (range.head, formattedTower))
     }.flatten.toSeq.sortBy(_._1.gameTime)

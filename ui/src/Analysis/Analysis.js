@@ -13,6 +13,7 @@ import { formatHeroName, formatName, isEmpty } from '../util';
 
 import styles from './Analysis.module.css'
 import MidasEfficiency from "../MidassEfficiency/MidasEfficiency";
+import WastedCreepwaves from "../WastedCreepwaves/WastedCreepwaves";
 
 export default class Analysis extends React.Component {
   render() {
@@ -71,6 +72,10 @@ export default class Analysis extends React.Component {
           {!isEmpty(analysis.midasEfficiency) &&
           <li>
             <MidasEfficiency heroes={heroes} midasEfficiency={analysis.midasEfficiency} />
+          </li>}
+          {!isEmpty(analysis.wastedCreepwaves) &&
+          <li>
+            <WastedCreepwaves wastedCreepwaves={analysis.wastedCreepwaves} />
           </li>}
           {itemTimings}
         </ul>

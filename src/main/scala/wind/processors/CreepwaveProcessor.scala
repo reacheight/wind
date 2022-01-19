@@ -70,14 +70,14 @@ class CreepwaveProcessor {
       .replace("npc_dota_goodguys_tower", "")
 
     if (newName == "4")
-      s"${teamPrefix} Tier 4"
+      s"${teamPrefix} T4"
     else {
       val tokens = newName.split("_")
       val tier = tokens(0)
       val lane = tokens(1)
       val laneCapitalized = lane(0).toUpper + lane.substring(1)
 
-      s"${teamPrefix} $laneCapitalized Tier $tier"
+      s"${teamPrefix} $laneCapitalized T$tier"
     }
   }
 }

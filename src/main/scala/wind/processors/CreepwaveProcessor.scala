@@ -7,7 +7,8 @@ import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import wind.models.Lane.{Bot, Lane, Middle, Top}
 import wind.models.Team.{Dire, Radiant, Team}
-import wind.{GameTimeState, Util}
+import wind.Util
+import wind.models.GameTimeState
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer

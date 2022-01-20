@@ -6,7 +6,7 @@ import skadistats.clarity.processor.entities.{Entities, OnEntityCreated, OnEntit
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
-import wind.models.PlayerId
+import wind.models.{GameTimeState, PlayerId}
 
 import scala.collection.mutable.ListBuffer
 

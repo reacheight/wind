@@ -1,9 +1,9 @@
 package wind
 
 import skadistats.clarity.model.Entity
+import wind.models.GameTimeState
 import wind.models.Team._
 
-import java.time.{Duration, Period}
 import scala.collection.mutable.ArrayBuffer
 
 object Util {
@@ -23,18 +23,18 @@ object Util {
       if (preGameTime > TIME_EPS){
         val startTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flGameStartTime")
         if (startTime > TIME_EPS) {
-          return new GameTimeState(true, true, gameTime - startTime)
+          return GameTimeState(true, true, gameTime - startTime)
         }
         else {
           val transitionTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flStateTransitionTime")
-          return new GameTimeState(true, false, gameTime - transitionTime)
+          return GameTimeState(true, false, gameTime - transitionTime)
         }
       }
 
-      return new GameTimeState(false, false, Float.MinValue)
+      return GameTimeState(false, false, Float.MinValue)
     }
 
-    new GameTimeState(false, false, Float.MinValue)
+    GameTimeState(false, false, Float.MinValue)
   }
 
   def isGlyphOnCooldown(gameRules: Entity, team: Team): Boolean =
@@ -87,14 +87,5 @@ object Util {
   def getSpawnTime(hero: Entity, time: Float): Float = {
     val respawnTime = hero.getProperty[Float]("m_flRespawnTime")
     if (respawnTime < 0) 0 else math.max(respawnTime - time, 0)
-  }
-}
-
-class GameTimeState(val preGameStarted: Boolean, val gameStarted: Boolean, val gameTime: Float) {
-  override def toString: String = {
-    val minutes = gameTime.toInt.sign * gameTime.toInt.abs / 60
-    val seconds = gameTime.toInt.abs % 60
-    val secondsStr = if (seconds < 10) s"0$seconds" else seconds
-    if (preGameStarted) s"$minutes:$secondsStr" else "not started"
   }
 }

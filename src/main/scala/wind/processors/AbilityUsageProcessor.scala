@@ -5,8 +5,8 @@ import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.processor.stringtables.{StringTables, UsesStringTable}
-import wind.{GameTimeState, Util}
-import wind.models.PlayerId
+import wind.Util
+import wind.models.{GameTimeState, PlayerId}
 
 import scala.collection.mutable.ListBuffer
 

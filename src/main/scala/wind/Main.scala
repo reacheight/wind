@@ -149,8 +149,8 @@ object Main {
     println(s"Dire: ${result.scanUsageCount(Dire)}")
 
     if (result.wastedCreepwaves.nonEmpty) println("\nWasted creepwaves:")
-    result.wastedCreepwaves.foreach { case (time, tower) =>
-      println(s"$time: $tower")
+    result.wastedCreepwaves.foreach { case (time, team, lane, tier) =>
+      println(s"$time: $team $lane T$tier")
     }
   }
 

@@ -86,5 +86,5 @@ case class AnalysisResult(
   purchases: Map[String, Seq[(String, Int)]],
   midasEfficiency: Map[PlayerId, Float],
   scanUsageCount: Map[Team, Int],
-  wastedCreepwaves: Seq[(GameTimeState, String)],
+  wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
 )

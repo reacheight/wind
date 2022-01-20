@@ -1,3 +1,29 @@
+export const Team = (t) => {
+  switch (t) {
+    case "0":
+      return "Radiant"
+    case "1":
+      return "Dire"
+  }
+}
+
+export const Lane = (l) => {
+  switch (l) {
+    case "0":
+      return "Top"
+    case "1":
+      return "Middle"
+    case "2":
+      return "Bot"
+    case "3":
+      return "Radiant Jungle"
+    case "4":
+      return "Dire Jungle"
+    case "5":
+      return "Roaming"
+  }
+}
+
 export function formatTime(time) {
   let minutes = Math.sign(time) * Math.floor(Math.abs(time) / 60)
   let seconds = Math.abs(time) % 60

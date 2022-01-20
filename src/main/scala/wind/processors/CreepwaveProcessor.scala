@@ -5,15 +5,17 @@ import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
+import wind.models.Lane.{Bot, Lane, Middle, Top}
+import wind.models.Team.{Dire, Radiant, Team}
 import wind.{GameTimeState, Util}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class CreepwaveProcessor {
-  def wastedCreepwaves: Seq[(GameTimeState, String)] = _wastedCreepwaves
+  def wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)] = _wastedCreepwaves
 
-  private var _wastedCreepwaves: Seq[(GameTimeState, String)] = Seq.empty
+  private var _wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)] = Seq.empty
   private val creepDeaths: mutable.Map[String, ListBuffer[GameTimeState]] = mutable.Map.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
@@ -21,8 +23,8 @@ class CreepwaveProcessor {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
-    _wastedCreepwaves = creepDeaths.map { case (tower, deaths) =>
-      val formattedTower = formatTowerName(tower)
+    _wastedCreepwaves = creepDeaths.flatMap { case (tower, deaths) =>
+      val (team, lane, tier) = parseTowerName(tower)
       val (ranges, last) = deaths.foldLeft(Seq.empty[Seq[GameTimeState]], Seq.empty[GameTimeState]) { case ((all, cur), death) =>
         if (cur.isEmpty || death.gameTime - cur.last.gameTime <= 10)
           (all, cur :+ death)
@@ -32,8 +34,8 @@ class CreepwaveProcessor {
 
       (ranges :+ last)
         .filter(range => range.length >= 4)
-        .map(range => (range.head, formattedTower))
-    }.flatten.toSeq.sortBy(_._1.gameTime)
+        .map(range => (range.head, team, lane, tier))
+    }.toSeq.sortBy(_._1.gameTime)
   }
 
   @OnCombatLogEntry
@@ -59,21 +61,22 @@ class CreepwaveProcessor {
     cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DEATH &&
       (cle.getTargetName.contains("creep_goodguys") || cle.getTargetName.contains("creep_badguys") || cle.getTargetName.contains("siege"))
 
-  def formatTowerName(towerName: String): String = {
-    val teamPrefix = if (towerName.contains("goodguys")) "Radiant" else "Dire"
-    val newName = towerName
+  def parseTowerName(towerName: String): (Team, Lane, Int) = {
+    val team = if (towerName.contains("goodguys")) Radiant else Dire
+    val tokens = towerName
       .replace("npc_dota_badguys_tower", "")
       .replace("npc_dota_goodguys_tower", "")
+      .split("_")
 
-    if (newName == "4")
-      s"${teamPrefix} T4"
-    else {
-      val tokens = newName.split("_")
-      val tier = tokens(0)
-      val lane = tokens(1)
-      val laneCapitalized = lane(0).toUpper + lane.substring(1)
+    val tier = tokens(0).toInt
+    val lane =
+      if (tokens.length < 2 || tokens(1) == "mid")
+        Middle
+      else if (tokens(1) == "bot")
+        Bot
+      else
+        Top
 
-      s"${teamPrefix} $laneCapitalized T$tier"
-    }
+    (team, lane, tier)
   }
 }

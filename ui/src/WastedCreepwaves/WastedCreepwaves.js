@@ -1,11 +1,13 @@
 import styles from '../Analysis/Analysis.module.css'
 import React from "react";
+import {Lane, Team} from "../util";
 
 const WastedCreepwaves = (props) => {
   const creepwavesInfo = props.wastedCreepwaves.map(entry => {
-    let [time, tower] = entry
-    return <li key={"creepwave" + tower + time}>
-      <span className={styles.heroName}>{tower}</span> tower at {time}
+    let [time, team, lane, tier] = entry
+    let teamName = <span className={team === "0" ? styles.green : styles.red}>{Team(team)}</span>
+    return <li key={"creepwave" + team + lane + tier + time}>
+      {teamName} {Lane(lane)} T{tier} tower at {time}
     </li>
   })
 

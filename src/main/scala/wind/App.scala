@@ -46,7 +46,7 @@ object App extends cask.MainRoutes{
       "unusedItems" -> result.unusedItems.map { case (time, id, name) => Seq(time.toString, id.toString, name) },
       "purchases" -> result.purchases.map { case (hero, list) => hero -> list.map { case (item, time) => Seq(item, time.toString) }},
       "midasEfficiency" -> result.midasEfficiency.map { case (id, efficiency) => id.toString -> efficiency },
-      "wastedCreepwaves" -> result.wastedCreepwaves.map { case (time, tower) => Seq(time.toString, tower) },
+      "wastedCreepwaves" -> result.wastedCreepwaves.map { case (time, team, lane, tier) => Seq(time.toString, team.id.toString, lane.id.toString, tier.toString) },
     )
 
     cask.Response(responseData, headers = Seq(("Access-Control-Allow-Origin", "*")))

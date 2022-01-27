@@ -66,7 +66,7 @@ class AbilityUsageProcessor {
       .filter(h => h.getProperty[Int]("m_lifeState") == 0)
       .filter(h => h.getHandle != hero.getHandle)
 
-    // todo брать свойства абилки из файлика доты с описанием всех скиллов
+    // todo брать свойства абилки из файлика доты с описанием всех скиллов или с stratz ???
     // todo учитывать шмотки на каст ренж
     // todo учитывать роль убитого персонажа ???
 
@@ -82,6 +82,8 @@ class AbilityUsageProcessor {
       case 2 => 850
       case 3 => 1000
     })
+
+    addUnusedOnAllyAbility("CDOTA_Ability_Winter_Wyvern_Cold_Embrace", "Cold Embrace", _ => 1000)
 
     def addUnusedOnAllyAbility(enittyName: String, realName: String, castRange: PartialFunction[Int, Int]): Unit = {
       allies.foreach(ally => {

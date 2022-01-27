@@ -129,6 +129,11 @@ object Main {
       println(s"${time.toString} ${result.heroName(id)} didn't use $name")
     }
 
+    if (result.unusedOnAllyAbilities.nonEmpty) println("\nAbilities not used on ally:")
+    result.unusedOnAllyAbilities foreach { case (time, deadPlayerId, allyId, name) =>
+      println(s"${time.toString} ${result.heroName(allyId)} didn't use $name for ${result.heroName(deadPlayerId)}")
+    }
+
     if (result.unusedItems.nonEmpty) println("\nItems not used before death:")
     result.unusedItems.foreach { case (time, id, name) =>
       println(s"${time.toString} ${result.heroName(id)} didn't use $name")

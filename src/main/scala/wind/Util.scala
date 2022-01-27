@@ -59,6 +59,15 @@ object Util {
     (x * 128 + vecX - 8192, y * 128 + vecY - 8192)
   }
 
+  def getDistance(first: Entity, second: Entity): Double = {
+    val firstLocation = getLocation(first)
+    val secondLocation = getLocation(second)
+
+    val deltaX = math.pow(firstLocation._1 - secondLocation._1, 2)
+    val deltaY = math.pow(firstLocation._2 - secondLocation._2, 2)
+    math.sqrt(deltaX + deltaY)
+  }
+
   def toList[T](iterator: java.util.Iterator[T]): List[T] = {
     val result = ArrayBuffer.empty[T]
     iterator.forEachRemaining(i => { result += i })

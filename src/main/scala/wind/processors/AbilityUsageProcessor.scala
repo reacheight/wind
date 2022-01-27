@@ -13,8 +13,10 @@ import scala.collection.mutable.ListBuffer
 @UsesStringTable("EntityNames")
 class AbilityUsageProcessor {
   def unusedAbilities: Seq[(GameTimeState, PlayerId, String)] = _unusedAbilities.toSeq
+  def unusedOnAllyAbilities: Seq[(GameTimeState, PlayerId, PlayerId, String)] = _unusedOnAllyAbilities.toSeq
 
   private val _unusedAbilities: ListBuffer[(GameTimeState, PlayerId, String)] = ListBuffer.empty
+  private val _unusedOnAllyAbilities: ListBuffer[(GameTimeState, PlayerId, PlayerId, String)] = ListBuffer.empty
 
   @Insert
   private val entities: Entities = null
@@ -46,6 +48,45 @@ class AbilityUsageProcessor {
     def addUnusedAbility(entityName: String, realName: String): Unit =
       findUnusedAbility(hero, abilities, entityName)
         .foreach(_ => _unusedAbilities.addOne((time, playerId, realName)))
+  }
+
+  @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
+  def onHeroDiedForAllies(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+    if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+
+    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
+
+    val gameTime = Util.getGameTimeState(gameRules)
+    val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
+
+    val allies = Util.toList(entities.getAllByPredicate(Util.isHero))
+      .filter(h => h.getProperty[Int]("m_iTeamNum") == hero.getProperty[Int]("m_iTeamNum"))
+      .filter(h => h.getProperty[Int]("m_lifeState") == 0)
+      .filter(h => h.getHandle != hero.getHandle)
+
+    // todo брать свойства абилки из файлика доты с описанием всех скиллов
+    // todo учитывать шмотки на каст ренж
+
+    addUnusedOnAllyAbility("CDOTA_Ability_Dazzle_Shallow_Grave", {
+      case 1 => 700
+      case 2 => 800
+      case 3 => 900
+      case 4 => 1000
+    })
+
+    def addUnusedOnAllyAbility(name: String, castRange: PartialFunction[Int, Int]): Unit = {
+      allies.foreach(ally => {
+        val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
+        findUnusedAbility(ally, getAbilities(ally), name)
+          .filter(ability => {
+            val distance = Util.getDistance(hero, ally)
+            val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel"))
+            abilityCastRange >= distance
+          })
+          .foreach(_ => _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, "Shallow Grave"))
+      })
+    }
   }
 
   private def getAbilities(hero: Entity): Seq[Entity] = {

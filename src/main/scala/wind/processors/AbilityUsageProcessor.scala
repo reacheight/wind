@@ -44,6 +44,7 @@ class AbilityUsageProcessor {
     addUnusedAbility("CDOTA_Ability_DarkWillow_ShadowRealm", "Shadow Realm")
     addUnusedAbility("templar_assassin_refraction", "Refraction")
     addUnusedAbility("CDOTA_Ability_PhantomLancer_Doppelwalk", "Doppelganger")
+    addUnusedAbility("CDOTA_Ability_Weaver_TimeLapse", "Time Lapse")
 
     def addUnusedAbility(entityName: String, realName: String): Unit =
       findUnusedAbility(hero, abilities, entityName)

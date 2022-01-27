@@ -67,24 +67,31 @@ class AbilityUsageProcessor {
 
     // todo брать свойства абилки из файлика доты с описанием всех скиллов
     // todo учитывать шмотки на каст ренж
+    // todo учитывать роль убитого персонажа ???
 
-    addUnusedOnAllyAbility("CDOTA_Ability_Dazzle_Shallow_Grave", {
+    addUnusedOnAllyAbility("CDOTA_Ability_Dazzle_Shallow_Grave", "Shalow Grave", {
       case 1 => 700
       case 2 => 800
       case 3 => 900
       case 4 => 1000
     })
 
-    def addUnusedOnAllyAbility(name: String, castRange: PartialFunction[Int, Int]): Unit = {
+    addUnusedOnAllyAbility("CDOTA_Ability_Oracle_FalsePromise", "False Promise", {
+      case 1 => 700
+      case 2 => 850
+      case 3 => 1000
+    })
+
+    def addUnusedOnAllyAbility(enittyName: String, realName: String, castRange: PartialFunction[Int, Int]): Unit = {
       allies.foreach(ally => {
         val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
-        findUnusedAbility(ally, getAbilities(ally), name)
+        findUnusedAbility(ally, getAbilities(ally), enittyName)
           .filter(ability => {
             val distance = Util.getDistance(hero, ally)
             val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel"))
             abilityCastRange >= distance
           })
-          .foreach(_ => _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, "Shallow Grave"))
+          .foreach(_ => _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName))
       })
     }
   }

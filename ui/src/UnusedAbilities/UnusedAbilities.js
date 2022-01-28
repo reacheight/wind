@@ -8,10 +8,17 @@ const UnusedAbilities = (props) => {
     </li>
   )
 
+  const unusedOnAllyAbilitiesInfo = props.unusedOnAllyAbilities.map(entry =>
+    <li key={'unusedOnAlly' + entry[3] + entry[0]}>
+      <span className={styles.heroName}>{props.heroes[entry[2]]}</span> didn't use <span className={styles.heroName}>{entry[3]}</span> on <span className={styles.heroName}>{props.heroes[entry[1]]}</span> at {entry[0]}
+    </li>
+  )
+
   return (
     <>
       <h5 className={styles.analysisTitle}>Unused abilities ☠️</h5>
       <ul>{unusedAbilitiesInfo}</ul>
+      <ul>{unusedOnAllyAbilitiesInfo}</ul>
     </>
   )
 }

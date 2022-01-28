@@ -43,6 +43,7 @@ object App extends cask.MainRoutes{
       "obs_placed_on_vision" -> result.obsPlacedOnVision.map { case (time, id) => Seq(time.toString, id.toString) },
       "heroes" -> result.heroName.map { case(id, name) => id.toString -> name },
       "unusedAbilities" -> result.unusedAbilities.map { case (time, id, name) => Seq(time.toString, id.toString, name) },
+      "unusedOnAllyAbilities" -> result.unusedOnAllyAbilities.map { case (time, deadPlayerId, casterId, name) => Seq(time.toString, deadPlayerId.toString, casterId.toString, name) },
       "unusedItems" -> result.unusedItems.map { case (time, id, name) => Seq(time.toString, id.toString, name) },
       "purchases" -> result.purchases.map { case (hero, list) => hero -> list.map { case (item, time) => Seq(item, time.toString) }},
       "midasEfficiency" -> result.midasEfficiency.map { case (id, efficiency) => id.toString -> efficiency },

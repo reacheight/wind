@@ -49,13 +49,13 @@ export default class Analysis extends React.Component {
           <li>
             <Summons heroes={heroes} summons={analysis.summon_gold} />
           </li>}
-          {!isEmpty(analysis.unusedItems) &&
+          {(!isEmpty(analysis.unusedItems) || !isEmpty(analysis.unusedOnAllyAbilities)) &&
           <li>
             <UnusedItems heroes={heroes} unusedItems={analysis.unusedItems} />
           </li>}
           {!isEmpty(analysis.unusedAbilities) &&
           <li>
-            <UnusedAbilities heroes={heroes} unusedAbilities={analysis.unusedAbilities} />
+            <UnusedAbilities heroes={heroes} unusedAbilities={analysis.unusedAbilities} unusedOnAllyAbilities={analysis.unusedOnAllyAbilities} />
           </li>}
           {!isEmpty(analysis.couriers) &&
           <li>

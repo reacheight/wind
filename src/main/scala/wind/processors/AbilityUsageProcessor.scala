@@ -37,6 +37,7 @@ class AbilityUsageProcessor {
 
     addUnusedAbility("CDOTA_Ability_Slark_ShadowDance", "Shadow Dance")
     addUnusedAbility("CDOTA_Ability_Slark_Depth_Shroud", "Depths Shroud")
+    addUnusedAbility("CDOTA_Ability_Slark_Pounce", "Pounce")
     addUnusedAbility("CDOTA_Ability_Dazzle_Shallow_Grave", "Shallow Grave")
     addUnusedAbility("CDOTA_Ability_Terrorblade_Sunder", "Sunder")
     addUnusedAbility("CDOTA_Ability_Life_Stealer_Rage", "Rage")
@@ -46,6 +47,15 @@ class AbilityUsageProcessor {
     addUnusedAbility("CDOTA_Ability_PhantomLancer_Doppelwalk", "Doppelganger")
     addUnusedAbility("CDOTA_Ability_Weaver_TimeLapse", "Time Lapse")
     addUnusedAbility("CDOTA_Ability_Winter_Wyvern_Cold_Embrace", "Cold Embrace")
+    addUnusedAbility("puck_phase_shift", "Phase Shift")
+    addUnusedAbility("CDOTA_Ability_VoidSpirit_Dissimilate", "Dissimilate")
+    addUnusedAbility("CDOTA_Ability_Riki_TricksOfTheTrade", "Tricks of the Trade")
+    addUnusedAbility("CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack")
+    addUnusedAbility("CDOTA_Ability_Omniknight_Purification", "Purification")
+    addUnusedAbility("CDOTA_Ability_Abaddon_AphoticShield", "Aphotic Shield")
+    addUnusedAbility("CDOTA_Ability_AntiMage_Blink", "Blink")
+    addUnusedAbility("CDOTA_Ability_QueenOfPain_Blink", "Blink")
+    addUnusedAbility("CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field")
 
     def addUnusedAbility(entityName: String, realName: String): Unit =
       findUnusedAbility(hero, abilities, entityName)
@@ -85,6 +95,11 @@ class AbilityUsageProcessor {
     })
 
     addUnusedOnAllyAbility("CDOTA_Ability_Winter_Wyvern_Cold_Embrace", "Cold Embrace", _ => 1000)
+    addUnusedOnAllyAbility("CDOTA_Ability_Omniknight_Purification", "Purification", _ => 550)
+    addUnusedOnAllyAbility("CDOTA_Ability_Abaddon_AphoticShield", "Aphotic Shield", _ => 550)
+    addUnusedOnAllyAbility("CDOTA_Ability_Abaddon_DeathCoil", "Mist Coil", _ => 575)
+    addUnusedOnAllyAbility("CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack", _ => 700)
+    addUnusedOnAllyAbility("CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field", _ => 1050)
 
     def addUnusedOnAllyAbility(enittyName: String, realName: String, castRange: PartialFunction[Int, Int]): Unit = {
       allies.foreach(ally => {

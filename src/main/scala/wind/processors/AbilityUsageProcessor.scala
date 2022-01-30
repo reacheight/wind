@@ -101,8 +101,9 @@ class AbilityUsageProcessor {
     addUnusedOnAllyAbility("CDOTA_Ability_Abaddon_DeathCoil", "Mist Coil", _ => 575)
     addUnusedOnAllyAbility("CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack", _ => 700)
     addUnusedOnAllyAbility("CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field", _ => 1050)
+    addUnusedOnAllyAbility("CDOTA_Ability_Weaver_TimeLapse", "Time Lapse", _ => 500, true)
 
-    def addUnusedOnAllyAbility(entityName: String, realName: String, castRange: PartialFunction[Int, Int]): Unit = {
+    def addUnusedOnAllyAbility(entityName: String, realName: String, castRange: PartialFunction[Int, Int], requireScepter: Boolean = false): Unit = {
       allies.foreach(ally => {
         val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
         findUnusedAbility(ally, getAbilities(ally), entityName)
@@ -111,6 +112,7 @@ class AbilityUsageProcessor {
             val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + getAdditionalCastRange(ally)
             abilityCastRange >= distance
           })
+          .filter(_ => !requireScepter || hasScepter(ally))
           .foreach(_ => _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName))
       })
     }
@@ -147,5 +149,11 @@ class AbilityUsageProcessor {
     val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
     val items = itemUsageProcessor.getItems(hero)
     castRangeItems.filter(item => itemUsageProcessor.findItem(items, item._1).nonEmpty).map(_._2).sum
+  }
+
+  private def hasScepter(hero: Entity): Boolean = {
+    val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
+    val items = itemUsageProcessor.getItems(hero)
+    itemUsageProcessor.findItem(items, "CDOTA_Item_UltimateScepter").nonEmpty
   }
 }

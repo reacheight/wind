@@ -51,7 +51,7 @@ class ItemUsageProcessor {
       .filterNot(Util.isOnCooldown)
   }
 
-  private def getItems(hero: Entity): Seq[Entity] = {
+  def getItems(hero: Entity): Seq[Entity] = {
     ((0 to 5) ++ Seq(16))
       .map(i => hero.getProperty[Int](s"m_hItems.000$i"))
       .filter(_ != Util.NullValue)
@@ -59,7 +59,7 @@ class ItemUsageProcessor {
       .filter(_ != null)
   }
 
-  private def findItem(items: Seq[Entity], name: String): Option[Entity] = {
+  def findItem(items: Seq[Entity], name: String): Option[Entity] = {
     val stringTable = ctx.getProcessor(classOf[StringTables]).forName("EntityNames")
     items.find(item => item.getDtClass.getDtName == name ||
       item.getDtClass.getDtName == GeneralItemName &&

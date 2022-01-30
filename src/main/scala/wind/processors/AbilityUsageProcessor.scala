@@ -80,6 +80,7 @@ class AbilityUsageProcessor {
     // todo брать свойства абилки из файлика доты с описанием всех скиллов или с stratz ???
     // todo учитывать шмотки на каст ренж
     // todo учитывать роль убитого персонажа ???
+    // todo смотреть на бкб
 
     addUnusedOnAllyAbility("CDOTA_Ability_Dazzle_Shallow_Grave", "Shalow Grave", {
       case 1 => 700

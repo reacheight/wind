@@ -102,10 +102,10 @@ class AbilityUsageProcessor {
     addUnusedOnAllyAbility("CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack", _ => 700)
     addUnusedOnAllyAbility("CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field", _ => 1050)
 
-    def addUnusedOnAllyAbility(enittyName: String, realName: String, castRange: PartialFunction[Int, Int]): Unit = {
+    def addUnusedOnAllyAbility(entityName: String, realName: String, castRange: PartialFunction[Int, Int]): Unit = {
       allies.foreach(ally => {
         val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
-        findUnusedAbility(ally, getAbilities(ally), enittyName)
+        findUnusedAbility(ally, getAbilities(ally), entityName)
           .filter(ability => {
             val distance = Util.getDistance(hero, ally)
             val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + getAdditionalCastRange(ally)

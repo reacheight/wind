@@ -4,16 +4,19 @@ import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged, UsesEntities}
 import wind.Util
-import wind.models.GameTimeState
+import wind.models.{GameTimeState, PlayerId}
 
 import scala.collection.mutable.ListBuffer
 
 @UsesEntities
 class FightProcessor {
-  def fights: Seq[(GameTimeState, (Float, Float))] = _fights
+  type DeathData = (GameTimeState, (Float, Float), Map[PlayerId, (Float, Float)])
+  type Fight = (GameTimeState, (Float, Float), Seq[PlayerId])
 
-  private val _deaths: ListBuffer[(GameTimeState, (Float, Float))] = ListBuffer.empty
-  private var _fights: Seq[(GameTimeState, (Float, Float))] = Seq.empty
+  def fights: Seq[Fight] = _fights
+
+  private val _deaths: ListBuffer[DeathData] = ListBuffer.empty
+  private var _fights: Seq[Fight] = Seq.empty
 
   private val TIME_DISTANCE = 20
   private val LOCATION_DISTANCE = 3000
@@ -26,31 +29,42 @@ class FightProcessor {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
-    val splitByLocation = _deaths.foldLeft(ListBuffer.empty[ListBuffer[(GameTimeState, (Float, Float))]]) { case (locations, (deathTime, deathLocation)) =>
+    val splitByLocation = _deaths.foldLeft(ListBuffer.empty[ListBuffer[DeathData]]) { case (locations, (deathTime, deathLocation, heroLocations)) =>
       locations.find(location => {
         val averageLocation = Util.getAverageLocation(location.map(_._2).toSeq)
         val distance = Util.getDistance(averageLocation, deathLocation)
 
         distance < LOCATION_DISTANCE
       }) match {
-        case Some(location) => location.addOne((deathTime, deathLocation))
-        case None => locations.addOne(ListBuffer((deathTime, deathLocation)))
+        case Some(location) => location.addOne((deathTime, deathLocation, heroLocations))
+        case None => locations.addOne(ListBuffer((deathTime, deathLocation, heroLocations)))
       }
 
       locations
     }
 
-    _fights = splitByLocation.flatMap(deaths =>
-      deaths.foldLeft(Seq(Seq.empty[(GameTimeState, (Float, Float))])) { case (fights, (deathTime, location)) =>
-        val curFight = fights.head
-        val prevFights = fights.tail
-        if (curFight.isEmpty || deathTime.gameTime - curFight.last._1.gameTime <= TIME_DISTANCE)
-          (curFight :+ (deathTime, location)) +: prevFights
-        else
-          Seq((deathTime, location)) +: fights
-      }
-        .filter(_.length >= 2)
-        .map(fight => (fight.head._1, Util.getAverageLocation(fight.map(_._2)))))
+    val fights = splitByLocation.flatMap(deaths => deaths.foldLeft(Seq(Seq.empty[DeathData])) { case (fights, (deathTime, location, heroLocations)) =>
+      val curFight = fights.head
+      val prevFights = fights.tail
+      if (curFight.isEmpty || deathTime.gameTime - curFight.last._1.gameTime <= TIME_DISTANCE)
+        (curFight :+ (deathTime, location, heroLocations)) +: prevFights
+      else
+        Seq((deathTime, location, heroLocations)) +: fights
+    })
+      .filter(_.length >= 2)
+
+    _fights = fights.map(deaths => {
+      val start = deaths.head._1
+      val fightLocation = Util.getAverageLocation(deaths.map(_._2))
+
+      val heroesLocations = deaths.flatMap(_._3)
+      val heroesInFight = heroesLocations
+        .filter { case (_, location) => Util.getDistance(location, fightLocation) < LOCATION_DISTANCE }
+        .map(_._1)
+        .distinct
+
+      (start, fightLocation, heroesInFight)
+    })
       .sortBy(_._1.gameTime)
       .toSeq
   }
@@ -62,6 +76,9 @@ class FightProcessor {
     val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
     val time = Util.getGameTimeState(gameRules)
 
-    _deaths.addOne((time, Util.getLocation(hero)))
+    val heroes = Util.toList(entities.getAllByPredicate(Util.isHero))
+    val locations = heroes.map(hero => PlayerId(hero.getProperty[Int]("m_iPlayerID")) -> Util.getLocation(hero)).toMap
+
+    _deaths.addOne((time, Util.getLocation(hero), locations))
   }
 }

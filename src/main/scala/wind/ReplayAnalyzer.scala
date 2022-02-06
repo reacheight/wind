@@ -91,5 +91,5 @@ case class AnalysisResult(
   midasEfficiency: Map[PlayerId, Float],
   scanUsageCount: Map[Team, Int],
   wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
-  fights: Seq[(GameTimeState, (Float, Float))],
+  fights: Seq[(GameTimeState, (Float, Float), Seq[PlayerId])],
 )

@@ -30,6 +30,7 @@ object ReplayAnalyzer {
     val midasProcessor = new MidasEfficiencyProcessor
     val scanProcessor = new ScanProcessor
     val creepwaveProcessor = new CreepwaveProcessor
+    val fightProcessor = new FightProcessor
 
     val start = System.currentTimeMillis()
     Using.Manager { use =>
@@ -37,7 +38,7 @@ object ReplayAnalyzer {
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
         itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor, abilityUsageProcessor,
-        purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor)
+        purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor, fightProcessor)
     }
     println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
 
@@ -63,6 +64,7 @@ object ReplayAnalyzer {
       midasProcessor.midasEfficiency,
       scanProcessor.scanUsageCount,
       creepwaveProcessor.wastedCreepwaves,
+      fightProcessor.fights
     )
   }
 }
@@ -89,4 +91,5 @@ case class AnalysisResult(
   midasEfficiency: Map[PlayerId, Float],
   scanUsageCount: Map[Team, Int],
   wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
+  fights: Seq[(GameTimeState, (Float, Float))],
 )

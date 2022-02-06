@@ -55,7 +55,7 @@ class LaneProcessor {
     }
 
     playerLane = laneStageLocation map {case (playerId, (firstStageLocation, secondStageLocation)) =>
-      playerId -> ((getLane _).tupled(firstStageLocation), (getLane _).tupled(secondStageLocation))
+      playerId -> ((Util.getLane _).tupled(firstStageLocation), (Util.getLane _).tupled(secondStageLocation))
     }
 
     val radiantData = entities.getByDtName("CDOTA_DataRadiant")
@@ -84,13 +84,4 @@ class LaneProcessor {
       case _ => None
     }
   }
-
-  private def getLane(x: Float, y: Float): Lane = (x, y) match {
-      case _ if y > 10000 && x < 4500 => Lane.Top
-      case _ if y > 6000 && y < 10000 && x > 6000 && x < 10000 => Lane.Middle
-      case _ if y > 2000 && y < 6000 && x > 4000 && x < 11800 => Lane.RadiantJungle
-      case _ if y > 10000 && y < 14000 && x > 4500 && x < 12000 => Lane.DireJungle
-      case _ if y < 6000 && x > 11800 => Lane.Bot
-      case _ => Lane.Roaming
-    }
 }

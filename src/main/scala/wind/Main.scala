@@ -157,6 +157,9 @@ object Main {
     result.wastedCreepwaves.foreach { case (time, team, lane, tier) =>
       println(s"$time: $team $lane T$tier")
     }
+
+    if (result.fights.nonEmpty) println("\nFights:")
+    result.fights.foreach { case (time, location) => println(time.toString, location, Util.getLane(location._1, location._2))}
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

@@ -1,7 +1,8 @@
 package wind
 
 import skadistats.clarity.model.Entity
-import wind.models.GameTimeState
+import wind.models.{GameTimeState, Lane}
+import wind.models.Lane.Lane
 import wind.models.Team._
 
 import scala.collection.mutable.ArrayBuffer
@@ -59,12 +60,32 @@ object Util {
     (x * 128 + vecX - 8192, y * 128 + vecY - 8192)
   }
 
+  def getAverageLocation(locations: Seq[(Float, Float)]): (Float, Float) = {
+    val xs = locations.map(_._1)
+    val ys = locations.map(_._2)
+
+    (xs.sum / xs.length, ys.sum / ys.length)
+  }
+
+  def getLane(x: Float, y: Float): Lane = (x, y) match {
+    case _ if y > 10000 && x < 4500 => Lane.Top
+    case _ if y > 6000 && y < 10000 && x > 6000 && x < 10000 => Lane.Middle
+    case _ if y > 2000 && y < 6000 && x > 4000 && x < 11800 => Lane.RadiantJungle
+    case _ if y > 10000 && y < 14000 && x > 4500 && x < 12000 => Lane.DireJungle
+    case _ if y < 6000 && x > 11800 => Lane.Bot
+    case _ => Lane.Roaming
+  }
+
   def getDistance(first: Entity, second: Entity): Double = {
     val firstLocation = getLocation(first)
     val secondLocation = getLocation(second)
 
-    val deltaX = math.pow(firstLocation._1 - secondLocation._1, 2)
-    val deltaY = math.pow(firstLocation._2 - secondLocation._2, 2)
+    getDistance(firstLocation, secondLocation)
+  }
+
+  def getDistance(first: (Float, Float), second: (Float, Float)): Double = {
+    val deltaX = math.pow(first._1 - second._1, 2)
+    val deltaY = math.pow(first._2 - second._2, 2)
     math.sqrt(deltaX + deltaY)
   }
 

@@ -1,7 +1,7 @@
 package wind
 
 import skadistats.clarity.model.Entity
-import wind.models.{GameTimeState, Lane}
+import wind.models.{GameTimeState, Lane, Location}
 import wind.models.Lane.Lane
 import wind.models.Team._
 
@@ -48,7 +48,7 @@ object Util {
 
   def isVisibleByEnemies(entity: Entity): Boolean = entity.getProperty[Int]("m_iTaggedAsVisibleByTeam") > 10
 
-  def getLocation(entity: Entity): (Float, Float) = {
+  def getLocation(entity: Entity): Location = {
     if (!entity.hasProperty("CBodyComponent.m_cellX") || !entity.hasProperty("CBodyComponent.m_cellY") ||
       !entity.hasProperty("CBodyComponent.m_vecX") || !entity.hasProperty("CBodyComponent.m_vecY")) {
       throw new IllegalArgumentException
@@ -57,22 +57,22 @@ object Util {
     val (x, y) = (entity.getProperty[Int]("CBodyComponent.m_cellX"), entity.getProperty[Int]("CBodyComponent.m_cellY"))
     val (vecX, vecY) = (entity.getProperty[Float]("CBodyComponent.m_vecX"), entity.getProperty[Float]("CBodyComponent.m_vecY"))
 
-    (x * 128 + vecX - 8192, y * 128 + vecY - 8192)
+    Location(x * 128 + vecX - 8192, y * 128 + vecY - 8192)
   }
 
-  def getAverageLocation(locations: Seq[(Float, Float)]): (Float, Float) = {
-    val xs = locations.map(_._1)
-    val ys = locations.map(_._2)
+  def getAverageLocation(locations: Seq[Location]): Location = {
+    val xs = locations.map(_.X)
+    val ys = locations.map(_.Y)
 
-    (xs.sum / xs.length, ys.sum / ys.length)
+    Location(xs.sum / xs.length, ys.sum / ys.length)
   }
 
-  def getLane(x: Float, y: Float): Lane = (x, y) match {
-    case _ if y > 10000 && x < 4500 => Lane.Top
-    case _ if y > 6000 && y < 10000 && x > 6000 && x < 10000 => Lane.Middle
-    case _ if y > 2000 && y < 6000 && x > 4000 && x < 11800 => Lane.RadiantJungle
-    case _ if y > 10000 && y < 14000 && x > 4500 && x < 12000 => Lane.DireJungle
-    case _ if y < 6000 && x > 11800 => Lane.Bot
+  def getLane(l: Location): Lane = l match {
+    case Location(x, y) if y > 10000 && x < 4500 => Lane.Top
+    case Location(x, y) if y > 6000 && y < 10000 && x > 6000 && x < 10000 => Lane.Middle
+    case Location(x, y) if y > 2000 && y < 6000 && x > 4000 && x < 11800 => Lane.RadiantJungle
+    case Location(x, y) if y > 10000 && y < 14000 && x > 4500 && x < 12000 => Lane.DireJungle
+    case Location(x, y) if y < 6000 && x > 11800 => Lane.Bot
     case _ => Lane.Roaming
   }
 
@@ -83,9 +83,9 @@ object Util {
     getDistance(firstLocation, secondLocation)
   }
 
-  def getDistance(first: (Float, Float), second: (Float, Float)): Double = {
-    val deltaX = math.pow(first._1 - second._1, 2)
-    val deltaY = math.pow(first._2 - second._2, 2)
+  def getDistance(first: Location, second: Location): Double = {
+    val deltaX = math.pow(first.X - second.X, 2)
+    val deltaY = math.pow(first.Y - second.Y, 2)
     math.sqrt(deltaX + deltaY)
   }
 

@@ -5,7 +5,7 @@ import skadistats.clarity.processor.entities.{Entities, OnEntityCreated, OnEntit
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
-import wind.models.{GameTimeState, PlayerId}
+import wind.models.{GameTimeState, Location, PlayerId}
 import wind.Util
 
 import scala.collection.mutable
@@ -15,14 +15,14 @@ class VisionProcessor {
   def smokeUsedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_smoke_of_deceit").toSeq
   def observerPlacedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_ward_observer").toSeq
 
-  def observers: Seq[((Float, Float), GameTimeState, GameTimeState)] = _observers.toMap.values.toSeq
+  def observers: Seq[(Location, GameTimeState, GameTimeState)] = _observers.toMap.values.toSeq
 
   private val itemUsages = mutable.Map(
     "item_smoke_of_deceit" -> ListBuffer.empty[(GameTimeState, PlayerId)],
     "item_ward_observer" -> ListBuffer.empty[(GameTimeState, PlayerId)]
   )
 
-  private val _observers = mutable.Map.empty[Int, ((Float, Float), GameTimeState, GameTimeState)]
+  private val _observers = mutable.Map.empty[Int, (Location, GameTimeState, GameTimeState)]
 
   @OnEntityCreated(classPattern = "CDOTA_NPC_Observer_Ward")
   private def onObserverPlaced(ctx: Context, observer: Entity): Unit = {

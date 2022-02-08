@@ -160,9 +160,11 @@ object Main {
 
     if (result.fights.nonEmpty) println("\nFights:")
     result.fights.foreach { case (time, location, heroes) =>
-      println(s"$time ${location} (${Util.getLane(location._1, location._2)})\n" +
+      println(s"$time ${location} (${Util.getLane(location)})\n" +
         s"Participants: ${heroes.map(h => result.heroName(h)).mkString(", ")}\n")
     }
+
+    if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.mkString(", ")}")
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

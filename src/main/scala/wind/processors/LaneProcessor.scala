@@ -6,7 +6,7 @@ import wind.models.Team._
 import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
-import wind.models.Lane
+import wind.models.{Lane, Location}
 
 class LaneProcessor {
   private val Epsilon = 0.001f
@@ -18,9 +18,9 @@ class LaneProcessor {
   private val entities: Entities = null
 
   private var currentIteration = 1
-  private var heroLocationMap = Map[Int, Array[(Float, Float)]]()
+  private var heroLocationMap = Map[Int, Array[Location]]()
 
-  var laneStageLocation: Map[Int, ((Float, Float), (Float, Float))] = Map()
+  var laneStageLocation: Map[Int, (Location, Location)] = Map()
   var playerLane: Map[Int, (Lane, Lane)] = Map()
   var laneExp: Map[Int, Int] = Map()
   var laneNetworth: Map[Int, Int] = Map()
@@ -48,14 +48,14 @@ class LaneProcessor {
   def onLaneStageEnded(): Unit = {
     laneStageLocation = heroLocationMap map {case (playerId, locations) =>
       val (firstHalf, secondHalf) = locations.splitAt(locations.length / 2)
-      val firstHalfLocation = (firstHalf.map(_._1).sum / firstHalf.length, firstHalf.map(_._2).sum / firstHalf.length)
-      val secondHalfLocation = (secondHalf.map(_._1).sum / secondHalf.length, secondHalf.map(_._2).sum / secondHalf.length)
+      val firstHalfLocation = Location(firstHalf.map(_.X).sum / firstHalf.length, firstHalf.map(_.Y).sum / firstHalf.length)
+      val secondHalfLocation = Location(secondHalf.map(_.X).sum / secondHalf.length, secondHalf.map(_.Y).sum / secondHalf.length)
 
       playerId -> (firstHalfLocation, secondHalfLocation)
     }
 
     playerLane = laneStageLocation map {case (playerId, (firstStageLocation, secondStageLocation)) =>
-      playerId -> ((Util.getLane _).tupled(firstStageLocation), (Util.getLane _).tupled(secondStageLocation))
+      playerId -> (Util.getLane(firstStageLocation), Util.getLane(secondStageLocation))
     }
 
     val radiantData = entities.getByDtName("CDOTA_DataRadiant")

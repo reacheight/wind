@@ -4,6 +4,7 @@ package processors
 import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
+import wind.models.Location
 
 class CourierProcessor {
   def courierIsOut: Map[Int, Boolean] = _courierIsOut
@@ -20,12 +21,10 @@ class CourierProcessor {
       val couriers = Util.toList(entities.getAllByDtName("CDOTA_Unit_Courier"))
       _courierIsOut = couriers.map(courier => {
         val playerId = courier.getProperty[Int]("m_nPlayerOwnerID")
-        val (x, y) = Util.getLocation(courier)
-
-        playerId -> isOutOfFountain(x, y)
+        playerId -> isOutOfFountain(Util.getLocation(courier))
       }).toMap
     }
   }
 
-  private def isOutOfFountain(x: Float, y: Float): Boolean = -x + 3600 < y && y < -x + 29080
+  private def isOutOfFountain(l: Location): Boolean = -l.X + 3600 < l.Y && l.Y < -l.X + 29080
 }

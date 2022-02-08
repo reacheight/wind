@@ -42,6 +42,13 @@ object ReplayAnalyzer {
     }
     println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
 
+    val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
+    Using.Manager { use =>
+      val source = use(new MappedFileSource(replay))(s => s.close())
+      val runner = new SimpleRunner(source)
+      runner.runWith(badFightsProcessor)
+    }
+
     AnalysisResult(
       courierProcessor.courierIsOut.map { case (id, isOut) => PlayerId(id) -> isOut },
       laneProcessor.playerLane.map { case (id, lane) => PlayerId(id) -> lane },
@@ -64,7 +71,8 @@ object ReplayAnalyzer {
       midasProcessor.midasEfficiency,
       scanProcessor.scanUsageCount,
       creepwaveProcessor.wastedCreepwaves,
-      fightProcessor.fights
+      fightProcessor.fights,
+      badFightsProcessor.badFights,
     )
   }
 }
@@ -91,5 +99,6 @@ case class AnalysisResult(
   midasEfficiency: Map[PlayerId, Float],
   scanUsageCount: Map[Team, Int],
   wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
-  fights: Seq[(GameTimeState, (Float, Float), Seq[PlayerId])],
+  fights: Seq[(GameTimeState, Location, Seq[PlayerId])],
+  badFights: Seq[GameTimeState],
 )

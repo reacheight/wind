@@ -159,12 +159,11 @@ object Main {
     }
 
     if (result.fights.nonEmpty) println("\nFights:")
-    result.fights.foreach { case (time, location, heroes) =>
-      println(s"$time ${location} (${Util.getLane(location)})\n" +
-        s"Participants: ${heroes.map(h => result.heroName(h)).mkString(", ")}\n")
-    }
-
-    if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.mkString(", ")}")
+    result.fights.foreach(fight => {
+      val (radiantHeroes, direHeroes) = fight.participants.partition(p => p.id <= 4)
+      println(s"${fight.start} ${fight.location} (${Util.getLane(fight.location)})\n" +
+        s"Participants (${radiantHeroes.length} radiant vs ${direHeroes.length} dire): ${fight.participants.map(h => result.heroName(h)).mkString(", ")}\n")
+    })
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

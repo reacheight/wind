@@ -4,14 +4,13 @@ import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged, UsesEntities}
 import wind.Util
-import wind.models.{GameTimeState, Location, PlayerId}
+import wind.models.{Fight, GameTimeState, Location, PlayerId}
 
 import scala.collection.mutable.ListBuffer
 
 @UsesEntities
 class FightProcessor {
   type DeathData = (GameTimeState, Location, Map[PlayerId, Location])
-  type Fight = (GameTimeState, Location, Seq[PlayerId])
 
   def fights: Seq[Fight] = _fights
 
@@ -66,6 +65,7 @@ class FightProcessor {
       (start, fightLocation, heroesInFight)
     })
       .sortBy(_._1.gameTime)
+      .map(fight => Fight(fight._1, fight._2, fight._3))
       .toSeq
   }
 

@@ -40,7 +40,6 @@ object ReplayAnalyzer {
         itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor, abilityUsageProcessor,
         purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor, fightProcessor)
     }
-    println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
 
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
     Using.Manager { use =>
@@ -48,6 +47,8 @@ object ReplayAnalyzer {
       val runner = new SimpleRunner(source)
       runner.runWith(badFightsProcessor)
     }
+
+    println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
 
     AnalysisResult(
       courierProcessor.courierIsOut.map { case (id, isOut) => PlayerId(id) -> isOut },

@@ -18,7 +18,8 @@ class FightProcessor {
   private var _fights: Seq[Fight] = Seq.empty
 
   private val TIME_DISTANCE = 20
-  private val LOCATION_DISTANCE = 3000
+  private val FIGHT_LOCATION_DISTANCE = 4000
+  private val HERO_IN_FIGHT_DISTANCE = 2000
 
   @Insert
   private val entities: Entities = null
@@ -33,7 +34,7 @@ class FightProcessor {
         val averageLocation = Util.getAverageLocation(location.map(_._2).toSeq)
         val distance = Util.getDistance(averageLocation, deathLocation)
 
-        distance < LOCATION_DISTANCE
+        distance < FIGHT_LOCATION_DISTANCE
       }) match {
         case Some(location) => location.addOne((deathTime, deathLocation, heroLocations))
         case None => locations.addOne(ListBuffer((deathTime, deathLocation, heroLocations)))
@@ -58,7 +59,7 @@ class FightProcessor {
 
       val heroesLocations = deaths.flatMap(_._3)
       val heroesInFight = heroesLocations
-        .filter { case (_, location) => Util.getDistance(location, fightLocation) < LOCATION_DISTANCE }
+        .filter { case (_, location) => Util.getDistance(location, fightLocation) < HERO_IN_FIGHT_DISTANCE }
         .map(_._1)
         .distinct
 

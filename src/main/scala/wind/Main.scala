@@ -164,6 +164,8 @@ object Main {
       println(s"${fight.start} ${fight.location} (${Util.getLane(fight.location)})\n" +
         s"Participants (${radiantHeroes.length} radiant vs ${direHeroes.length} dire): ${fight.participants.map(h => result.heroName(h)).mkString(", ")}\n")
     })
+
+    if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.mkString(", ")}")
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

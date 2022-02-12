@@ -160,9 +160,9 @@ object Main {
 
     if (result.fights.nonEmpty) println("\nFights:")
     result.fights.foreach(fight => {
-      val (radiantHeroes, direHeroes) = fight.participants.partition(p => p.id <= 4)
       println(s"${fight.start} ${fight.location} (${Util.getLane(fight.location)})\n" +
-        s"Participants (${radiantHeroes.length} radiant vs ${direHeroes.length} dire): ${fight.participants.map(h => result.heroName(h)).mkString(", ")}\n")
+        s"Participants (${fight.radiantParticipants.size} radiant vs ${fight.direParticipants.size} dire): " +
+        s"${fight.participants.map(h => result.heroName(h)).mkString(", ")}\n")
     })
 
     if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.mkString(", ")}")

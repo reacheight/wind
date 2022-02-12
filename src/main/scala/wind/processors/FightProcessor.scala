@@ -61,7 +61,7 @@ class FightProcessor {
       val heroesInFight = heroesLocations
         .filter { case (_, location) => Util.getDistance(location, fightLocation) < HERO_IN_FIGHT_DISTANCE }
         .map(_._1)
-        .distinct
+        .toSet
 
       (start, fightLocation, heroesInFight)
     })

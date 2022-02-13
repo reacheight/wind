@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Analysis from './Analysis/Analysis'
 import Header from './Header/Header';
 import Form from 'react-bootstrap/Form';
-import Spinner from 'react-bootstrap/Spinner';
+import { Spinner } from '@chakra-ui/react';
 
 import styles from './App.module.css'
 
@@ -47,7 +47,7 @@ const Wind = () => {
       </form>
       {loading &&
         <div className={styles.spinner}>
-          <Spinner variant='light' animation='border' role='status'></Spinner>
+          <Spinner />
         </div>
       }
       <Analysis analysis={analysis} />

@@ -1,7 +1,7 @@
 package wind
 
 import skadistats.clarity.Clarity
-import skadistats.clarity.processor.runner.SimpleRunner
+import skadistats.clarity.processor.runner.{ControllableRunner, SimpleRunner}
 import skadistats.clarity.source.MappedFileSource
 import wind.models.Lane.Lane
 import wind.models.Role.Role
@@ -73,7 +73,7 @@ object ReplayAnalyzer {
       scanProcessor.scanUsageCount,
       creepwaveProcessor.wastedCreepwaves,
       fightProcessor.fights,
-      badFightsProcessor.badFights,
+      fightProcessor.fights.filter(fight => badFightsProcessor.badFights.contains(fight.start)),
     )
   }
 }
@@ -101,5 +101,5 @@ case class AnalysisResult(
   scanUsageCount: Map[Team, Int],
   wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
   fights: Seq[Fight],
-  badFights: Seq[GameTimeState],
+  badFights: Seq[Fight],
 )

@@ -167,7 +167,7 @@ object Main {
       )
     })
 
-    if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.mkString(", ")}")
+    if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.map(_.start).mkString(", ")}")
   }
 
   def downloadReplay(location: ReplayLocation): Boolean = {

@@ -120,4 +120,9 @@ object Util {
     val respawnTime = hero.getProperty[Float]("m_flRespawnTime")
     if (respawnTime < 0) 0 else math.max(respawnTime - time, 0)
   }
+
+  def getOppositeTeam(team: Team): Team = team match {
+    case Radiant => Dire
+    case Dire => Radiant
+  }
 }

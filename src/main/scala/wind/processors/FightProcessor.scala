@@ -18,7 +18,7 @@ class FightProcessor {
   private var _fights: Seq[Fight] = Seq.empty
 
   private val TIME_DISTANCE = 20
-  private val FIGHT_LOCATION_DISTANCE = 4000
+  private val FIGHT_LOCATION_DISTANCE = 3000
   private val HERO_IN_FIGHT_DISTANCE = 2000
 
   @Insert

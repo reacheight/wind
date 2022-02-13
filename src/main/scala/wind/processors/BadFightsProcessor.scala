@@ -4,6 +4,7 @@ import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged, UsesEntities}
 import wind.Util
+import wind.models.Team.Radiant
 import wind.models.{Fight, GameTimeState, PlayerId}
 
 import scala.collection.mutable
@@ -14,7 +15,11 @@ class BadFightsProcessor(fights: Seq[Fight]) {
   def badFights: Seq[GameTimeState] = _badFights.distinct.toSeq
 
   private val _badFights: ListBuffer[GameTimeState] = ListBuffer.empty
-  private val candidates = fights.filter(_.isOutnumbered)
+  private val candidates = fights
+    .filter(_.isOutnumbered)
+    .filter(_.participants.size >= 4)
+    .filter(_.winner.nonEmpty)
+    .filter(fight => Util.getOppositeTeam(fight.outnumberedTeam.get) == fight.winner.get)
 
   @Insert
   private val entities: Entities = null
@@ -38,8 +43,7 @@ class BadFightsProcessor(fights: Seq[Fight]) {
         preFight = true
         seenHeroes.clear()
 
-        val isRadiantOutnumbered = fight.radiantParticipants.size < fight.direParticipants.size
-        val teamPredicate: PlayerId => Boolean = if (isRadiantOutnumbered) p => p.id <= 4 else p => p.id > 4
+        val teamPredicate: PlayerId => Boolean = if (fight.outnumberedTeam.contains(Radiant)) p => p.id <= 4 else p => p.id > 4
         heroesNotInFight = players
           .diff(fight.participants)
           .filter(teamPredicate)

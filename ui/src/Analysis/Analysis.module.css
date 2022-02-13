@@ -62,3 +62,12 @@
   border-radius: 8px;
   background: #1A1A1A;
 }
+
+.spectralLink:hover {
+  color: purple;
+  text-shadow: 0 0 5px purple;
+}
+
+.spectralLink {
+  color: purple;
+}

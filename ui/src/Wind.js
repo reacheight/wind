@@ -8,6 +8,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import styles from './App.module.css'
 
 const Wind = () => {
+  const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+
   const [matchId, setMatchId] = useState('')
   const [analysis, setAnalysis] = useState({})
   const [loading, setLoading] = useState(false)
@@ -18,7 +20,7 @@ const Wind = () => {
     setLoading(true)
     setIsError(false)
 
-    fetch(`http://localhost:8080/analysis/${matchId}`)
+    fetch(`${API_ENDPOINT}/analysis/${matchId}`)
       .then(response => {
         if (!response.ok) {
           setIsError(true)

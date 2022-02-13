@@ -4,6 +4,8 @@ version := "0.1"
 
 scalaVersion := "2.13.6"
 
+enablePlugins(JavaAppPackaging)
+
 libraryDependencies ++= Seq(
   "com.skadistats" % "clarity" % "2.7.0",
   "org.slf4j" % "slf4j-simple" % "1.7.32",
@@ -16,3 +18,5 @@ libraryDependencies ++= Seq(
   "org.apache.commons" % "commons-compress" % "1.21",
   "com.lihaoyi" %% "cask" % "0.8.0"
 )
+
+Compile/mainClass := Some("wind.App")

@@ -162,7 +162,9 @@ object Main {
     result.fights.foreach(fight => {
       println(s"${fight.start} ${fight.location} (${Util.getLane(fight.location)})\n" +
         s"Participants (${fight.radiantParticipants.size} radiant vs ${fight.direParticipants.size} dire): " +
-        s"${fight.participants.map(h => result.heroName(h)).mkString(", ")}\n")
+        s"${fight.participants.map(h => result.heroName(h)).mkString(", ")}\n" +
+        s"Dead heroes: ${fight.dead.map(h => result.heroName(h)).mkString(", ")}\n"
+      )
     })
 
     if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.mkString(", ")}")

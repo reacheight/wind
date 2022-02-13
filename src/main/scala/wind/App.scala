@@ -54,5 +54,7 @@ object App extends cask.MainRoutes{
     cask.Response(responseData, headers = Seq(("Access-Control-Allow-Origin", "*")))
   }
 
+  override def port: Int = sys.env.getOrElse("PORT", "8080").toInt
+
   initialize()
 }

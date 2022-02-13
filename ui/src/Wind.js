@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 
 import Analysis from './Analysis/Analysis'
 import Header from './Header/Header';
-import Form from 'react-bootstrap/Form';
-import { Spinner } from '@chakra-ui/react';
+import {FormControl, Input, Spinner} from '@chakra-ui/react';
 
 import styles from './App.module.css'
 
@@ -43,7 +42,9 @@ const Wind = () => {
     <div className={styles.app}>
       <Header />
       <form className={styles.input} onSubmit={getAnalysis}>
-        <Form.Control type='text' placeholder='Enter match id' value={matchId} onChange={event => setMatchId(event.target.value)} />
+        <FormControl>
+          <Input id='matchId' value={matchId} type='text' placeholder='Enter match id' onChange={event => setMatchId(event.target.value)} />
+        </FormControl>
       </form>
       {loading &&
         <div className={styles.spinner}>

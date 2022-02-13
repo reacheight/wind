@@ -53,7 +53,7 @@ const Wind = () => {
       }
       <Analysis analysis={analysis} />
       {isError &&
-        <div className={styles.error}> Error occured :( </div>
+        <div className={styles.error}> Error occurred :( </div>
       }
     </div>
   )

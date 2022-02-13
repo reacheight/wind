@@ -46,6 +46,8 @@ object Util {
       entity.hasProperty(replicatingPropertyName) &&
       entity.getProperty[Int](replicatingPropertyName) == NullValue
 
+  def isAlive(entity: Entity): Boolean = entity.getProperty[Int]("m_lifeState") == 0
+
   def isVisibleByEnemies(entity: Entity): Boolean = entity.getProperty[Int]("m_iTaggedAsVisibleByTeam") > 10
 
   def getLocation(entity: Entity): Location = {

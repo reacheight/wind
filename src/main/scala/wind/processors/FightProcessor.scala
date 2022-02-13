@@ -78,7 +78,10 @@ class FightProcessor {
     val time = Util.getGameTimeState(gameRules)
 
     val heroes = Util.toList(entities.getAllByPredicate(Util.isHero))
-    val locations = heroes.map(hero => PlayerId(hero.getProperty[Int]("m_iPlayerID")) -> Util.getLocation(hero)).toMap
+    val locations = heroes
+      .filter(Util.isAlive)
+      .appended(hero)
+      .map(hero => PlayerId(hero.getProperty[Int]("m_iPlayerID")) -> Util.getLocation(hero)).toMap
 
     _deaths.addOne((time, Util.getLocation(hero), locations))
   }

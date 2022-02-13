@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Wind from './Wind';
 import reportWebVitals from './reportWebVitals';
+import { ChakraProvider } from '@chakra-ui/react'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Wind />
+    <ChakraProvider>
+      <Wind />
+    </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

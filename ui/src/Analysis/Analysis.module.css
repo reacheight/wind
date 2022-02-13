@@ -32,6 +32,7 @@
 
 .analysisTitle {
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .intelligence {
@@ -48,4 +49,16 @@
 
 .team1 {
   color: red
+}
+
+.accordionButton {
+  font-size: 24px;
+  justify-content: center;
+}
+
+.accordionItem {
+  border: none;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #1A1A1A;
 }

@@ -4,6 +4,10 @@ version := "0.1"
 
 scalaVersion := "2.13.6"
 
+enablePlugins(JavaAppPackaging)
+
+Compile/mainClass := Some("wind.WindApp")
+
 val Http4sVersion = "0.23.10"
 val LogbackVersion = "1.2.10"
 
@@ -27,7 +31,3 @@ libraryDependencies ++= Seq(
   "ch.qos.logback"  %  "logback-classic"     % LogbackVersion         % Runtime,
   "org.scalameta"   %% "svm-subs"            % "20.2.0"
 )
-
-enablePlugins(JavaAppPackaging)
-
-Compile/mainClass := Some("wind.WindApp")

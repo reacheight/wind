@@ -1,8 +1,8 @@
 export const Team = (t) => {
   switch (t) {
-    case "0":
+    case 0:
       return "Radiant"
-    case "1":
+    case 1:
       return "Dire"
   }
 }

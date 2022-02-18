@@ -3,9 +3,8 @@ import React from "react";
 import {Lane, Team} from "../util";
 
 const WastedCreepwaves = (props) => {
-  const creepwavesInfo = props.wastedCreepwaves.map(entry => {
-    let [time, team, lane, tier] = entry
-    let teamName = <span className={team === "0" ? styles.green : styles.red}>{Team(team)}</span>
+  const creepwavesInfo = props.wastedCreepwaves.map(([time, team, lane, tier]) => {
+    let teamName = <span className={styles["team" + team]}>{Team(team)}</span>
     return <li key={"creepwave" + team + lane + tier + time}>
       {teamName} {Lane(lane)} T{tier} tower at {time}
     </li>

@@ -21,7 +21,6 @@ libraryDependencies ++= Seq(
   "io.circe"                      %% "circe-generic"       % CirceVersion,
   "io.circe"                      %% "circe-parser"        % CirceVersion,
   "org.apache.commons"            % "commons-compress"     % "1.21",
-  "com.lihaoyi"                   %% "cask"                % "0.8.0",
   "org.http4s"                    %% "http4s-ember-server" % Http4sVersion,
   "org.http4s"                    %% "http4s-ember-client" % Http4sVersion,
   "org.http4s"                    %% "http4s-blaze-server" % Http4sVersion,

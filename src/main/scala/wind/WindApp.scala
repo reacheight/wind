@@ -104,11 +104,12 @@ object WindApp extends IOApp {
 
   }.orNotFound
 
-  val corsService = CORS(analysisService)
+  val corsService = CORS.policy.withAllowOriginAll(analysisService)
   
 
   def run(args: List[String]): IO[ExitCode] =
-    BlazeServerBuilder[IO](global)
+    BlazeServerBuilder[IO]
+      .withExecutionContext(global)
       .bindHttp(sys.env.getOrElse("PORT", "8080").toInt, "0.0.0.0")
       .withHttpApp(corsService)
       .serve

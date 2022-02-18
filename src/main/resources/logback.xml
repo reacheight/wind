@@ -6,7 +6,6 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <!-- path to your log file, where you want to store logs -->
         <file>logs/wind.log</file>
         <append>false</append>
         <encoder>

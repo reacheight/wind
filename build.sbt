@@ -9,12 +9,11 @@ enablePlugins(JavaAppPackaging)
 Compile/mainClass := Some("wind.WindApp")
 
 val Http4sVersion = "0.23.10"
-val LogbackVersion = "1.2.10"
 
 libraryDependencies ++= Seq(
   "com.skadistats" % "clarity" % "2.7.0",
-  "org.slf4j" % "slf4j-simple" % "1.7.32",
-  "org.slf4j" % "slf4j-api" % "1.7.32",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4",
+  "ch.qos.logback"  %  "logback-classic"     % "1.2.10",
   "com.softwaremill.sttp.client3" %% "core" % "3.3.16",
   "com.softwaremill.sttp.client3" %% "circe" % "3.3.16",
   "io.circe" %% "circe-core" % "0.14.1",
@@ -28,6 +27,5 @@ libraryDependencies ++= Seq(
   "org.http4s"      %% "http4s-blaze-client" % Http4sVersion,
   "org.http4s"      %% "http4s-circe"        % Http4sVersion,
   "org.http4s"      %% "http4s-dsl"          % Http4sVersion,
-  "ch.qos.logback"  %  "logback-classic"     % LogbackVersion         % Runtime,
   "org.scalameta"   %% "svm-subs"            % "20.2.0"
 )

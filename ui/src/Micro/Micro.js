@@ -19,11 +19,11 @@ const Micro = ({ analysis, heroes }) => {
         <li>
           <Summons heroes={heroes} summons={analysis.summon_gold} />
         </li>}
-      {(!isEmpty(analysis.unusedItems) || !isEmpty(analysis.unusedOnAllyAbilities)) &&
+      {(analysis.unusedItems.length !== 0) &&
         <li>
           <UnusedItems heroes={heroes} unusedItems={analysis.unusedItems} />
         </li>}
-      {!isEmpty(analysis.unusedAbilities) &&
+      {(analysis.unusedAbilities.length + analysis.unusedOnAllyAbilities.length !== 0) &&
         <li>
           <UnusedAbilities heroes={heroes} unusedAbilities={analysis.unusedAbilities} unusedOnAllyAbilities={analysis.unusedOnAllyAbilities} />
         </li>}

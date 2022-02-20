@@ -21,6 +21,7 @@ class FightProcessor {
   private val FIGHT_LOCATION_DISTANCE = 3000
   private val HERO_IN_FIGHT_DISTANCE = 2000
   private val FIGHT_START_DIFF = 8
+  private val FIGHT_END_DIFF = 3
 
   @Insert
   private val entities: Entities = null
@@ -57,6 +58,10 @@ class FightProcessor {
     _fights = fights.map(deaths => {
       val firstDeathTime = deaths.head._1
       val start = firstDeathTime.copy(gameTime = firstDeathTime.gameTime - FIGHT_START_DIFF)
+
+      val lastDeathTime = deaths.last._1
+      val end = lastDeathTime.copy(gameTime = lastDeathTime.gameTime + FIGHT_END_DIFF)
+
       val fightLocation = Util.getAverageLocation(deaths.map(_._3))
 
       val deadInFight = deaths.map(_._2).toSet
@@ -66,7 +71,7 @@ class FightProcessor {
         .map(_._1)
         .toSet
 
-      Fight(start, fightLocation, heroesInFight, deadInFight)
+      Fight(start, end, fightLocation, heroesInFight, deadInFight)
     })
       .sortBy(_.start.gameTime)
       .toSeq

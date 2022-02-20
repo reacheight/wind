@@ -11,21 +11,21 @@ import React from "react";
 const Macro = ({ analysis, heroes }) => {
   return (
     <ul className={styles.list}>
-      {!isEmpty(analysis.obs_placed_on_vision) &&
+      {!isEmpty(analysis.obsPlacedOnVision) &&
         <li>
-          <Observers heroes={heroes} observers={analysis.obs_placed_on_vision} />
+          <Observers heroes={heroes} observers={analysis.obsPlacedOnVision} />
         </li>}
-      {!isEmpty(analysis.smokes_used_on_vision) &&
+      {!isEmpty(analysis.smokesUsedOnVision) &&
         <li>
-          <Smokes heroes={heroes} smokes={analysis.smokes_used_on_vision} />
+          <Smokes heroes={heroes} smokes={analysis.smokesUsedOnVision} />
         </li>}
-      {!isEmpty(analysis.obs_max_count_time) &&
+      {!isEmpty(analysis.obsMaxCountTime) &&
         <li>
-          <ObserversMaxStock observersMaxStock={analysis.obs_max_count_time} />
+          <ObserversMaxStock observersMaxStock={analysis.obsMaxCountTime} />
         </li>}
-      {!isEmpty(analysis.smoke_max_count_time) &&
+      {!isEmpty(analysis.smokeMaxCountTime) &&
         <li>
-          <SmokesMaxStock smokesMaxStock={analysis.smoke_max_count_time} />
+          <SmokesMaxStock smokesMaxStock={analysis.smokeMaxCountTime} />
         </li>}
       {!isEmpty(analysis.wastedCreepwaves) &&
         <li>

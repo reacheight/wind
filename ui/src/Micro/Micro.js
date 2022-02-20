@@ -11,13 +11,13 @@ import React from "react";
 const Micro = ({ analysis, heroes }) => {
   return (
     <ul className={styles.list}>
-      {(!isEmpty(analysis.ability_pt) || !isEmpty(analysis.ptNotOnStrength)) &&
+      {(!isEmpty(analysis.abilityPt) || !isEmpty(analysis.ptNotOnStrength)) &&
         <li>
-          <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.ability_pt} ptNotOnStrength={analysis.ptNotOnStrength} />
+          <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.abilityPt} ptNotOnStrength={analysis.ptNotOnStrength} />
         </li>}
-      {!isEmpty(analysis.summon_gold) &&
+      {!isEmpty(analysis.summonGold) &&
         <li>
-          <Summons heroes={heroes} summons={analysis.summon_gold} />
+          <Summons heroes={heroes} summons={analysis.summonGold} />
         </li>}
       {(analysis.unusedItems.length !== 0) &&
         <li>

@@ -33,23 +33,27 @@ object WindApp extends IOApp {
 
   implicit def analysisEncoder = new Encoder[AnalysisResult] {
     override def apply(a: AnalysisResult): Json = Json.obj(
-      "heroes" -> a.heroName.toStringKeyMap.asJson,
-      "couriers" -> a.couriers.toStringKeyMap.asJson,
-      "ability_pt" -> a.abilityUsagesWithPT.toStringKeyMap.asJson,
-      "resource_pt" -> a.resourceItemsUsagesWithPT.toStringKeyMap.asJson,
-      "ptNotOnStrength" -> a.ptNotOnStrength.asJson,
-      "summon_gold" -> a.goldFedWithSummons.toStringKeyMap.asJson,
-      "smoke_max_count_time" -> a.maxStockSmokesDuration.toStringKeyMap.asJson,
-      "obs_max_count_time" -> a.maxStockObsDuration.toStringKeyMap.asJson,
-      "smokes_used_on_vision" -> a.smokesUsedOnVision.asJson,
-      "obs_placed_on_vision" -> a.obsPlacedOnVision.asJson,
-      "unusedAbilities" -> a.unusedAbilities.asJson,
-      "unusedOnAllyAbilities" -> a.unusedOnAllyAbilities.asJson,
-      "unusedItems" -> a.unusedItems.asJson,
-      "purchases" -> a.purchases.asJson,
-      "midasEfficiency" -> a.midasEfficiency.toStringKeyMap.asJson,
-      "wastedCreepwaves" -> a.wastedCreepwaves.asJson,
-      "badFights" -> a.badFights.asJson
+      "info" -> Json.obj(
+        "heroes" -> a.heroName.toStringKeyMap.asJson
+      ),
+      "analysis" -> Json.obj(
+        "couriers" -> a.couriers.toStringKeyMap.asJson,
+        "abilityPt" -> a.abilityUsagesWithPT.toStringKeyMap.asJson,
+        "resourcePt" -> a.resourceItemsUsagesWithPT.toStringKeyMap.asJson,
+        "ptNotOnStrength" -> a.ptNotOnStrength.asJson,
+        "summonGold" -> a.goldFedWithSummons.toStringKeyMap.asJson,
+        "smokeMaxCountTime" -> a.maxStockSmokesDuration.toStringKeyMap.asJson,
+        "obsMaxCountTime" -> a.maxStockObsDuration.toStringKeyMap.asJson,
+        "smokesUsedOnVision" -> a.smokesUsedOnVision.asJson,
+        "obsPlacedOnVision" -> a.obsPlacedOnVision.asJson,
+        "unusedAbilities" -> a.unusedAbilities.asJson,
+        "unusedOnAllyAbilities" -> a.unusedOnAllyAbilities.asJson,
+        "unusedItems" -> a.unusedItems.asJson,
+        "purchases" -> a.purchases.asJson,
+        "midasEfficiency" -> a.midasEfficiency.toStringKeyMap.asJson,
+        "wastedCreepwaves" -> a.wastedCreepwaves.asJson,
+        "badFights" -> a.badFights.asJson
+      )
     )
   }
 

@@ -9,13 +9,13 @@ import Macro from "../Macro/Macro";
 
 export default class Analysis extends React.Component {
   render() {
-    const analysis = this.props.analysis
+    const { info, analysis } = this.props.analysis
 
     if (!analysis || Object.keys(analysis).length === 0) {
       return <div/>
     }
 
-    const heroes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => formatHeroName(analysis.heroes[id]))
+    const heroes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => formatHeroName(info.heroes[id]))
     const itemTimings = Object.keys(analysis.purchases).map(hero =>
       <li key={"timings" + hero}>
         <ItemTimings hero={hero} purchases={analysis.purchases[hero]} />

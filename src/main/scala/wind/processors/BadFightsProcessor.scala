@@ -26,6 +26,7 @@ class BadFightsProcessor(fights: Seq[Fight]) {
   private val players = (0 to 9).map(PlayerId).toSet
   private val EPS = 0.05
   private val NOT_IN_FIGHT_DISTANCE = 6000
+  private val CHECK_HEROES_NOT_IN_FIGHT_DIFF = 10
 
   private var currentFight: Option[Fight] = None
   private var heroesNotInFight = Set.empty[Int]
@@ -44,7 +45,7 @@ class BadFightsProcessor(fights: Seq[Fight]) {
       }))
 
     candidates
-      .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime - 5) < EPS)
+      .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime - CHECK_HEROES_NOT_IN_FIGHT_DIFF) < EPS)
       .foreach(fight => {
         currentFight = Some(fight)
         seenHeroes.clear()

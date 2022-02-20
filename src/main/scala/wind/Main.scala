@@ -2,27 +2,29 @@ package wind
 
 import wind.models.Team.{Dire, Radiant}
 
-import java.nio.file.{Path, Paths}
+import java.nio.file.{Files, Path, Paths}
 
 object Main {
-  private val downloadingDirectory = Paths.get("tmp")
-  private val compressedReplayPath = Paths.get(downloadingDirectory.toString, "replay.dem.bz2")
-  private val replayPath = Paths.get(downloadingDirectory.toString, "replay.dem")
+  private val CacheReplayDirectory = Paths.get("replays")
+  private val TmpReplayDirectory = Paths.get("tmp")
+
+  def cacheReplayPath(matchId: String) = Paths.get(CacheReplayDirectory.toString, s"$matchId.dem")
+  def tmpReplayPath(matchId: String) = Paths.get(TmpReplayDirectory.toString, s"$matchId.dem")
+  def compressedReplayPath(matchId: String) = Paths.get(TmpReplayDirectory.toString, s"${matchId}_compressed")
 
   def main(args: Array[String]): Unit = {
     if (args(0) == "analyze") {
       val `match` = args(1)
       if (`match`.forall(_.isDigit)) {
-        val replayLocation = OdotaClient.getReplayLocation(`match`)
-        replayLocation match {
-          case None => println(s"Can't find replay for match ${`match`}.")
-          case Some(location) =>
-            if (downloadReplay(location)) {
-              println("Analyzing replay...")
-              analyze(replayPath)
-              deleteReplayFolder()
-            }
+        if (!Files.exists(cacheReplayPath(`match`))) {
+          val replayLocation = OdotaClient.getReplayLocation(`match`)
+          replayLocation match {
+            case None => println(s"Can't find replay for match ${`match`}.")
+            case Some(location) => downloadReplay(location, compressedReplayPath(`match`), cacheReplayPath(`match`))
+          }
         }
+
+        analyze(cacheReplayPath(`match`))
       }
       else {
         println("Analyzing replay...")
@@ -47,10 +49,9 @@ object Main {
           replayLocation match {
             case Some(location) =>
               println(s"Processing match ${m.match_id}")
-              if (downloadReplay(location)) {
+              if (downloadReplay(location, compressedReplayPath(m.match_id.toString), tmpReplayPath(m.match_id.toString))) {
                 println("Collecting data..\n")
-                collector.collect(replayPath, m.match_id.toString)
-                deleteReplayFolder()
+                collector.collect(cacheReplayPath(m.match_id.toString), m.match_id.toString)
               }
             case _ => println(s"Can't find replay for match ${m.match_id}")
           }
@@ -65,6 +66,8 @@ object Main {
   }
 
   def analyze(replay: Path): Unit = {
+    println("Analyzing..")
+
     val analyzer = ReplayAnalyzer
     val result = analyzer.analyze(replay)
 
@@ -170,9 +173,9 @@ object Main {
     if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.map(_.start).mkString(", ")}")
   }
 
-  def downloadReplay(location: ReplayLocation): Boolean = {
-    println(s"Downloading replay..")
-    val isDownloaded = ReplayDownloader.downloadReplay(location, compressedReplayPath).nonEmpty
+  def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {
+    println(s"Downloading replay for match ${location.matchId} to $replayPath..")
+    val isDownloaded = ReplayDownloader.downloadReplay(location, compressedPath).nonEmpty
 
     if (!isDownloaded) {
       println(s"Failed to download replay for match ${location.matchId}")
@@ -180,14 +183,14 @@ object Main {
     }
     else {
       println("Decompressing replay..")
-      BZip2Decompressor.decompress(compressedReplayPath, replayPath)
+      BZip2Decompressor.decompress(compressedPath, replayPath)
+      deleteTmpFolder()
       true
     }
   }
 
-  def deleteReplayFolder(): Unit = {
-    compressedReplayPath.toFile.delete()
-    replayPath.toFile.delete()
-    downloadingDirectory.toFile.delete()
+  def deleteTmpFolder(): Unit = {
+    TmpReplayDirectory.toFile.listFiles().foreach(_.delete())
+    TmpReplayDirectory.toFile.delete()
   }
 }

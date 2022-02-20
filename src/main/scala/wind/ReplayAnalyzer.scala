@@ -1,7 +1,7 @@
 package wind
 
 import skadistats.clarity.Clarity
-import skadistats.clarity.processor.runner.{ControllableRunner, SimpleRunner}
+import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
 import wind.models.Lane.Lane
 import wind.models.Role.Role

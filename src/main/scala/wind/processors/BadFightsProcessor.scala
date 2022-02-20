@@ -25,8 +25,9 @@ class BadFightsProcessor(fights: Seq[Fight]) {
   private val entities: Entities = null
   private val players = (0 to 9).map(PlayerId).toSet
   private val EPS = 0.05
+  private val NOT_IN_FIGHT_DISTANCE = 6000
 
-  private var preFight = false
+  private var currentFight: Option[Fight] = None
   private var heroesNotInFight = Set.empty[Int]
   private val seenHeroes = mutable.Set.empty[Int]
 
@@ -34,13 +35,18 @@ class BadFightsProcessor(fights: Seq[Fight]) {
   def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     val gameTimeState = Util.getGameTimeState(gameRulesEntity)
 
-    if (preFight)
-      seenHeroes ++= heroesNotInFight.filter(handle => Util.isVisibleByEnemies(entities.getByHandle(handle)))
+    currentFight.foreach(fight => seenHeroes ++= heroesNotInFight
+      .filter(handle => {
+        val hero = entities.getByHandle(handle)
+        val heroLocation = Util.getLocation(hero)
+        val fightLocation = fight.location
+        Util.isVisibleByEnemies(hero) && Util.getDistance(heroLocation, fightLocation) > NOT_IN_FIGHT_DISTANCE
+      }))
 
     candidates
       .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime - 5) < EPS)
       .foreach(fight => {
-        preFight = true
+        currentFight = Some(fight)
         seenHeroes.clear()
 
         val teamPredicate: PlayerId => Boolean = if (fight.outnumberedTeam.contains(Radiant)) p => p.id <= 4 else p => p.id > 4
@@ -53,7 +59,7 @@ class BadFightsProcessor(fights: Seq[Fight]) {
     candidates
       .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime) < EPS)
       .map(fight => {
-        preFight = false
+        currentFight = None
         fight
       })
       .filter(_ => seenHeroes.exists(handle => entities.getByHandle(handle).getProperty[Int]("m_lifeState") == 0))

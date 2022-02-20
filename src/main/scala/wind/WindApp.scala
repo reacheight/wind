@@ -10,28 +10,35 @@ import org.http4s.server.middleware._
 import wind.converters._
 
 import java.nio.file.{Files, Paths}
-import scala.concurrent.ExecutionContext.global
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 
 object WindApp extends IOApp {
   private val DownloadingDirectory = "replays"
 
   val analysisService = HttpRoutes.of[IO] {
     case GET -> Root / "analysis" / matchId =>
-      val compressedReplayPath = Paths.get(DownloadingDirectory, s"${matchId}_compressed")
-      val replayPath = Paths.get(DownloadingDirectory, s"$matchId.dem")
-      if (!Files.exists(replayPath)) {
-        val replayLocation = OdotaClient.getReplayLocation(matchId)
-        replayLocation
-          .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath))
-          .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath, replayPath))
+      Await.result(MongoClient.getAnalysisJson(matchId.toLong), Duration.Inf) match {
+        case Some(json) => Ok(json)
+        case None =>
+          val compressedReplayPath = Paths.get(DownloadingDirectory, s"${matchId}_compressed")
+          val replayPath = Paths.get(DownloadingDirectory, s"$matchId.dem")
+          if (!Files.exists(replayPath)) {
+            val replayLocation = OdotaClient.getReplayLocation(matchId)
+            replayLocation
+              .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath))
+              .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath, replayPath))
+          }
+
+          if (!Files.exists(replayPath))
+            NotFound()
+          else {
+            val analysis = ReplayAnalyzer.analyze(replayPath)
+            MongoClient.saveAnalysis(analysis)
+            Ok(analysis)
+          }
       }
-
-      if (!Files.exists(replayPath))
-        NotFound()
-
-      val result = ReplayAnalyzer.analyze(replayPath)
-      Ok(result)
-
   }.orNotFound
 
   val corsService = CORS.policy.withAllowOriginAll(analysisService)

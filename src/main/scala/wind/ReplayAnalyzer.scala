@@ -51,6 +51,7 @@ object ReplayAnalyzer {
     println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
 
     AnalysisResult(
+      gameInfo.getGameInfo.getDota.getMatchId,
       courierProcessor.courierIsOut.map { case (id, isOut) => PlayerId(id) -> isOut },
       laneProcessor.playerLane.map { case (id, lane) => PlayerId(id) -> lane },
       rolesProcessor.roles,
@@ -79,6 +80,7 @@ object ReplayAnalyzer {
 }
 
 case class AnalysisResult(
+  matchId: Long,
   couriers: Map[PlayerId, Boolean],
   lanes: Map[PlayerId, (Lane, Lane)],
   roles: Map[PlayerId, Role],

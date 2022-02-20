@@ -20,6 +20,7 @@ libraryDependencies ++= Seq(
   "io.circe"                      %% "circe-core"          % CirceVersion,
   "io.circe"                      %% "circe-generic"       % CirceVersion,
   "io.circe"                      %% "circe-parser"        % CirceVersion,
+  "io.circe"                      %% "circe-bson"          % "0.5.0",
   "org.apache.commons"            % "commons-compress"     % "1.21",
   "org.http4s"                    %% "http4s-ember-server" % Http4sVersion,
   "org.http4s"                    %% "http4s-ember-client" % Http4sVersion,
@@ -27,5 +28,6 @@ libraryDependencies ++= Seq(
   "org.http4s"                    %% "http4s-blaze-client" % Http4sVersion,
   "org.http4s"                    %% "http4s-circe"        % Http4sVersion,
   "org.http4s"                    %% "http4s-dsl"          % Http4sVersion,
-  "org.scalameta"                 %% "svm-subs"            % "20.2.0"
+  "org.scalameta"                 %% "svm-subs"            % "20.2.0",
+  "org.reactivemongo"             %% "reactivemongo"       % "1.0.7"
 )

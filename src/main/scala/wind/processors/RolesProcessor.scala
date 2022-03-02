@@ -25,13 +25,13 @@ class RolesProcessor {
     val direNetworth = Util.getPlayersExpAndNetworth(direData).map { case (id, (_, networth)) => id -> networth }
 
     val laneProcessor = ctx.getProcessor(classOf[LaneProcessor])
-    val radiantRoles = (0 to 4)
+    val radiantRoles = Util.RadiantPlayerIds
       .map(id => {
         val lane = laneProcessor.playerLane(id)._1
         PlayerId(id) -> getRadiantRole(isCore(id, radiantNetworth), lane)
       })
 
-    val direRoles = (5 to 9)
+    val direRoles = Util.DirePlayerIds
       .map(id => {
         val lane = laneProcessor.playerLane(id)._1
         PlayerId(id) -> getDireRole(isCore(id, direNetworth), lane)

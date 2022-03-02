@@ -37,8 +37,8 @@ class WinProbabilityProcessor {
 
     val time = gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")
     val heroProcessor = ctx.getProcessor(classOf[HeroProcessor])
-    val radiantHeroes = (0 to 4).map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
-    val direHeroes = (5 to 9).map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
+    val radiantHeroes = Util.RadiantPlayerIds.map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
+    val direHeroes = Util.DirePlayerIds.map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
     val respawnTime = Map(Radiant -> getSpawnTimes(radiantHeroes, time), Dire -> getSpawnTimes(direHeroes, time))
 
     val buybackState = Map(

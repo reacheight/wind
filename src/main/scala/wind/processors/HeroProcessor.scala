@@ -10,7 +10,7 @@ class HeroProcessor(replayInfo: CDemoFileInfo) {
 
   def heroName: Map[Int, String] = heroNameBuilder.result
   def heroHandle: Map[Int, Int] = heroHandleBuilder.result
-  val combatLogNameToPlayerId: Map[String, Int] = (0 to 9).map(id => game.getPlayerInfo(id).getHeroName -> id).toMap
+  val combatLogNameToPlayerId: Map[String, Int] = (0 to 9).map(id => game.getPlayerInfo(id).getHeroName -> id * 2).toMap
 
   private val heroNameBuilder = Map.newBuilder[Int, String]
   private val heroHandleBuilder = Map.newBuilder[Int, Int]

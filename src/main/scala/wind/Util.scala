@@ -9,6 +9,10 @@ import scala.collection.mutable.ArrayBuffer
 
 object Util {
   val NullValue = 16777215
+  val PlayerIds = 0 to 18 by 2
+  val RadiantPlayerIds = PlayerIds.take(5)
+  val DirePlayerIds = PlayerIds.takeRight(5)
+
   private val TIME_EPS: Float = 0.001f
   private val replicatingPropertyName = "m_hReplicatingOtherHeroModel"
   private val glyphCooldownPropertyName: Map[Team, String] =
@@ -100,9 +104,10 @@ object Util {
   def getPlayersExpAndNetworth(data: Entity): Map[Int, (Int, Int)] = {
     val isRadiant = data.getDtClass.getDtName == "CDOTA_DataRadiant"
 
-    (0 to 4).map(playerNumber => {
-      val playerId = if (isRadiant) playerNumber else playerNumber + 5
-      val propertyPrefix = s"m_vecDataTeam.000$playerNumber."
+    Util.RadiantPlayerIds.map(playerNumber => {
+      val playerId = if (isRadiant) playerNumber else playerNumber + 10
+      // in 7.31 playerId was multiplied by 2, but ids in Data-entities wasn't changed
+      val propertyPrefix = s"m_vecDataTeam.000${playerNumber / 2}."
       val exp = data.getProperty[Int](propertyPrefix + "m_iTotalEarnedXP")
       val networth = data.getProperty[Int](propertyPrefix + "m_iNetWorth")
 

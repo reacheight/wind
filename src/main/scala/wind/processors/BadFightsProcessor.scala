@@ -23,7 +23,7 @@ class BadFightsProcessor(fights: Seq[Fight]) {
 
   @Insert
   private val entities: Entities = null
-  private val players = (0 to 9).map(PlayerId).toSet
+  private val players = Util.PlayerIds.map(PlayerId).toSet
   private val EPS = 0.05
   private val NOT_IN_FIGHT_DISTANCE = 6000
   private val CHECK_HEROES_NOT_IN_FIGHT_DIFF = 10

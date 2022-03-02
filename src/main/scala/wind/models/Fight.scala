@@ -3,13 +3,13 @@ package wind.models
 import wind.models.Team.{Dire, Radiant, Team}
 
 case class Fight(start: GameTimeState, end: GameTimeState, location: Location, participants: Set[PlayerId], dead: Set[PlayerId]) {
-  val radiantParticipants: Set[PlayerId] = participants.filter(_.id <= 4)
-  val direParticipants: Set[PlayerId] = participants.filter(_.id > 4)
+  val radiantParticipants: Set[PlayerId] = participants.filter(_.id <= 8)
+  val direParticipants: Set[PlayerId] = participants.filter(_.id > 8)
   val isOutnumbered: Boolean = radiantParticipants.size != direParticipants.size
 
   val winner: Option[Team] = {
-    val radiantDead = dead.filter(_.id <= 4)
-    val direDead = dead.filter(_.id > 4)
+    val radiantDead = dead.filter(_.id <= 8)
+    val direDead = dead.filter(_.id > 8)
 
     if (radiantDead.size == direDead.size)
       None

@@ -7,7 +7,7 @@ const ItemTimings = (props) => {
   const [heroTimingsData, setTimings] = useState({})
 
   useEffect(() => {
-    fetch(`https://stats.spectral.gg/lrg2/api/?league=imm_ranked_meta_last_7&mod=items/icritical-heroid${heroId}`)
+    fetch(`https://stats.spectral.gg/lrg2/api/?league=imm_ranked_731&mod=items/icritical-heroid${heroId}&item_cat=medium,major`)
       .then(response => response.json())
       .then(data => setTimings(data.result.items))
   }, [heroId])

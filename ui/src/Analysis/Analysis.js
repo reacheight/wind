@@ -15,7 +15,7 @@ export default class Analysis extends React.Component {
       return <div/>
     }
 
-    const heroes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => formatHeroName(info.heroes[id]))
+    const heroes = Object.fromEntries(Object.entries(info.heroes).map(([k, v]) => [k, formatHeroName(v)]));
     const itemTimings = Object.keys(analysis.purchases).map(hero =>
       <li key={"timings" + hero}>
         <ItemTimings hero={hero} purchases={analysis.purchases[hero]} />

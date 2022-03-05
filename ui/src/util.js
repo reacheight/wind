@@ -65,6 +65,7 @@ export function getItemClassName(name) {
   return name.toLowerCase().replace(' ', '-')
 }
 
+// https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=APIKEY
 export const DotaHeroes = JSON.parse(`{
   "result":{
   "heroes":[
@@ -555,14 +556,19 @@ export const DotaHeroes = JSON.parse(`{
   {
   "name":"npc_dota_hero_marci",
   "id":136
+  },
+  {
+  "name":"npc_dota_hero_primal_beast",
+  "id":137
   }
   ]
   ,
   "status":200,
-  "count":122
+  "count":123
   }
   }`).result.heroes
 
+// https://api.steampowered.com/IEconDOTA2_570/GetGameItems/V001/?key=APIKEY
 export const DotaItems = JSON.parse(`{
   "result":{
   "items":[
@@ -697,7 +703,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":11,
   "name":"item_quelling_blade",
-  "cost":130,
+  "cost":100,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -1447,6 +1453,22 @@ export const DotaItems = JSON.parse(`{
   "recipe":0
   },
   {
+  "id":907,
+  "name":"item_recipe_wraith_pact",
+  "cost":400,
+  "secret_shop":0,
+  "side_shop":0,
+  "recipe":1
+  },
+  {
+  "id":908,
+  "name":"item_wraith_pact",
+  "cost":4200,
+  "secret_shop":0,
+  "side_shop":0,
+  "recipe":0
+  },
+  {
   "id":85,
   "name":"item_recipe_buckler",
   "cost":250,
@@ -1561,7 +1583,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":97,
   "name":"item_recipe_orchid",
-  "cost":475,
+  "cost":300,
   "secret_shop":0,
   "side_shop":0,
   "recipe":1
@@ -1577,7 +1599,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":245,
   "name":"item_recipe_bloodthorn",
-  "cost":800,
+  "cost":925,
   "secret_shop":0,
   "side_shop":0,
   "recipe":1
@@ -1585,7 +1607,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":250,
   "name":"item_bloodthorn",
-  "cost":6275,
+  "cost":6800,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -1961,7 +1983,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":120,
   "name":"item_recipe_bloodstone",
-  "cost":0,
+  "cost":900,
   "secret_shop":0,
   "side_shop":0,
   "recipe":1
@@ -1969,7 +1991,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":121,
   "name":"item_bloodstone",
-  "cost":5750,
+  "cost":4600,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -2145,7 +2167,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":126,
   "name":"item_recipe_blade_mail",
-  "cost":575,
+  "cost":550,
   "secret_shop":0,
   "side_shop":0,
   "recipe":1
@@ -2153,7 +2175,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":127,
   "name":"item_blade_mail",
-  "cost":2125,
+  "cost":2100,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -2241,7 +2263,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":136,
   "name":"item_recipe_radiance",
-  "cost":1350,
+  "cost":0,
   "secret_shop":0,
   "side_shop":0,
   "recipe":1
@@ -2249,7 +2271,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":137,
   "name":"item_radiance",
-  "cost":5100,
+  "cost":5050,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -2313,7 +2335,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":145,
   "name":"item_bfury",
-  "cost":4130,
+  "cost":4100,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -2641,7 +2663,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":173,
   "name":"item_recipe_diffusal_blade",
-  "cost":700,
+  "cost":1050,
   "secret_shop":0,
   "side_shop":0,
   "recipe":1
@@ -2649,7 +2671,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":174,
   "name":"item_diffusal_blade",
-  "cost":3150,
+  "cost":2500,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -2657,7 +2679,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":175,
   "name":"item_recipe_ethereal_blade",
-  "cost":0,
+  "cost":1100,
   "secret_shop":0,
   "side_shop":0,
   "recipe":1
@@ -2665,7 +2687,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":176,
   "name":"item_ethereal_blade",
-  "cost":4300,
+  "cost":4650,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -2673,7 +2695,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":177,
   "name":"item_recipe_soul_ring",
-  "cost":225,
+  "cost":245,
   "secret_shop":0,
   "side_shop":0,
   "recipe":1
@@ -2681,7 +2703,7 @@ export const DotaItems = JSON.parse(`{
   {
   "id":178,
   "name":"item_soul_ring",
-  "cost":680,
+  "cost":700,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -2799,6 +2821,22 @@ export const DotaItems = JSON.parse(`{
   "recipe":0
   },
   {
+  "id":930,
+  "name":"item_recipe_boots_of_bearing",
+  "cost":1500,
+  "secret_shop":0,
+  "side_shop":0,
+  "recipe":1
+  },
+  {
+  "id":931,
+  "name":"item_boots_of_bearing",
+  "cost":4125,
+  "secret_shop":0,
+  "side_shop":0,
+  "recipe":0
+  },
+  {
   "id":186,
   "name":"item_recipe_medallion_of_courage",
   "cost":0,
@@ -2858,6 +2896,22 @@ export const DotaItems = JSON.parse(`{
   "id":190,
   "name":"item_veil_of_discord",
   "cost":1525,
+  "secret_shop":0,
+  "side_shop":0,
+  "recipe":0
+  },
+  {
+  "id":910,
+  "name":"item_recipe_revenants_brooch",
+  "cost":800,
+  "secret_shop":0,
+  "side_shop":0,
+  "recipe":1
+  },
+  {
+  "id":911,
+  "name":"item_revenants_brooch",
+  "cost":6200,
   "secret_shop":0,
   "side_shop":0,
   "recipe":0
@@ -3177,14 +3231,6 @@ export const DotaItems = JSON.parse(`{
   {
   "id":829,
   "name":"item_force_field",
-  "cost":0,
-  "secret_shop":0,
-  "side_shop":0,
-  "recipe":0
-  },
-  {
-  "id":833,
-  "name":"item_tree_processor",
   "cost":0,
   "secret_shop":0,
   "side_shop":0,

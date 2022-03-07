@@ -3,10 +3,11 @@ package wind
 import io.circe.bson._
 import io.circe.syntax._
 import io.circe.{Encoder, Json}
-import reactivemongo.api.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter}
+import reactivemongo.api.bson._
+import wind.models.AnalysisStatus._
 import wind.models.Lane.Lane
 import wind.models.Team.Team
-import wind.models.{Fight, GameTimeState, PlayerId}
+import wind.models.{AnalysisState, AnalysisStatus, Fight, GameTimeState, PlayerId}
 
 import scala.util.{Failure, Success}
 
@@ -49,6 +50,11 @@ package object converters {
     )
   )
 
+  implicit def analysisStateJsonEncoder: Encoder[AnalysisState] = (state: AnalysisState) => Json.obj(
+    "matchId" -> state.matchId.asJson,
+    "status" -> state.status.id.asJson
+  )
+
   implicit def analysisResultWriter: BSONDocumentWriter[AnalysisResult] = (analysis: AnalysisResult) =>
     jsonToBson(analysis.asJson) match {
       case Left(err) => Failure(err)
@@ -63,4 +69,14 @@ package object converters {
         case Right(json) => Success(json)
       }
     }
+
+  implicit def analysisStatusReader: BSONReader[AnalysisStatus] = {
+    case BSONInteger(i) => Success(AnalysisStatus(i))
+    case _ => Failure(new Exception)
+  }
+
+  implicit def analysisStatusWriter: BSONWriter[AnalysisStatus] = (status: AnalysisStatus) => Success(BSONInteger(status.id))
+
+  implicit val analysisStateHandler: BSONDocumentHandler[AnalysisState] =
+    Macros.handler[AnalysisState]
 }

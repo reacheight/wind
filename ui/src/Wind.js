@@ -19,7 +19,7 @@ const Wind = () => {
     setLoading(true)
     setIsError(false)
 
-    fetch(`${API_ENDPOINT}/analysis/${matchId}`)
+    fetch(`${API_ENDPOINT}/old/analysis/${matchId}`)
       .then(response => {
         if (!response.ok) {
           setIsError(true)

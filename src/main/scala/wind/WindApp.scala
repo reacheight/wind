@@ -8,17 +8,19 @@ import org.http4s.dsl.io._
 import org.http4s.implicits._
 import org.http4s.server.middleware._
 import wind.converters._
+import wind.models.{AnalysisState, AnalysisStatus}
 
 import java.nio.file.{Files, Paths}
-import scala.concurrent.Await
+import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
 object WindApp extends IOApp {
   private val DownloadingDirectory = "replays"
 
+  // todo: избавиться от Await, разобраться с IO
   val analysisService = HttpRoutes.of[IO] {
-    case GET -> Root / "analysis" / matchId =>
+    case GET -> Root / "old" / "analysis" / matchId =>
       Await.result(MongoClient.getAnalysisJson(matchId.toLong), Duration.Inf) match {
         case Some(json) => Ok(json)
         case None =>
@@ -39,7 +41,43 @@ object WindApp extends IOApp {
             Ok(analysis)
           }
       }
+
+    case POST -> Root / "analysis" / matchId =>
+      Await.result(MongoClient.addState(AnalysisState(matchId.toLong, AnalysisStatus.Processing)), Duration.Inf)
+
+      Future {
+        val replayLocation = OdotaClient.getReplayLocation(matchId)
+        replayLocation
+          .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath(matchId)))
+          .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
+
+        if (!Files.exists(replayPath(matchId))) {
+          MongoClient.setState(matchId.toLong, AnalysisStatus.Failed)
+        } else {
+          val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
+          Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
+          MongoClient.saveAnalysis(analysis)
+          MongoClient.setState(matchId.toLong, AnalysisStatus.Finished)
+        }
+      }
+
+      Created()
+
+    case GET -> Root / "analysis" / matchId / "state" =>
+      Await.result(MongoClient.getState(matchId.toLong), Duration.Inf) match {
+        case Some(state) => Ok(state)
+        case None => NotFound()
+      }
+
+    case GET -> Root / "analysis" / matchId =>
+      Await.result(MongoClient.getAnalysisJson(matchId.toLong), Duration.Inf) match {
+        case Some(json) => Ok(json)
+        case None => NotFound()
+      }
   }.orNotFound
+
+  private def compressedReplayPath(matchId: String) = Paths.get(DownloadingDirectory, s"${matchId}_compressed")
+  private def replayPath(matchId: String) = Paths.get(DownloadingDirectory, s"$matchId.dem")
 
   val corsService = CORS.policy.withAllowOriginAll(analysisService)
   

@@ -45,7 +45,7 @@ export default class Analysis extends React.Component {
           </AccordionItem>
           <AccordionItem className={styles.accordionItem}>
             <AccordionButton className={styles.accordionButton}>
-              <span>Item timings (statistics provided by <a className={styles.spectralLink} target="_blank" href="https://stats.spectral.gg/lrg2/?league=imm_ranked_730e&mod=items-icritical">Spectral.gg</a>)</span>
+              <span>Item timings (statistics provided by <a className={styles.spectralLink} target="_blank" href="https://stats.spectral.gg/lrg2/?league=imm_ranked_731&mod=items-icritical">Spectral.gg</a>)</span>
               <AccordionIcon />
             </AccordionButton>
             <AccordionPanel>

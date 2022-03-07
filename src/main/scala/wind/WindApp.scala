@@ -43,25 +43,29 @@ object WindApp extends IOApp {
       }
 
     case POST -> Root / "analysis" / matchId =>
-      Await.result(MongoClient.addState(AnalysisState(matchId.toLong, AnalysisStatus.Processing)), Duration.Inf)
+      Await.result(MongoClient.getState(matchId.toLong), Duration.Inf) match {
+        case Some(state) => Created()
+        case None =>
+          Await.result(MongoClient.addState(AnalysisState(matchId.toLong, AnalysisStatus.Processing)), Duration.Inf)
 
-      Future {
-        val replayLocation = OdotaClient.getReplayLocation(matchId)
-        replayLocation
-          .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath(matchId)))
-          .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
+          Future {
+            val replayLocation = OdotaClient.getReplayLocation(matchId)
+            replayLocation
+              .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath(matchId)))
+              .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
 
-        if (!Files.exists(replayPath(matchId))) {
-          MongoClient.setState(matchId.toLong, AnalysisStatus.Failed)
-        } else {
-          val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
-          Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
-          MongoClient.saveAnalysis(analysis)
-          MongoClient.setState(matchId.toLong, AnalysisStatus.Finished)
-        }
+            if (!Files.exists(replayPath(matchId))) {
+              MongoClient.setState(matchId.toLong, AnalysisStatus.Failed)
+            } else {
+              val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
+              Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
+              MongoClient.saveAnalysis(analysis)
+              MongoClient.setState(matchId.toLong, AnalysisStatus.Finished)
+            }
+          }
+
+          Created()
       }
-
-      Created()
 
     case GET -> Root / "analysis" / matchId / "state" =>
       Await.result(MongoClient.getState(matchId.toLong), Duration.Inf) match {

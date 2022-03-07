@@ -19,16 +19,42 @@ const Wind = () => {
     setLoading(true)
     setIsError(false)
 
-    fetch(`${API_ENDPOINT}/old/analysis/${matchId}`)
+    fetch(`${API_ENDPOINT}/analysis/${matchId}`, { method: 'POST' })
       .then(response => {
         if (!response.ok) {
           setIsError(true)
+          setLoading(false)
         }
-        return response.json()
-      })
-      .then(json => {
-        setLoading(false)
-        setAnalysis(json)
+        else {
+          let timer = setInterval(() => {
+            fetch(`${API_ENDPOINT}/analysis/${matchId}/state`)
+              .then(stateResponse => {
+                if (!stateResponse.ok) {
+                  setIsError(true)
+                  setLoading(false)
+                  clearInterval(timer)
+                }
+
+                return stateResponse.json()
+              })
+              .then(state => {
+                if (state.status === 1) {
+                  fetch(`${API_ENDPOINT}/analysis/${matchId}`)
+                    .then(analysisResponse => analysisResponse.json())
+                    .then(json => {
+                      setAnalysis(json)
+                      setLoading(false)
+                      clearInterval(timer)
+                    })
+                }
+                if (state.status === 2) {
+                  setIsError(true)
+                  setLoading(false)
+                  clearInterval(timer)
+                }
+              })
+          }, 5000)
+        }
       })
       .catch(e => {
         setLoading(false)

@@ -13,71 +13,49 @@ import wind.models.{AnalysisState, AnalysisStatus}
 import java.nio.file.{Files, Paths}
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
 
 object WindApp extends IOApp {
   private val DownloadingDirectory = "replays"
 
-  // todo: избавиться от Await, разобраться с IO
   val analysisService = HttpRoutes.of[IO] {
-    case GET -> Root / "old" / "analysis" / matchId =>
-      Await.result(MongoClient.getAnalysisJson(matchId.toLong), Duration.Inf) match {
-        case Some(json) => Ok(json)
-        case None =>
-          val compressedReplayPath = Paths.get(DownloadingDirectory, s"${matchId}_compressed")
-          val replayPath = Paths.get(DownloadingDirectory, s"$matchId.dem")
-          if (!Files.exists(replayPath)) {
-            val replayLocation = OdotaClient.getReplayLocation(matchId)
-            replayLocation
-              .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath))
-              .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath, replayPath))
-          }
-
-          if (!Files.exists(replayPath))
-            NotFound()
-          else {
-            val analysis = ReplayAnalyzer.analyze(replayPath)
-            MongoClient.saveAnalysis(analysis)
-            Ok(analysis)
-          }
-      }
-
     case POST -> Root / "analysis" / matchId =>
-      Await.result(MongoClient.getState(matchId.toLong), Duration.Inf) match {
-        case Some(state) => Created()
+      IO.fromFuture(IO(MongoClient.getState(matchId.toLong) flatMap {
+        case Some(_) => Future.successful(Created())
         case None =>
-          Await.result(MongoClient.addState(AnalysisState(matchId.toLong, AnalysisStatus.Processing)), Duration.Inf)
+          MongoClient.addState(AnalysisState(matchId.toLong, AnalysisStatus.Processing))
+            .map(_ => {
+              Future {
+                val replayLocation = OdotaClient.getReplayLocation(matchId)
+                replayLocation
+                  .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath(matchId)))
+                  .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
 
-          Future {
-            val replayLocation = OdotaClient.getReplayLocation(matchId)
-            replayLocation
-              .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath(matchId)))
-              .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
+                if (!Files.exists(replayPath(matchId))) {
+                  MongoClient.setState(matchId.toLong, AnalysisStatus.Failed)
+                } else {
+                  val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
+                  Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
+                  MongoClient.saveAnalysis(analysis)
+                  MongoClient.setState(matchId.toLong, AnalysisStatus.Finished)
+                }
+              }
 
-            if (!Files.exists(replayPath(matchId))) {
-              MongoClient.setState(matchId.toLong, AnalysisStatus.Failed)
-            } else {
-              val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
-              Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
-              MongoClient.saveAnalysis(analysis)
-              MongoClient.setState(matchId.toLong, AnalysisStatus.Finished)
-            }
-          }
-
-          Created()
-      }
+              Created()
+            })
+      })).flatten
 
     case GET -> Root / "analysis" / matchId / "state" =>
-      Await.result(MongoClient.getState(matchId.toLong), Duration.Inf) match {
+      IO.fromFuture(IO(MongoClient.getState(matchId.toLong))) flatMap {
         case Some(state) => Ok(state)
         case None => NotFound()
       }
 
     case GET -> Root / "analysis" / matchId =>
-      Await.result(MongoClient.getAnalysisJson(matchId.toLong), Duration.Inf) match {
+      IO.fromFuture(IO(MongoClient.getAnalysisJson(matchId.toLong))) flatMap {
         case Some(json) => Ok(json)
         case None => NotFound()
       }
+
   }.orNotFound
 
   private def compressedReplayPath(matchId: String) = Paths.get(DownloadingDirectory, s"${matchId}_compressed")

@@ -22,7 +22,7 @@ package object converters {
   implicit val fromGameTimeState: Encoder[GameTimeState] = (time: GameTimeState) => time.toString.asJson
   implicit val fromFight: Encoder[Fight] = (fight: Fight) => (fight.outnumberedTeam.get, fight.start).asJson
 
-  implicit class MapExtensions[K, V](val map: Map[K, V]) {
+  implicit class MapExtensions[K, V](val map: Map[K, V]) extends AnyVal {
     def toStringKeyMap(implicit keyToString: K => String) = map.map { case (k, v) => keyToString(k) -> v }
   }
 

@@ -29,3 +29,7 @@
 ul {
   list-style-type: none;
 }
+
+.content {
+  min-height: calc(100vh - 10vh - 10px)
+}

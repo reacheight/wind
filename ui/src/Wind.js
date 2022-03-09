@@ -5,6 +5,7 @@ import Header from './Header/Header';
 import {FormControl, Input, Spinner} from '@chakra-ui/react';
 
 import styles from './App.module.css'
+import Footer from "./Footer/Footer";
 
 const Wind = () => {
   const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
@@ -67,20 +68,23 @@ const Wind = () => {
   return (
     <div className={styles.app}>
       <Header />
-      <form className={styles.input} onSubmit={getAnalysis}>
-        <FormControl>
-          <Input id='matchId' value={matchId} type='text' placeholder='Enter match id' onChange={event => setMatchId(event.target.value)} />
-        </FormControl>
-      </form>
-      {loading &&
-        <div className={styles.spinner}>
-          <Spinner />
-        </div>
-      }
-      <Analysis analysis={analysis} />
-      {isError &&
-        <div className={styles.error}> Error occurred :( </div>
-      }
+      <div className={styles.content}>
+        <form className={styles.input} onSubmit={getAnalysis}>
+          <FormControl>
+            <Input id='matchId' value={matchId} type='text' placeholder='Enter match id' onChange={event => setMatchId(event.target.value)} />
+          </FormControl>
+        </form>
+        {loading &&
+          <div className={styles.spinner}>
+            <Spinner />
+          </div>
+        }
+        <Analysis analysis={analysis} />
+        {isError &&
+          <div className={styles.error}> Error occurred :( </div>
+        }
+      </div>
+      <Footer />
     </div>
   )
 }

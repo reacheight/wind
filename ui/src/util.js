@@ -9,17 +9,17 @@ export const Team = (t) => {
 
 export const Lane = (l) => {
   switch (l) {
-    case "0":
+    case 0:
       return "Top"
-    case "1":
+    case 1:
       return "Middle"
-    case "2":
+    case 2:
       return "Bot"
-    case "3":
+    case 3:
       return "Radiant Jungle"
-    case "4":
+    case 4:
       return "Dire Jungle"
-    case "5":
+    case 5:
       return "Roaming"
   }
 }

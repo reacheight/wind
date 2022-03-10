@@ -7,6 +7,7 @@ import UnusedAbilities from "../UnusedAbilities/UnusedAbilities";
 import Couriers from "../Couriers/Couriers";
 import MidasEfficiency from "../MidassEfficiency/MidasEfficiency";
 import React from "react";
+import NotTankedCreepwaves from "../NotTankedCreepwaves/NotTankedCreepwaves";
 
 const Micro = ({ analysis, heroes }) => {
   return (
@@ -35,6 +36,11 @@ const Micro = ({ analysis, heroes }) => {
         <li>
           <MidasEfficiency heroes={heroes} midasEfficiency={analysis.midasEfficiency} />
         </li>}
+      {!isEmpty(analysis.notTankedCreepwaves) &&
+        <li>
+          <NotTankedCreepwaves notTankedCreepwaves={analysis.notTankedCreepwaves} heroes={heroes} />
+        </li>
+      }
     </ul>
   )
 }

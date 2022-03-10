@@ -46,6 +46,7 @@ package object converters {
       "purchases" -> analysis.purchases.asJson,
       "midasEfficiency" -> analysis.midasEfficiency.toStringKeyMap.asJson,
       "wastedCreepwaves" -> analysis.wastedCreepwaves.asJson,
+      "notTankedCreepwaves" -> analysis.notTankedCreepwaves.asJson,
       "badFights" -> analysis.badFights.asJson
     )
   )

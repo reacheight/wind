@@ -161,6 +161,11 @@ object Main {
       println(s"$time: $team $lane T$tier")
     }
 
+    if (result.notTankedCreepwaves.nonEmpty) println("\nNot tanked creepwaves:")
+    result.notTankedCreepwaves.foreach { case (time, team, lane, players) =>
+      println(s"${players.map(id => result.heroName(id)).mkString(", ")} didn't tank creepwave at $time in $lane lane")
+    }
+
     if (result.fights.nonEmpty) println("\nFights:")
     result.fights.foreach(fight => {
       println(s"${fight.start} - ${fight.end} ${fight.location} (${Util.getLane(fight.location)})\n" +

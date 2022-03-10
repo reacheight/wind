@@ -1,23 +1,58 @@
 package wind.processors
 
+import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
+import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged, UsesEntities}
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import wind.models.Lane.{Bot, Lane, Middle, Top}
 import wind.models.Team.{Dire, Radiant, Team}
 import wind.Util
-import wind.models.GameTimeState
+import wind.models.{GameTimeState, PlayerId}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
+@UsesEntities
 class CreepwaveProcessor {
+  def notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])] = _notTankedCreepwaves.toSeq
   def wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)] = _wastedCreepwaves
 
+  private val _notTankedCreepwaves: ListBuffer[(GameTimeState, Team, Lane, Seq[PlayerId])] = ListBuffer.empty
   private var _wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)] = Seq.empty
+
   private val creepDeaths: mutable.Map[String, ListBuffer[GameTimeState]] = mutable.Map.empty
+  private val lastTowerHitCreepTime: mutable.Map[(Team, Lane), GameTimeState] = mutable.Map.empty
+
+  @Insert
+  private val entities: Entities = null
+
+  @OnEntityPropertyChanged(classPattern = "CDOTA_BaseNPC_Creep_Lane", propertyPattern = "m_iHealth")
+  def onCreepHPChanged(creep: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+    val time = Util.getGameTimeState(entities.getByDtName("CDOTAGamerulesProxy"))
+    if (time.gameTime > 60 * 10) return
+
+    val towerTeam = Util.getOppositeTeam(Util.getTeam(creep))
+    val tower = entities.getByPredicate(e => Util.isTower(e) && e.getProperty[Int]("m_iCurrentLevel") == 1 && Util.getTeam(e) == towerTeam && Util.getDistance(e, creep) <= 800)
+
+    if (tower != null) {
+      val towerLane = Util.getLane(Util.getLocation(tower))
+      if (towerLane == Middle) return
+
+      if (!lastTowerHitCreepTime.contains((towerTeam, towerLane)) || time.gameTime - lastTowerHitCreepTime((towerTeam, towerLane)).gameTime > 5) {
+        val nearAllyHeroes = Util.toList(entities.getAllByPredicate(e => Util.isHero(e) && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, creep) < 500))
+        val nearEnemyHeroes = Util.toList(entities.getAllByPredicate(e => Util.isHero(e) && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 1000))
+        val comingAllyCreeps = Util.toList(entities.getAllByPredicate(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, tower) < 1000))
+        val nearEnemyCreeps = Util.toList(entities.getAllByPredicate(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 500))
+
+        if (comingAllyCreeps.nonEmpty && nearAllyHeroes.nonEmpty && nearEnemyHeroes.isEmpty && nearEnemyCreeps.length >= 2)
+          _notTankedCreepwaves.addOne((time, towerTeam, towerLane, nearAllyHeroes.map(Util.getPlayerId)))
+      }
+
+      lastTowerHitCreepTime((towerTeam, towerLane)) = time
+    }
+  }
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
   def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
@@ -42,7 +77,7 @@ class CreepwaveProcessor {
   @OnCombatLogEntry
   def onCreepDied(ctx: Context, cle: CombatLogEntry): Unit = {
     if (towerKilledCreep(cle)) {
-      val gameRules = ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy")
+      val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
       val time = Util.getGameTimeState(gameRules)
       addCreepDeath(cle.getAttackerName, time)
     }

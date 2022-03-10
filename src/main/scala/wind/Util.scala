@@ -1,7 +1,7 @@
 package wind
 
 import skadistats.clarity.model.Entity
-import wind.models.{GameTimeState, Lane, Location}
+import wind.models.{GameTimeState, Lane, Location, PlayerId, Team}
 import wind.models.Lane.Lane
 import wind.models.Team._
 
@@ -49,6 +49,16 @@ object Util {
     entity.getDtClass.getDtName.startsWith("CDOTA_Unit_Hero") &&
       entity.hasProperty(replicatingPropertyName) &&
       entity.getProperty[Int](replicatingPropertyName) == NullValue
+
+  def isTower(entity: Entity): Boolean =
+    entity.getDtClass.getDtName == "CDOTA_BaseNPC_Tower"
+
+  def getTeam(entity: Entity): Team = {
+    val teamNum = entity.getProperty[Int]("m_iTeamNum")
+    Team(teamNum - 2)
+  }
+
+  def getPlayerId(entity: Entity): PlayerId = PlayerId(entity.getProperty[Int]("m_iPlayerID"))
 
   def isAlive(entity: Entity): Boolean = entity.getProperty[Int]("m_lifeState") == 0
 
@@ -130,4 +140,5 @@ object Util {
     case Radiant => Dire
     case Dire => Radiant
   }
+
 }

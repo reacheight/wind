@@ -73,6 +73,7 @@ object ReplayAnalyzer {
       midasProcessor.midasEfficiency,
       scanProcessor.scanUsageCount,
       creepwaveProcessor.wastedCreepwaves,
+      creepwaveProcessor.notTankedCreepwaves,
       fightProcessor.fights,
       fightProcessor.fights.filter(fight => badFightsProcessor.badFights.contains(fight.start)),
     )
@@ -102,6 +103,7 @@ case class AnalysisResult(
   midasEfficiency: Map[PlayerId, Float],
   scanUsageCount: Map[Team, Int],
   wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
+  notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])],
   fights: Seq[Fight],
   badFights: Seq[Fight],
 )

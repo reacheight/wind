@@ -16,32 +16,44 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object WindApp extends IOApp {
   private val DownloadingDirectory = "replays"
+  private def compressedReplayPath(matchId: String) = Paths.get(DownloadingDirectory, s"${matchId}_compressed")
+  private def replayPath(matchId: String) = Paths.get(DownloadingDirectory, s"$matchId.dem")
+
+  private def startAnalysis(matchId: String): Unit = {
+    val replayLocation = OdotaClient.getReplayLocation(matchId)
+    replayLocation
+      .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath(matchId)))
+      .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
+
+    if (!Files.exists(replayPath(matchId))) {
+      MongoClient.setState(matchId.toLong, AnalysisStatus.Failed)
+    } else {
+      val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
+      Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
+      MongoClient.saveAnalysis(analysis)
+      MongoClient.setState(matchId.toLong, AnalysisStatus.Finished)
+    }
+  }
 
   val analysisService = HttpRoutes.of[IO] {
     case POST -> Root / "analysis" / matchId =>
       IO.fromFuture(IO(MongoClient.getState(matchId.toLong) flatMap {
-        case Some(_) => Future.successful(Created())
+
+        case Some(state) if state.status == AnalysisStatus.Failed =>
+          MongoClient.setState(matchId.toLong, AnalysisStatus.Processing)
+            .map(_ => {
+              Future { startAnalysis(matchId) }
+              Created()
+            })
+
         case None =>
           MongoClient.addState(AnalysisState(matchId.toLong, AnalysisStatus.Processing))
             .map(_ => {
-              Future {
-                val replayLocation = OdotaClient.getReplayLocation(matchId)
-                replayLocation
-                  .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath(matchId)))
-                  .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
-
-                if (!Files.exists(replayPath(matchId))) {
-                  MongoClient.setState(matchId.toLong, AnalysisStatus.Failed)
-                } else {
-                  val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
-                  Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
-                  MongoClient.saveAnalysis(analysis)
-                  MongoClient.setState(matchId.toLong, AnalysisStatus.Finished)
-                }
-              }
-
+              Future { startAnalysis(matchId) }
               Created()
             })
+
+        case _ => Future.successful(Created())
       })).flatten
 
     case GET -> Root / "analysis" / matchId / "state" =>
@@ -57,9 +69,6 @@ object WindApp extends IOApp {
       }
 
   }.orNotFound
-
-  private def compressedReplayPath(matchId: String) = Paths.get(DownloadingDirectory, s"${matchId}_compressed")
-  private def replayPath(matchId: String) = Paths.get(DownloadingDirectory, s"$matchId.dem")
 
   val corsService = CORS.policy.withAllowOriginAll(analysisService)
   

@@ -14,11 +14,13 @@ const Wind = () => {
   const [analysis, setAnalysis] = useState({})
   const [loading, setLoading] = useState(false)
   const [isError, setIsError] = useState(false)
+  const [isDownloadError, setIsDownloadError] = useState(false)
 
   const getAnalysis = event => {
     setAnalysis({})
     setLoading(true)
     setIsError(false)
+    setIsDownloadError(false)
 
     fetch(`${API_ENDPOINT}/analysis/${matchId}`, { method: 'POST' })
       .then(response => {
@@ -51,6 +53,7 @@ const Wind = () => {
                 if (state.status === 2) {
                   setIsError(true)
                   setLoading(false)
+                  setIsDownloadError(true)
                   clearInterval(timer)
                 }
               })
@@ -80,8 +83,14 @@ const Wind = () => {
           </div>
         }
         <Analysis analysis={analysis} />
-        {isError &&
+        {isError && !isDownloadError &&
           <div className={styles.error}> Error occurred :( </div>
+        }
+        {isDownloadError &&
+          <div>
+            <div className={styles.error}> Failed to download replay of the match. </div>
+            <div className={styles.error}> If it's a recent game, try later. </div>
+          </div>
         }
       </div>
       <Footer />

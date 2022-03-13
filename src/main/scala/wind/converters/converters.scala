@@ -47,7 +47,8 @@ package object converters {
       "midasEfficiency" -> analysis.midasEfficiency.toStringKeyMap.asJson,
       "wastedCreepwaves" -> analysis.wastedCreepwaves.asJson,
       "notTankedCreepwaves" -> analysis.notTankedCreepwaves.asJson,
-      "badFights" -> analysis.badFights.asJson
+      "badFights" -> analysis.badFights.asJson,
+      "glyphUsedOnDeadT2" -> analysis.glyphOnDeadT2.toStringKeyMap.asJson
     )
   )
 

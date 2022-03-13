@@ -7,6 +7,7 @@ import SmokesMaxStock from "../SmokesMaxStock/SmokesMaxStock";
 import WastedCreepwaves from "../WastedCreepwaves/WastedCreepwaves";
 import BadFights from "../BadFights/BadFights";
 import React from "react";
+import GlyphOnDeadTower from "../GlyphOnDeadTower/GlyphOnDeadTower";
 
 const Macro = ({ analysis, heroes }) => {
   return (
@@ -35,6 +36,9 @@ const Macro = ({ analysis, heroes }) => {
         <li>
           <BadFights badFights={analysis.badFights} />
         </li>}
+      <li>
+        <GlyphOnDeadTower glyphUsedOnDeadT2={analysis.glyphUsedOnDeadT2}/>
+      </li>
     </ul>
   )
 }

@@ -20,14 +20,13 @@ object Main {
           val replayLocation = OdotaClient.getReplayLocation(`match`)
           replayLocation match {
             case None => println(s"Can't find replay for match ${`match`}.")
-            case Some(location) => downloadReplay(location, compressedReplayPath(`match`), cacheReplayPath(`match`))
+            case Some(location) =>
+              downloadReplay(location, compressedReplayPath(`match`), cacheReplayPath(`match`))
+              analyze(cacheReplayPath(`match`))
           }
         }
-
-        analyze(cacheReplayPath(`match`))
       }
       else {
-        println("Analyzing replay...")
         analyze(Paths.get(`match`))
       }
     }
@@ -116,6 +115,11 @@ object Main {
     println("\nGlyph not used on T1 count:")
     println(s"Radiant: ${result.glyphNotUsedOnT1.getOrElse(Radiant, 0)}")
     println(s"Dire: ${result.glyphNotUsedOnT1.getOrElse(Dire, 0)}")
+
+    if (result.glyphOnDeadT2.flatMap(_._2).nonEmpty) println("\nGlyph used on dead T2:")
+    result.glyphOnDeadT2.foreach { case (team, usages) =>
+      if (usages.nonEmpty) println(s"$team: ${usages.mkString(", ")}")
+    }
 
     if (result.smokesUsedOnVision.nonEmpty) println("\nSmoke used on enemy vision:")
     result.smokesUsedOnVision.foreach { case (time, id) =>

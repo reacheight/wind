@@ -12,6 +12,7 @@ object Util {
   val PlayerIds = 0 to 18 by 2
   val RadiantPlayerIds = PlayerIds.take(5)
   val DirePlayerIds = PlayerIds.takeRight(5)
+  val GlyphCooldown = 300
 
   private val TIME_EPS: Float = 0.001f
   private val replicatingPropertyName = "m_hReplicatingOtherHeroModel"
@@ -43,7 +44,10 @@ object Util {
   }
 
   def isGlyphOnCooldown(gameRules: Entity, team: Team): Boolean =
-    gameRules.getProperty[Float]("m_pGameRules.m_fGameTime") < gameRules.getProperty[Float](glyphCooldownPropertyName(team))
+    getGlyphCooldown(gameRules, team) > 0
+
+  def getGlyphCooldown(gameRules: Entity, team: Team): Float =
+    math.max(gameRules.getProperty[Float](glyphCooldownPropertyName(team)) - gameRules.getProperty[Float]("m_pGameRules.m_fGameTime"), 0)
 
   def isHero(entity: Entity): Boolean =
     entity.getDtClass.getDtName.startsWith("CDOTA_Unit_Hero") &&

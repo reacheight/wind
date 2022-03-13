@@ -71,8 +71,8 @@ object Main {
     val result = analyzer.analyze(replay)
 
     println("Couriers location at the start of the game:")
-    result.couriers foreach { case (playerId, isOut) =>
-      println(s"${result.heroName(playerId)} courier is ${if (isOut) "out of" else "in"} fountain")
+    result.couriers foreach { case (playerId, (isOut, isVersusMK)) =>
+      println(s"${result.heroName(playerId)} courier is ${if (isOut) "out of" else "in"} fountain ${if (isOut && isVersusMK) "versus Monkey King \uD83E\uDD21" else ""}")
     }
 
     println("\nHeroes' lanes:")

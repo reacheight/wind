@@ -52,7 +52,7 @@ object ReplayAnalyzer {
 
     AnalysisResult(
       gameInfo.getGameInfo.getDota.getMatchId,
-      courierProcessor.courierIsOut.map { case (id, isOut) => PlayerId(id) -> isOut },
+      courierProcessor.courierIsOut,
       laneProcessor.playerLane.map { case (id, lane) => PlayerId(id) -> lane },
       rolesProcessor.roles,
       laneProcessor.laneWinner,
@@ -83,7 +83,7 @@ object ReplayAnalyzer {
 
 case class AnalysisResult(
   matchId: Long,
-  couriers: Map[PlayerId, Boolean],
+  couriers: Map[PlayerId, (Boolean, Boolean)],
   lanes: Map[PlayerId, (Lane, Lane)],
   roles: Map[PlayerId, Role],
   laneOutcomes: Map[Lane, Option[Team]],

@@ -136,8 +136,12 @@ object Util {
     item.getProperty[Int]("m_iManaCost") <= hero.getProperty[Float]("m_flMana")
 
   def getSpawnTime(hero: Entity, time: Float): Float = {
-    val respawnTime = hero.getProperty[Float]("m_flRespawnTime")
-    if (respawnTime < 0) 0 else math.max(respawnTime - time, 0)
+    if (Util.isAlive(hero))
+      0
+    else {
+      val respawnTime = hero.getProperty[Float]("m_flRespawnTime")
+      if (respawnTime < 0) 0 else math.max(respawnTime - time, 0)
+    }
   }
 
   def getOppositeTeam(team: Team): Team = team match {

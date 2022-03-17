@@ -50,7 +50,8 @@ object Main {
               println(s"Processing match ${m.match_id}")
               if (downloadReplay(location, compressedReplayPath(m.match_id.toString), tmpReplayPath(m.match_id.toString))) {
                 println("Collecting data..\n")
-                collector.collect(cacheReplayPath(m.match_id.toString), m.match_id.toString)
+                collector.collect(tmpReplayPath(m.match_id.toString), m.match_id.toString)
+                deleteTmpFolder()
               }
             case _ => println(s"Can't find replay for match ${m.match_id}")
           }
@@ -193,7 +194,7 @@ object Main {
     else {
       println("Decompressing replay..")
       BZip2Decompressor.decompress(compressedPath, replayPath)
-      deleteTmpFolder()
+      compressedPath.toFile.delete()
       true
     }
   }

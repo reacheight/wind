@@ -3,13 +3,13 @@ package wind.processors
 import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.runner.Context
-import wind.{Util, WinProbabilityDataEntry}
 import wind.models.Team._
+import wind.{Util, WinProbabilityDataEntry}
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.ListBuffer
 
 class WinProbabilityProcessor {
-  var data: ArrayBuffer[WinProbabilityDataEntry] = ArrayBuffer.empty
+  var data: ListBuffer[WinProbabilityDataEntry] = ListBuffer.empty
 
   private val IterationInterval = 10
   private val Epsilon = 0.001f

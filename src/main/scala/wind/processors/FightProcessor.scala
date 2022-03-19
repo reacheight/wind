@@ -1,15 +1,13 @@
 package wind.processors
 
-import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged, UsesEntities}
+import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import wind.Util
 import wind.models.{Fight, GameTimeState, Location, PlayerId}
 
 import scala.collection.mutable.ListBuffer
 
-@UsesEntities
-class FightProcessor {
+class FightProcessor extends EntitiesProcessor {
   type DeathData = (GameTimeState, PlayerId, Location, Map[PlayerId, Location])
 
   def fights: Seq[Fight] = _fights
@@ -22,9 +20,6 @@ class FightProcessor {
   private val HERO_IN_FIGHT_DISTANCE = 2000
   private val FIGHT_START_DIFF = 8
   private val FIGHT_END_DIFF = 3
-
-  @Insert
-  private val entities: Entities = null
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
   def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
@@ -82,10 +77,10 @@ class FightProcessor {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
-    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     val time = Util.getGameTimeState(gameRules)
 
-    val heroes = Util.toList(entities.getAllByPredicate(Util.isHero))
+    val heroes = Util.toList(Entities.getAllByPredicate(Util.isHero))
     val locations = heroes
       .filter(Util.isAlive)
       .appended(hero)

@@ -1,8 +1,7 @@
 package wind.processors
 
-import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged, UsesEntities}
+import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
@@ -11,12 +10,8 @@ import wind.models.{GameTimeState, PlayerId}
 
 import scala.collection.mutable
 
-@UsesEntities
-class MidasEfficiencyProcessor {
+class MidasEfficiencyProcessor extends EntitiesProcessor {
   def midasEfficiency: Map[PlayerId, Float] = _midasEfficiency
-
-  @Insert
-  private val entities: Entities = null
 
   private val MidasName = "item_hand_of_midas"
   private val MidasCooldown = 90
@@ -41,7 +36,7 @@ class MidasEfficiencyProcessor {
   @OnCombatLogEntry
   def onMidasPurchase(ctx: Context, cle: CombatLogEntry): Unit = {
     if (isMidasPurchase(cle)) {
-      val time = Util.getGameTimeState(entities.getByDtName("CDOTAGamerulesProxy"))
+      val time = Util.getGameTimeState(Entities.getByDtName("CDOTAGamerulesProxy"))
       val playerId = PlayerId(ctx.getProcessor(classOf[HeroProcessor]).combatLogNameToPlayerId(cle.getTargetName))
 
       _midasPurchases(playerId) = time

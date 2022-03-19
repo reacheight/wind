@@ -1,17 +1,14 @@
 package wind
 package processors
 
-import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
+import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.runner.Context
 import wind.models.{Location, PlayerId}
 
-class CourierProcessor {
+class CourierProcessor extends EntitiesProcessor {
   def courierIsOut: Map[PlayerId, (Boolean, Boolean)] = _courierIsOut
 
-  @Insert
-  private val entities: Entities = null
   private var _courierIsOut: Map[PlayerId, (Boolean, Boolean)] = Map.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_flGameStartTime")
@@ -24,10 +21,10 @@ class CourierProcessor {
         .find(_._2.contains("MonkeyKing"))
         .map(_._1)
         .map(heroProcessor.heroHandle(_))
-        .map(entities.getByHandle)
+        .map(Entities.getByHandle)
         .map(Util.getTeam)
 
-      val couriers = Util.toList(entities.getAllByDtName("CDOTA_Unit_Courier"))
+      val couriers = Util.toList(Entities.getAllByDtName("CDOTA_Unit_Courier"))
       _courierIsOut = couriers.map(courier => {
         val playerId = PlayerId(courier.getProperty[Int]("m_nPlayerOwnerID"))
         playerId -> (isOutOfFountain(Util.getLocation(courier)), monkeyKingTeam.contains(Util.getOppositeTeam(Util.getTeam(courier))))

@@ -25,6 +25,8 @@ object Main {
               analyze(cacheReplayPath(`match`))
           }
         }
+        else
+          analyze(cacheReplayPath(`match`))
       }
       else {
         analyze(Paths.get(`match`))

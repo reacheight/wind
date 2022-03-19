@@ -1,21 +1,17 @@
 package wind
 package processors
 
-import wind.models.Lane._
-import wind.models.Team._
-import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
-import wind.models.{Lane, Location}
+import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import wind.models.Lane._
+import wind.models.Location
+import wind.models.Team._
 
-class LaneProcessor {
+class LaneProcessor extends EntitiesProcessor {
   private val Epsilon = 0.001f
   private val IterationInterval = 10
   private val LaneStageEndMinute = 10
   private val LaneStageIterationCount = 60 * LaneStageEndMinute / IterationInterval
-
-  @Insert
-  private val entities: Entities = null
 
   private var currentIteration = 1
   private var heroLocationMap = Map[Int, Array[Location]]()
@@ -31,7 +27,7 @@ class LaneProcessor {
     val gameTimeState = Util.getGameTimeState(gameRulesEntity)
     if (!gameTimeState.gameStarted || gameTimeState.gameTime < 30 || currentIteration > LaneStageIterationCount || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
 
-    val heroEntities = entities.getAllByPredicate(Util.isHero)
+    val heroEntities = Entities.getAllByPredicate(Util.isHero)
     heroEntities.forEachRemaining(heroEntity => {
       val playerId = heroEntity.getProperty[Int]("m_iPlayerID")
       val location = Util.getLocation(heroEntity)
@@ -58,8 +54,8 @@ class LaneProcessor {
       playerId -> (Util.getLane(firstStageLocation), Util.getLane(secondStageLocation))
     }
 
-    val radiantData = entities.getByDtName("CDOTA_DataRadiant")
-    val direData = entities.getByDtName("CDOTA_DataDire")
+    val radiantData = Entities.getByDtName("CDOTA_DataRadiant")
+    val direData = Entities.getByDtName("CDOTA_DataDire")
     (Util.getPlayersExpAndNetworth(radiantData) ++ Util.getPlayersExpAndNetworth(direData)) foreach {case (playerId, (exp, networth)) =>
       laneExp += (playerId -> exp)
       laneNetworth += (playerId -> networth)

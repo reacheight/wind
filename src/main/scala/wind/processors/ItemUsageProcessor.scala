@@ -2,21 +2,18 @@ package wind.processors
 
 import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged, UsesEntities}
+import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.processor.stringtables.{StringTables, UsesStringTable}
-import wind.models.{GameTimeState, PlayerId}
 import wind.Util
+import wind.models.{GameTimeState, PlayerId}
 
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
-@UsesEntities
-class ItemUsageProcessor {
+class ItemUsageProcessor extends EntitiesProcessor {
   def unusedItems: Seq[(GameTimeState, PlayerId, String)] = _unusedItems.toSeq
 
-  @Insert
-  private val entities: Entities = null
   @Insert
   private val ctx: Context = null
 
@@ -28,7 +25,7 @@ class ItemUsageProcessor {
   def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
-    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
 
     val time = Util.getGameTimeState(gameRules)
@@ -55,7 +52,7 @@ class ItemUsageProcessor {
     ((0 to 5) ++ Seq(16))
       .map(i => hero.getProperty[Int](s"m_hItems.000$i"))
       .filter(_ != Util.NullValue)
-      .map(entities.getByHandle)
+      .map(Entities.getByHandle)
       .filter(_ != null)
   }
 

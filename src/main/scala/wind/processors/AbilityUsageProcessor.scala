@@ -2,7 +2,7 @@ package wind.processors
 
 import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
+import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.processor.stringtables.{StringTables, UsesStringTable}
 import wind.Util
@@ -11,7 +11,7 @@ import wind.models.{GameTimeState, PlayerId}
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
-class AbilityUsageProcessor {
+class AbilityUsageProcessor extends EntitiesProcessor {
   def unusedAbilities: Seq[(GameTimeState, PlayerId, String)] = _unusedAbilities.toSeq
   def unusedOnAllyAbilities: Seq[(GameTimeState, PlayerId, PlayerId, String)] = _unusedOnAllyAbilities.toSeq
 
@@ -19,15 +19,13 @@ class AbilityUsageProcessor {
   private val _unusedOnAllyAbilities: ListBuffer[(GameTimeState, PlayerId, PlayerId, String)] = ListBuffer.empty
 
   @Insert
-  private val entities: Entities = null
-  @Insert
   private val ctx: Context = null
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
-    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
 
     val time = Util.getGameTimeState(gameRules)
@@ -66,13 +64,13 @@ class AbilityUsageProcessor {
   def onHeroDiedForAllies(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
-    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
 
     val gameTime = Util.getGameTimeState(gameRules)
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
-    val allies = Util.toList(entities.getAllByPredicate(Util.isHero))
+    val allies = Util.toList(Entities.getAllByPredicate(Util.isHero))
       .filter(h => h.getProperty[Int]("m_iTeamNum") == hero.getProperty[Int]("m_iTeamNum"))
       .filter(h => h.getProperty[Int]("m_lifeState") == 0)
       .filter(h => h.getHandle != hero.getHandle)
@@ -122,7 +120,7 @@ class AbilityUsageProcessor {
     (0 to 31)
       .map(i => hero.getProperty[Int](s"m_hAbilities.000$i"))
       .filter(_ != Util.NullValue)
-      .map(entities.getByHandle)
+      .map(Entities.getByHandle)
       .filter(_ != null)
   }
 

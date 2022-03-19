@@ -1,8 +1,7 @@
 package wind.processors
 
-import skadistats.clarity.event.Insert
 import skadistats.clarity.model.{Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged, UsesEntities}
+import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import wind.Util
 import wind.models.Team.Radiant
 import wind.models.{Fight, GameTimeState, PlayerId}
@@ -10,8 +9,7 @@ import wind.models.{Fight, GameTimeState, PlayerId}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-@UsesEntities
-class BadFightsProcessor(fights: Seq[Fight]) {
+class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
   def badFights: Seq[GameTimeState] = _badFights.distinct.toSeq
 
   private val _badFights: ListBuffer[GameTimeState] = ListBuffer.empty
@@ -21,8 +19,6 @@ class BadFightsProcessor(fights: Seq[Fight]) {
     .filter(_.winner.nonEmpty)
     .filter(fight => Util.getOppositeTeam(fight.outnumberedTeam.get) == fight.winner.get)
 
-  @Insert
-  private val entities: Entities = null
   private val players = Util.PlayerIds.map(PlayerId).toSet
   private val EPS = 0.05
   private val NOT_IN_FIGHT_DISTANCE = 6000
@@ -38,7 +34,7 @@ class BadFightsProcessor(fights: Seq[Fight]) {
 
     currentFight.foreach(fight => seenHeroes ++= heroesNotInFight
       .filter(handle => {
-        val hero = entities.getByHandle(handle)
+        val hero = Entities.getByHandle(handle)
         val heroLocation = Util.getLocation(hero)
         val fightLocation = fight.location
         Util.isVisibleByEnemies(hero) && Util.getDistance(heroLocation, fightLocation) > NOT_IN_FIGHT_DISTANCE
@@ -54,7 +50,7 @@ class BadFightsProcessor(fights: Seq[Fight]) {
         heroesNotInFight = players
           .diff(fight.participants)
           .filter(teamPredicate)
-          .map(id => entities.getByPredicate(e => Util.isHero(e) && e.getProperty[Int]("m_iPlayerID") == id.id).getHandle)
+          .map(id => Entities.getByPredicate(e => Util.isHero(e) && e.getProperty[Int]("m_iPlayerID") == id.id).getHandle)
       })
 
     candidates
@@ -63,7 +59,7 @@ class BadFightsProcessor(fights: Seq[Fight]) {
         currentFight = None
         fight
       })
-      .filter(_ => seenHeroes.exists(handle => entities.getByHandle(handle).getProperty[Int]("m_lifeState") == 0))
+      .filter(_ => seenHeroes.exists(handle => Entities.getByHandle(handle).getProperty[Int]("m_lifeState") == 0))
       .foreach(fight => _badFights.addOne(fight.start))
   }
 }

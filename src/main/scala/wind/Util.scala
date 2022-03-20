@@ -109,12 +109,6 @@ object Util {
     math.sqrt(deltaX + deltaY)
   }
 
-  def toList[T](iterator: java.util.Iterator[T]): List[T] = {
-    val result = ArrayBuffer.empty[T]
-    iterator.forEachRemaining(i => { result += i })
-    result.toList
-  }
-
   def getPlayersExpAndNetworth(data: Entity): Map[Int, (Int, Int)] = {
     val isRadiant = data.getDtClass.getDtName == "CDOTA_DataRadiant"
 

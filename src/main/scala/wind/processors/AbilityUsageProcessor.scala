@@ -7,6 +7,7 @@ import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.processor.stringtables.{StringTables, UsesStringTable}
 import wind.Util
 import wind.models.{GameTimeState, PlayerId}
+import wind.extensions._
 
 import scala.collection.mutable.ListBuffer
 
@@ -70,7 +71,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
     val gameTime = Util.getGameTimeState(gameRules)
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
-    val allies = Util.toList(Entities.getAllByPredicate(Util.isHero))
+    val allies = Entities.getAll(Util.isHero)
       .filter(h => h.getProperty[Int]("m_iTeamNum") == hero.getProperty[Int]("m_iTeamNum"))
       .filter(h => h.getProperty[Int]("m_lifeState") == 0)
       .filter(h => h.getHandle != hero.getHandle)

@@ -5,6 +5,7 @@ import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.runner.Context
 import wind.models.{Location, PlayerId}
+import wind.extensions._
 
 class CourierProcessor extends EntitiesProcessor {
   def courierIsOut: Map[PlayerId, (Boolean, Boolean)] = _courierIsOut
@@ -24,7 +25,7 @@ class CourierProcessor extends EntitiesProcessor {
         .map(Entities.getByHandle)
         .map(Util.getTeam)
 
-      val couriers = Util.toList(Entities.getAllByDtName("CDOTA_Unit_Courier"))
+      val couriers = Entities.getAllByName("CDOTA_Unit_Courier")
       _courierIsOut = couriers.map(courier => {
         val playerId = PlayerId(courier.getProperty[Int]("m_nPlayerOwnerID"))
         playerId -> (isOutOfFountain(Util.getLocation(courier)), monkeyKingTeam.contains(Util.getOppositeTeam(Util.getTeam(courier))))

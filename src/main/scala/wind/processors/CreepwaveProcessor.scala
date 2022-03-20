@@ -9,6 +9,7 @@ import wind.Util
 import wind.models.Lane.{Bot, Lane, Middle, Top}
 import wind.models.Team.{Dire, Radiant, Team}
 import wind.models.{GameTimeState, PlayerId}
+import wind.extensions._
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -36,10 +37,10 @@ class CreepwaveProcessor extends EntitiesProcessor {
       if (towerLane == Middle) return
 
       if (!lastTowerHitCreepTime.contains((towerTeam, towerLane)) || time.gameTime - lastTowerHitCreepTime((towerTeam, towerLane)).gameTime > 5) {
-        val nearAllyHeroes = Util.toList(Entities.getAllByPredicate(e => Util.isHero(e) && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, creep) < 500))
-        val nearEnemyHeroes = Util.toList(Entities.getAllByPredicate(e => Util.isHero(e) && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 1000))
-        val comingAllyCreeps = Util.toList(Entities.getAllByPredicate(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, tower) < 1000))
-        val nearEnemyCreeps = Util.toList(Entities.getAllByPredicate(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 500))
+        val nearAllyHeroes = Entities.getAll(e => Util.isHero(e) && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, creep) < 500)
+        val nearEnemyHeroes = Entities.getAll(e => Util.isHero(e) && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 1000)
+        val comingAllyCreeps = Entities.getAll(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, tower) < 1000)
+        val nearEnemyCreeps = Entities.getAll(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 500)
 
         if (comingAllyCreeps.nonEmpty && nearAllyHeroes.nonEmpty && nearEnemyHeroes.isEmpty && nearEnemyCreeps.length >= 2)
           _notTankedCreepwaves.addOne((time, towerTeam, towerLane, nearAllyHeroes.map(Util.getPlayerId)))

@@ -4,6 +4,7 @@ import skadistats.clarity.model.{Entity, FieldPath}
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import wind.Util
 import wind.models.{Fight, GameTimeState, Location, PlayerId}
+import wind.extensions._
 
 import scala.collection.mutable.ListBuffer
 
@@ -80,7 +81,7 @@ class FightProcessor extends EntitiesProcessor {
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     val time = Util.getGameTimeState(gameRules)
 
-    val heroes = Util.toList(Entities.getAllByPredicate(Util.isHero))
+    val heroes = Entities.getAll(Util.isHero)
     val locations = heroes
       .filter(Util.isAlive)
       .appended(hero)

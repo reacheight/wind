@@ -5,6 +5,7 @@ import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import wind.Util
 import wind.models.Team.Radiant
 import wind.models.{Fight, GameTimeState, PlayerId}
+import wind.extensions._
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -50,7 +51,8 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
         heroesNotInFight = players
           .diff(fight.participants)
           .filter(teamPredicate)
-          .map(id => Entities.getByPredicate(e => Util.isHero(e) && e.getProperty[Int]("m_iPlayerID") == id.id).getHandle)
+          .flatMap(id => Entities.get(e => Util.isHero(e) && e.getProperty[Int]("m_iPlayerID") == id.id))
+          .map(_.getHandle)
       })
 
     candidates

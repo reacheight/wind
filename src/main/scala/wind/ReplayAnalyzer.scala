@@ -41,11 +41,13 @@ object ReplayAnalyzer {
         purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor, fightProcessor)
     }
 
+    val modifierProcessor = new ModifierProcessor
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
+    val smokeFightProcessor = new SmokeFightProcessor(fightProcessor.fights)
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(badFightsProcessor)
+      runner.runWith(modifierProcessor, badFightsProcessor, smokeFightProcessor, new HeroProcessor(gameInfo))
     }
 
     println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
@@ -77,6 +79,7 @@ object ReplayAnalyzer {
       creepwaveProcessor.notTankedCreepwaves,
       fightProcessor.fights,
       fightProcessor.fights.filter(fight => badFightsProcessor.badFights.contains(fight.start)),
+      fightProcessor.fights.filter(fight => smokeFightProcessor.smokeFights.contains(fight.start))
     )
   }
 }
@@ -108,4 +111,5 @@ case class AnalysisResult(
   notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])],
   fights: Seq[Fight],
   badFights: Seq[Fight],
+  smokeFights: Seq[Fight],
 )

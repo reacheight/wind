@@ -49,7 +49,7 @@ class FightProcessor extends EntitiesProcessor {
       else
         Seq((deathTime, deadPlayerId, location, heroLocations)) +: fights
     })
-      .filter(_.length >= 2)
+      .filter(_.nonEmpty)
 
     _fights = fights.map(deaths => {
       val firstDeathTime = deaths.head._1
@@ -69,6 +69,8 @@ class FightProcessor extends EntitiesProcessor {
 
       Fight(start, end, fightLocation, heroesInFight, deadInFight)
     })
+      .filter(_.radiantParticipants.nonEmpty)
+      .filter(_.direParticipants.nonEmpty)
       .sortBy(_.start.gameTime)
       .toSeq
   }

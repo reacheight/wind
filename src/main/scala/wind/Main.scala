@@ -183,6 +183,8 @@ object Main {
     })
 
     if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.map(_.start).mkString(", ")}")
+    if (result.smokeFights.nonEmpty) println(s"\nSmoke fights: ${result.smokeFights.map(_.start).mkString(", ")}")
+
   }
 
   def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {

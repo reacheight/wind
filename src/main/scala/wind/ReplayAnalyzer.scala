@@ -78,7 +78,7 @@ object ReplayAnalyzer {
       creepwaveProcessor.notTankedCreepwaves,
       fightProcessor.fights,
       fightProcessor.fights.filter(fight => badFightsProcessor.badFights.contains(fight.start)),
-      fightProcessor.fights.filter(fight => smokeFightProcessor.smokeFights.contains(fight.start))
+      smokeFightProcessor.smokeFights
     )
   }
 }
@@ -110,5 +110,5 @@ case class AnalysisResult(
   notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])],
   fights: Seq[Fight],
   badFights: Seq[Fight],
-  smokeFights: Seq[Fight],
+  smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
 )

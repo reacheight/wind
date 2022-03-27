@@ -10,17 +10,17 @@ import skadistats.clarity.wire.common.proto.DotaModifiers
 import skadistats.clarity.wire.common.proto.DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import wind.Util
-import wind.models.PlayerId
+import wind.models.{GameTimeState, PlayerId}
 
 import scala.collection.mutable
 
 @UsesStringTable("ModifierNames")
 class ModifierProcessor extends EntitiesProcessor {
-  def smokedHeroes: Set[PlayerId] = _smoked.toSet
+  def smokedHeroes: Map[PlayerId, GameTimeState] = _smoked.toMap
   def scepter: Set[PlayerId] = _scepter.toSet
   def shard: Set[PlayerId] = _shard.toSet
 
-  private val _smoked = mutable.Set.empty[PlayerId]
+  private val _smoked = mutable.Map.empty[PlayerId, GameTimeState]
   private val _scepter = mutable.Set.empty[PlayerId]
   private val _shard = mutable.Set.empty[PlayerId]
 
@@ -38,11 +38,14 @@ class ModifierProcessor extends EntitiesProcessor {
   @OnCombatLogEntry
   def onCombatLog(cle: CombatLogEntry): Unit = {
     if (cle.getInflictorName == SmokeModifierName) {
+      val time = Util.getGameTimeState(Entities)
+      val playerId = combatLogHeroNameToPlayerId.get(cle.getTargetName)
+
       if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_MODIFIER_ADD)
-        combatLogHeroNameToPlayerId.get(cle.getTargetName).foreach(id => _smoked.addOne(PlayerId(id)))
+        time.foreach(t => playerId.foreach(id => _smoked(PlayerId(id)) = t))
 
       if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_MODIFIER_REMOVE)
-        combatLogHeroNameToPlayerId.get(cle.getTargetName).foreach(id => _smoked.remove(PlayerId(id)))
+        playerId.foreach(id => _smoked.remove(PlayerId(id)))
     }
   }
 

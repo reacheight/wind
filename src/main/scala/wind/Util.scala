@@ -1,6 +1,7 @@
 package wind
 
 import skadistats.clarity.model.Entity
+import skadistats.clarity.processor.entities.Entities
 import wind.models.{GameTimeState, Lane, Location, PlayerId, Team}
 import wind.models.Lane.Lane
 import wind.models.Team._
@@ -18,6 +19,11 @@ object Util {
   private val replicatingPropertyName = "m_hReplicatingOtherHeroModel"
   private val glyphCooldownPropertyName: Map[Team, String] =
     Map(Radiant -> "m_pGameRules.m_fGoodGlyphCooldown", Dire -> "m_pGameRules.m_fBadGlyphCooldown")
+
+  def getGameTimeState(entities: Entities): Option[GameTimeState] = {
+    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
+    Option(gameRules).map(getGameTimeState)
+  }
 
   def getGameTimeState(gameRulesEntity: Entity): GameTimeState = {
     if (gameRulesEntity.getDtClass.getDtName != "CDOTAGamerulesProxy") throw new IllegalArgumentException

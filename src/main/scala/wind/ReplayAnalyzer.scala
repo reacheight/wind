@@ -38,16 +38,15 @@ object ReplayAnalyzer {
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
         itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor, abilityUsageProcessor,
-        purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor, fightProcessor)
+        purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor, fightProcessor, new ModifierProcessor)
     }
 
-    val modifierProcessor = new ModifierProcessor
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
     val smokeFightProcessor = new SmokeFightProcessor(fightProcessor.fights)
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(modifierProcessor, badFightsProcessor, smokeFightProcessor, new HeroProcessor(gameInfo))
+      runner.runWith(new ModifierProcessor, badFightsProcessor, smokeFightProcessor, new HeroProcessor(gameInfo))
     }
 
     println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")

@@ -77,7 +77,6 @@ class AbilityUsageProcessor extends EntitiesProcessor {
       .filter(h => h.getHandle != hero.getHandle)
 
     // todo брать свойства абилки из файлика доты с описанием всех скиллов или с stratz ???
-    // todo учитывать шмотки на каст ренж
     // todo учитывать роль убитого персонажа ???
     // todo смотреть на бкб
 
@@ -100,9 +99,11 @@ class AbilityUsageProcessor extends EntitiesProcessor {
     addUnusedOnAllyAbility("CDOTA_Ability_Abaddon_DeathCoil", "Mist Coil", _ => 575)
     addUnusedOnAllyAbility("CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack", _ => 700)
     addUnusedOnAllyAbility("CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field", _ => 1050)
-    addUnusedOnAllyAbility("CDOTA_Ability_Weaver_TimeLapse", "Time Lapse", _ => 500, true)
+    addUnusedOnAllyAbility("CDOTA_Ability_Weaver_TimeLapse", "Time Lapse", _ => 500, requireScepter = true)
+    addUnusedOnAllyAbility("CDOTA_Ability_Pudge_Dismember", "Dismember", _ => 300, requireShard = true)
+    addUnusedOnAllyAbility("CDOTA_Ability_Snapfire_GobbleUp", "Gobble Up", _ => 150, requireScepter = true)
 
-    def addUnusedOnAllyAbility(entityName: String, realName: String, castRange: PartialFunction[Int, Int], requireScepter: Boolean = false): Unit = {
+    def addUnusedOnAllyAbility(entityName: String, realName: String, castRange: PartialFunction[Int, Int], requireScepter: Boolean = false, requireShard: Boolean = false): Unit = {
       allies.foreach(ally => {
         val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
         findUnusedAbility(ally, getAbilities(ally), entityName)
@@ -112,6 +113,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
             abilityCastRange >= distance
           })
           .filter(_ => !requireScepter || hasScepter(ally))
+          .filter(_ => !requireShard || hasShard(ally))
           .foreach(_ => _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName))
       })
     }
@@ -151,8 +153,12 @@ class AbilityUsageProcessor extends EntitiesProcessor {
   }
 
   private def hasScepter(hero: Entity): Boolean = {
-    val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
-    val items = itemUsageProcessor.getItems(hero)
-    itemUsageProcessor.findItem(items, "CDOTA_Item_UltimateScepter").nonEmpty
+    val modifierProcessor = ctx.getProcessor(classOf[ModifierProcessor])
+    modifierProcessor.scepter.contains(Util.getPlayerId(hero))
+  }
+
+  private def hasShard(hero: Entity): Boolean = {
+    val modifierProcessor = ctx.getProcessor(classOf[ModifierProcessor])
+    modifierProcessor.shard.contains(Util.getPlayerId(hero))
   }
 }

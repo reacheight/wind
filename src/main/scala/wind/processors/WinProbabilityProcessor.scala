@@ -30,10 +30,10 @@ class WinProbabilityProcessor {
     val networth = Map(Radiant -> getNetworth(radiantData), Dire -> getNetworth(direData))
     val experience = Map(Radiant -> getExperience(radiantData), Dire -> getExperience(direData))
 
-    val (radiantTowers, direTowers) = entities.getAllByName("CDOTA_BaseNPC_Tower").partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
+    val (radiantTowers, direTowers) = entities.filterByName("CDOTA_BaseNPC_Tower").partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
     val towers = Map(Radiant -> countTowers(radiantTowers), Dire -> countTowers(direTowers))
 
-    val (radiantBarracks, direBarracks) = entities.getAllByName("CDOTA_BaseNPC_Barracks").partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
+    val (radiantBarracks, direBarracks) = entities.filterByName("CDOTA_BaseNPC_Barracks").partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
     val barracks = Map(Radiant -> countBarracks(radiantBarracks), Dire -> countBarracks(direBarracks))
 
     val time = gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")

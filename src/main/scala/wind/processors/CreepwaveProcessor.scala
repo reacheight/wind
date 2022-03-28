@@ -30,16 +30,16 @@ class CreepwaveProcessor extends EntitiesProcessor {
     if (time.gameTime > 60 * 10) return
 
     val towerTeam = Util.getOppositeTeam(Util.getTeam(creep))
-    val tower = Entities.get(e => Util.isTower(e) && e.getProperty[Int]("m_iCurrentLevel") == 1 && Util.getTeam(e) == towerTeam && Util.getDistance(e, creep) <= 800)
+    val tower = Entities.find(e => Util.isTower(e) && e.getProperty[Int]("m_iCurrentLevel") == 1 && Util.getTeam(e) == towerTeam && Util.getDistance(e, creep) <= 800)
     tower.foreach(t => {
       val towerLane = Util.getLane(Util.getLocation(t))
       if (towerLane == Middle) return
 
       if (!lastTowerHitCreepTime.contains((towerTeam, towerLane)) || time.gameTime - lastTowerHitCreepTime((towerTeam, towerLane)).gameTime > 5) {
-        val nearAllyHeroes = Entities.getAll(e => Util.isHero(e) && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, creep) < 500)
-        val nearEnemyHeroes = Entities.getAll(e => Util.isHero(e) && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 1000)
-        val comingAllyCreeps = Entities.getAll(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, t) < 1000)
-        val nearEnemyCreeps = Entities.getAll(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 500)
+        val nearAllyHeroes = Entities.filter(e => Util.isHero(e) && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, creep) < 500)
+        val nearEnemyHeroes = Entities.filter(e => Util.isHero(e) && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 1000)
+        val comingAllyCreeps = Entities.filter(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == towerTeam && Util.isAlive(e) && Util.getDistance(e, t) < 1000)
+        val nearEnemyCreeps = Entities.filter(e => e.getDtClass.getDtName == "CDOTA_BaseNPC_Creep_Lane" && Util.getTeam(e) == Util.getTeam(creep) && Util.isAlive(e) && Util.getDistance(e, creep) < 500)
 
         if (comingAllyCreeps.nonEmpty && nearAllyHeroes.nonEmpty && nearEnemyHeroes.isEmpty && nearEnemyCreeps.length >= 2)
           _notTankedCreepwaves.addOne((time, towerTeam, towerLane, nearAllyHeroes.map(Util.getPlayerId)))

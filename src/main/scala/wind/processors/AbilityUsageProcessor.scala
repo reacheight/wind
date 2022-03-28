@@ -71,7 +71,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
     val gameTime = Util.getGameTimeState(gameRules)
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
-    val allies = Entities.getAll(Util.isHero)
+    val allies = Entities.filter(Util.isHero)
       .filter(h => h.getProperty[Int]("m_iTeamNum") == hero.getProperty[Int]("m_iTeamNum"))
       .filter(h => h.getProperty[Int]("m_lifeState") == 0)
       .filter(h => h.getHandle != hero.getHandle)
@@ -123,8 +123,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
     (0 to 31)
       .map(i => hero.getProperty[Int](s"m_hAbilities.000$i"))
       .filter(_ != Util.NullValue)
-      .map(Entities.getByHandle)
-      .filter(_ != null)
+      .flatMap(Entities.get)
   }
 
   private def findUnusedAbility(hero: Entity, abilities: Seq[Entity], name: String): Option[Entity] = {

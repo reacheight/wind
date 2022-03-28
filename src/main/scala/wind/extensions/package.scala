@@ -7,9 +7,11 @@ import scala.collection.mutable.ListBuffer
 
 package object extensions {
   implicit class EntitiesExtension(val entities: Entities) {
-    def get(predicate: Entity => Boolean) = Option(entities.getByPredicate(e => predicate(e)))
-    def getAll(predicate: Entity => Boolean) = toList(entities.getAllByPredicate(e => predicate(e)))
-    def getAllByName(className: String) = toList(entities.getAllByDtName(className))
+    def get(handle: Int) = Option(entities.getByHandle(handle))
+    def find(predicate: Entity => Boolean) = Option(entities.getByPredicate(e => predicate(e)))
+    def filter(predicate: Entity => Boolean) = toList(entities.getAllByPredicate(e => predicate(e)))
+    def findByName(className: String) = Option(entities.getByDtName(className))
+    def filterByName(className: String) = toList(entities.getAllByDtName(className))
   }
 
   private def toList[T](iterator: java.util.Iterator[T]): List[T] = {

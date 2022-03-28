@@ -22,10 +22,10 @@ class CourierProcessor extends EntitiesProcessor {
         .find(_._2.contains("MonkeyKing"))
         .map(_._1)
         .map(heroProcessor.heroHandle(_))
-        .map(Entities.getByHandle)
+        .flatMap(Entities.get)
         .map(Util.getTeam)
 
-      val couriers = Entities.getAllByName("CDOTA_Unit_Courier")
+      val couriers = Entities.filterByName("CDOTA_Unit_Courier")
       _courierIsOut = couriers.map(courier => {
         val playerId = PlayerId(courier.getProperty[Int]("m_nPlayerOwnerID"))
         playerId -> (isOutOfFountain(Util.getLocation(courier)), monkeyKingTeam.contains(Util.getOppositeTeam(Util.getTeam(courier))))

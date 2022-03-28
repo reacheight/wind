@@ -52,7 +52,7 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
         heroesNotInFight = players
           .diff(fight.participants)
           .filter(teamPredicate)
-          .flatMap(id => Entities.get(e => Util.isHero(e) && e.getProperty[Int]("m_iPlayerID") == id.id))
+          .flatMap(id => Entities.find(e => Util.isHero(e) && e.getProperty[Int]("m_iPlayerID") == id.id))
           .map(_.getHandle)
       })
 

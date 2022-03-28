@@ -11,6 +11,7 @@ import skadistats.clarity.wire.common.proto.DotaModifiers.DOTA_MODIFIER_ENTRY_TY
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import wind.Util
 import wind.models.{GameTimeState, PlayerId}
+import wind.extensions._
 
 import scala.collection.mutable
 
@@ -53,27 +54,27 @@ class ModifierProcessor extends EntitiesProcessor {
   def onModifierEntry(ctx: Context, modifier: DotaModifiers.CDOTAModifierBuffTableEntry): Unit = {
     val table = ctx.getProcessor(classOf[StringTables]).forName("ModifierNames")
     val modifierName = table.getNameByIndex(modifier.getModifierClass)
-    val hero = Entities.getByHandle(modifier.getParent)
-    if (hero == null) return
+    val hero = Entities.get(modifier.getParent)
+    hero
+      .filter(Util.isHero)
+      .foreach(h => {
+        val playerId = Util.getPlayerId(h)
 
-    if (modifierName == ScepterModifierName) {
-      val playerId = Util.getPlayerId(hero)
+        if (modifierName == ScepterModifierName) {
+          if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE)
+            _scepter.addOne(playerId)
 
-      if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE)
-        _scepter.addOne(playerId)
+          if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_REMOVED)
+            _scepter.remove(playerId)
+        }
 
-      if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_REMOVED)
-        _scepter.remove(playerId)
-    }
+        if (modifierName == ShardModifierName) {
+          if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE)
+            _shard.addOne(playerId)
 
-    if (modifierName == ShardModifierName) {
-      val playerId = Util.getPlayerId(hero)
-
-      if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE)
-        _shard.addOne(playerId)
-
-      if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_REMOVED)
-        _shard.remove(playerId)
-    }
+          if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_REMOVED)
+            _shard.remove(playerId)
+      }
+    })
   }
 }

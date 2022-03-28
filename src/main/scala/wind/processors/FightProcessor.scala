@@ -83,7 +83,7 @@ class FightProcessor extends EntitiesProcessor {
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     val time = Util.getGameTimeState(gameRules)
 
-    val heroes = Entities.getAll(Util.isHero)
+    val heroes = Entities.filter(Util.isHero)
     val locations = heroes
       .filter(Util.isAlive)
       .appended(hero)

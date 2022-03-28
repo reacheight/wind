@@ -7,6 +7,7 @@ import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.processor.stringtables.{StringTables, UsesStringTable}
 import wind.Util
 import wind.models.{GameTimeState, PlayerId}
+import wind.extensions._
 
 import scala.collection.mutable.ListBuffer
 
@@ -52,8 +53,7 @@ class ItemUsageProcessor extends EntitiesProcessor {
     ((0 to 5) ++ Seq(16))
       .map(i => hero.getProperty[Int](s"m_hItems.000$i"))
       .filter(_ != Util.NullValue)
-      .map(Entities.getByHandle)
-      .filter(_ != null)
+      .flatMap(Entities.get)
   }
 
   def findItem(items: Seq[Entity], name: String): Option[Entity] = {

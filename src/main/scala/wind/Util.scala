@@ -2,11 +2,10 @@ package wind
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.Entities
-import wind.models.{GameTimeState, Lane, Location, PlayerId, Team}
+import wind.extensions._
 import wind.models.Lane.Lane
 import wind.models.Team._
-
-import scala.collection.mutable.ArrayBuffer
+import wind.models.{Team, _}
 
 object Util {
   val NullValue = 16777215
@@ -20,10 +19,10 @@ object Util {
   private val glyphCooldownPropertyName: Map[Team, String] =
     Map(Radiant -> "m_pGameRules.m_fGoodGlyphCooldown", Dire -> "m_pGameRules.m_fBadGlyphCooldown")
 
-  def getGameTimeState(entities: Entities): Option[GameTimeState] = {
-    val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
-    Option(gameRules).map(getGameTimeState)
-  }
+  def getGameTimeState(entities: Entities): Option[GameTimeState] =
+    entities
+      .findByName("CDOTAGamerulesProxy")
+      .map(getGameTimeState)
 
   def getGameTimeState(gameRulesEntity: Entity): GameTimeState = {
     if (gameRulesEntity.getDtClass.getDtName != "CDOTAGamerulesProxy") throw new IllegalArgumentException

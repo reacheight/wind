@@ -187,6 +187,10 @@ object Main {
     result.smokeFights.foreach { case (smokeTimes, fight) =>
       println(s"${fight.start}: ${smokeTimes.map { case (team, smokeTime) => s"$team smoked at $smokeTime" }.mkString(", ")}")
     }
+
+    result.smokeOnVisionButWonFight.foreach { case (fightTime, smokeTime, smokeTeam) =>
+      println(s"$smokeTeam used smoke on enemy vision at $smokeTime, but ${Util.getOppositeTeam(smokeTeam)} didn't react and lost fight anyway at $fightTime.")
+    }
   }
 
   def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {

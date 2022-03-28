@@ -5,7 +5,7 @@ import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
 import wind.models.Lane.Lane
 import wind.models.Role.Role
-import wind.models.Team.Team
+import wind.models.Team.{Dire, Radiant, Team}
 import wind.models._
 import wind.processors._
 
@@ -51,6 +51,13 @@ object ReplayAnalyzer {
 
     println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
 
+    val smokeOnVisionButWonFight = visionProcessor.smokeUsedOnVision.flatMap { case (smokeTime, playerId) =>
+      val smokeTeam = if (Util.RadiantPlayerIds.contains(playerId)) Radiant else Dire
+      smokeFightProcessor.smokeFights
+        .find { case (smokeTimes, fight) => smokeTimes.get(smokeTeam).exists(_.gameTime == smokeTime.gameTime) && fight.winner.contains(smokeTeam) }
+        .map { case (_, fight) => (fight.start, smokeTime, smokeTeam) }
+    }
+
     AnalysisResult(
       gameInfo.getGameInfo.getDota.getMatchId,
       courierProcessor.courierIsOut,
@@ -78,7 +85,8 @@ object ReplayAnalyzer {
       creepwaveProcessor.notTankedCreepwaves,
       fightProcessor.fights,
       fightProcessor.fights.filter(fight => badFightsProcessor.badFights.contains(fight.start)),
-      smokeFightProcessor.smokeFights
+      smokeFightProcessor.smokeFights,
+      smokeOnVisionButWonFight
     )
   }
 }
@@ -111,4 +119,5 @@ case class AnalysisResult(
   fights: Seq[Fight],
   badFights: Seq[Fight],
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
+  smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)] // (fight start, smoke time, smoked team)
 )

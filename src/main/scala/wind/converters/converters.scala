@@ -48,7 +48,8 @@ package object converters {
       "wastedCreepwaves" -> analysis.wastedCreepwaves.asJson,
       "notTankedCreepwaves" -> analysis.notTankedCreepwaves.asJson,
       "badFights" -> analysis.badFights.asJson,
-      "glyphUsedOnDeadT2" -> analysis.glyphOnDeadT2.toStringKeyMap.asJson
+      "glyphUsedOnDeadT2" -> analysis.glyphOnDeadT2.toStringKeyMap.asJson,
+      "badSmokeFights" -> analysis.smokeOnVisionButWonFight.asJson,
     )
   )
 

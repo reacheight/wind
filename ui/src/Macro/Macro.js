@@ -8,6 +8,7 @@ import WastedCreepwaves from "../WastedCreepwaves/WastedCreepwaves";
 import BadFights from "../BadFights/BadFights";
 import React from "react";
 import GlyphOnDeadTower from "../GlyphOnDeadTower/GlyphOnDeadTower";
+import BadSmokeFights from "../BadSmokeFights/BadSmokeFights";
 
 const Macro = ({ analysis, heroes }) => {
   return (
@@ -36,6 +37,11 @@ const Macro = ({ analysis, heroes }) => {
         <li>
           <BadFights badFights={analysis.badFights} />
         </li>}
+      {analysis.badSmokeFights.length !== 0 &&
+        <li>
+          <BadSmokeFights badSmokeFights={analysis.badSmokeFights} />
+        </li>
+      }
       <li>
         <GlyphOnDeadTower glyphUsedOnDeadT2={analysis.glyphUsedOnDeadT2}/>
       </li>

@@ -15,6 +15,7 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
 
   private val _badFights: ListBuffer[GameTimeState] = ListBuffer.empty
   private val candidates = fights
+    .filter(_.start.gameTime > 600)
     .filter(_.isOutnumbered)
     .filter(_.participants.size >= 4)
     .filter(_.winner.nonEmpty)

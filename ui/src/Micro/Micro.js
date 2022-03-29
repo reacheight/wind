@@ -12,14 +12,6 @@ import NotTankedCreepwaves from "../NotTankedCreepwaves/NotTankedCreepwaves";
 const Micro = ({ analysis, heroes }) => {
   return (
     <ul className={styles.list}>
-      {(!isEmpty(analysis.abilityPt) || !isEmpty(analysis.ptNotOnStrength)) &&
-        <li>
-          <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.abilityPt} ptNotOnStrength={analysis.ptNotOnStrength} />
-        </li>}
-      {!isEmpty(analysis.summonGold) &&
-        <li>
-          <Summons heroes={heroes} summons={analysis.summonGold} />
-        </li>}
       {(analysis.unusedItems.length !== 0) &&
         <li>
           <UnusedItems heroes={heroes} unusedItems={analysis.unusedItems} />
@@ -28,19 +20,27 @@ const Micro = ({ analysis, heroes }) => {
         <li>
           <UnusedAbilities heroes={heroes} unusedAbilities={analysis.unusedAbilities} unusedOnAllyAbilities={analysis.unusedOnAllyAbilities} />
         </li>}
-      {!isEmpty(analysis.couriers) &&
-        <li>
-          <Couriers heroes={heroes} couriers={analysis.couriers} />
-        </li>}
-      {!isEmpty(analysis.midasEfficiency) &&
-        <li>
-          <MidasEfficiency heroes={heroes} midasEfficiency={analysis.midasEfficiency} />
-        </li>}
+      {/*{(!isEmpty(analysis.abilityPt) || !isEmpty(analysis.ptNotOnStrength)) &&*/}
+      {/*  <li>*/}
+      {/*    <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.abilityPt} ptNotOnStrength={analysis.ptNotOnStrength} />*/}
+      {/*  </li>}*/}
       {!isEmpty(analysis.notTankedCreepwaves) &&
         <li>
           <NotTankedCreepwaves notTankedCreepwaves={analysis.notTankedCreepwaves} heroes={heroes} />
         </li>
       }
+      {!isEmpty(analysis.summonGold) &&
+        <li>
+          <Summons heroes={heroes} summons={analysis.summonGold} />
+        </li>}
+      {!isEmpty(analysis.midasEfficiency) &&
+        <li>
+          <MidasEfficiency heroes={heroes} midasEfficiency={analysis.midasEfficiency} />
+        </li>}
+      {!isEmpty(analysis.couriers) &&
+        <li>
+          <Couriers heroes={heroes} couriers={analysis.couriers} />
+        </li>}
     </ul>
   )
 }

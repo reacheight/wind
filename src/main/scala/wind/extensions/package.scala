@@ -15,7 +15,8 @@ package object extensions {
   }
 
   implicit class EntityExtension(val entity: Entity) {
-    def getProperty[T](propertyName: String) = Option(entity.getProperty[T](propertyName))
+    def exists(propertyName: String) = entity.hasProperty(propertyName)
+    def get[T](propertyName: String) = Option(entity.getProperty[T](propertyName))
   }
 
   private def toList[T](iterator: java.util.Iterator[T]): List[T] = {

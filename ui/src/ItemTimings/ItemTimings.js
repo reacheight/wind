@@ -52,7 +52,7 @@ const ItemTimings = (props) => {
 
   return (
     <div>
-      <h5 className={styles.analysisTitle}><span className={styles.heroName}>{formatName(props.hero)}</span></h5>
+      <h5 className={styles.analysisTitle}><span className={styles.glowing}>{formatName(props.hero)}</span></h5>
       <ul>
         {itemInfo}
       </ul>

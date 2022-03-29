@@ -4,7 +4,7 @@ import styles from '../Analysis/Analysis.module.css'
 const Summons = (props) => {
   const summonInfo = Object.keys(props.summons).map((id) =>
     <li key={'summon' + id.toString()}>
-      {props.summons[id]} by <span className={styles.heroName}>{props.heroes[id]}</span>
+      <span className={styles.gold}>{props.summons[id]}</span> by <span className={styles.glowing}>{props.heroes[id]}</span>
     </li>
   )
 

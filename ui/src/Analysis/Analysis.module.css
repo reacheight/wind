@@ -1,24 +1,28 @@
 .green {
-  color: green
+  color: green;
 }
 
 .red {
-  color: red
+  color: red;
 }
 
 .yellow {
-  color: yellow
+  color: yellow;
+}
+
+.gold {
+  color: gold;
 }
 
 .lightgreen {
-  color: lightgreen
+  color: lightgreen;
 }
 
 .analysis {
   padding-top: 20px;
 }
 
-.heroName {
+.glowing {
   text-shadow: 0 0 5px #ffffff;
 }
 
@@ -36,23 +40,22 @@
 }
 
 .intelligence {
-  color: skyblue
+  color: skyblue;
 }
 
 .gray {
-  color: gray
+  color: gray;
 }
 
 .team0 {
-  color: green
+  color: green;
 }
 
 .team1 {
-  color: red
+  color: red;
 }
 
 .accordionButton {
-  font-size: 24px;
   justify-content: center;
 }
 

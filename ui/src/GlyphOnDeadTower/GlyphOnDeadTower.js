@@ -10,12 +10,12 @@ const GlyphOnDeadTower = ({glyphUsedOnDeadT2}) => {
     <ul>
       {glyphUsedOnDeadT2[0].length > 0 &&
         <li key={'uselessGlyphRadiant'}>
-          <span className={styles.green}>Radiant</span>: {glyphUsedOnDeadT2[0].join(", ")}
+          <span className={styles.green}>Radiant</span> at {glyphUsedOnDeadT2[0].join(", ")}
         </li>
       }
       {glyphUsedOnDeadT2[1].length > 0 &&
         <li key={'uselessGlyphDire'}>
-          <span className={styles.red}>Dire</span>: {glyphUsedOnDeadT2[1].join(", ")}
+          <span className={styles.red}>Dire</span> at {glyphUsedOnDeadT2[1].join(", ")}
         </li>
       }
     </ul>

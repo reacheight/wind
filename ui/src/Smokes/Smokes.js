@@ -6,7 +6,7 @@ const Smokes = (props) => {
   const smokeInfo = props.smokes
     .map((entry) =>
       <li key={'smoke' + entry[0]}>
-        <span className={styles.heroName}>{props.heroes[entry[1]]}</span> at {entry[0]}
+        <span className={styles.glowing}>{props.heroes[entry[1]]}</span> at {entry[0]}
       </li>
     )
 

@@ -4,7 +4,7 @@ import React from "react";
 
 const NotTankedCreepwaves = (props) => {
   const notTankedCreepwavesInfo = props.notTankedCreepwaves.map(([time, team, lane, players]) => {
-    let heroes = <span className={styles.heroName}>{players.map(id => props.heroes[id]).join(", ")}</span>
+    let heroes = <span className={styles.glowing}>{players.map(id => props.heroes[id]).join(", ")}</span>
     return <li key={"notTankedCreepwave" + time + heroes}>
       {heroes} <span className={styles.gray}>didn't tank</span> creepwave at {time} in {Lane(lane)} lane
     </li>

@@ -4,7 +4,7 @@ import React from "react";
 const MidasEfficiency = (props) => {
   const efficiencyInfo = Object.keys(props.midasEfficiency).map(id =>
     <li key={"midas" + id}>
-      <span className={styles.heroName}>{props.heroes[id]}</span> — {props.midasEfficiency[id].toFixed(2)}
+      <span className={styles.glowing}>{props.heroes[id]}</span> — {props.midasEfficiency[id].toFixed(2)}
     </li>
   )
 

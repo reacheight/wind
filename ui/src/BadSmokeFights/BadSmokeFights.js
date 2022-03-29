@@ -11,7 +11,7 @@ const BadSmokeFights = ({ badSmokeFights }) => {
     let oppositeTeam = (smokedTeam + 1) % 2
     let oppositeTeamName = <span className={styles["team" + oppositeTeam]}>{Team(oppositeTeam)}</span>
     return <li key={"badSmokeFight" + smokedTeam + fightStart}>
-      {oppositeTeamName} saw {smokedTeamName} use smoke at <span className={styles.heroName}>{smokeTime}</span>, but didn't react and lost fight anyway at <span className={styles.heroName}>{fightStart}</span>
+      {oppositeTeamName} saw {smokedTeamName} use smoke at <span className={styles.glowing}>{smokeTime}</span>, but didn't react and lost fight anyway at <span className={styles.glowing}>{fightStart}</span>
     </li>
   })
 

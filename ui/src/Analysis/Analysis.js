@@ -26,7 +26,7 @@ export default class Analysis extends React.Component {
       <div className={styles.analysis}>
         <Accordion allowMultiple pl="20px" pr="20px">
           <AccordionItem className={styles.accordionItem}>
-            <AccordionButton className={styles.accordionButton}>
+            <AccordionButton className={styles.accordionButton} fontSize={20}>
               <span>Micro</span>
               <AccordionIcon />
             </AccordionButton>
@@ -35,7 +35,7 @@ export default class Analysis extends React.Component {
             </AccordionPanel>
           </AccordionItem>
           <AccordionItem className={styles.accordionItem}>
-            <AccordionButton className={styles.accordionButton}>
+            <AccordionButton className={styles.accordionButton} fontSize={20}>
               Macro
               <AccordionIcon />
             </AccordionButton>
@@ -44,7 +44,7 @@ export default class Analysis extends React.Component {
             </AccordionPanel>
           </AccordionItem>
           <AccordionItem className={styles.accordionItem}>
-            <AccordionButton className={styles.accordionButton}>
+            <AccordionButton className={styles.accordionButton} fontSize={20}>
               <span>Item timings (statistics provided by <a className={styles.spectralLink} target="_blank" href="https://stats.spectral.gg/lrg2/?league=imm_ranked_731&mod=items-icritical">Spectral.gg</a>)</span>
               <AccordionIcon />
             </AccordionButton>

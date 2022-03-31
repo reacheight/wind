@@ -37,9 +37,9 @@ object ReplayAnalyzer {
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
-        itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor, abilityUsageProcessor,
-        purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor, fightProcessor, modifierProcessor)
+      runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
+        glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
+        purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor)
     }
 
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)

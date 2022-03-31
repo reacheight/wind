@@ -61,6 +61,7 @@ class ModifierProcessor extends EntitiesProcessor {
             case None => _stun(stunnedId) = newStun
             case Some(stun) if newStun.end.gameTime > stun.end.gameTime => _stun(stunnedId) = newStun
             case Some(stun) if (stun.end.gameTime - time.gameTime) > 1 && newStun.duration > 0.5 => _overlappedStuns.addOne((time, stunnedId, attackerId))
+            case _ =>
           }
         }
 

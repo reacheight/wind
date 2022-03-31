@@ -8,6 +8,7 @@ import Couriers from "../Couriers/Couriers";
 import MidasEfficiency from "../MidassEfficiency/MidasEfficiency";
 import React from "react";
 import NotTankedCreepwaves from "../NotTankedCreepwaves/NotTankedCreepwaves";
+import OverlappedStuns from "../OverlappedStuns/OverlappedStuns";
 
 const Micro = ({ analysis, heroes }) => {
   return (
@@ -24,6 +25,11 @@ const Micro = ({ analysis, heroes }) => {
       {/*  <li>*/}
       {/*    <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.abilityPt} ptNotOnStrength={analysis.ptNotOnStrength} />*/}
       {/*  </li>}*/}
+      {analysis.overlappedStuns.length !== 0 &&
+        <li>
+          <OverlappedStuns overlappedStuns={analysis.overlappedStuns} heroes={heroes} />
+        </li>
+      }
       {!isEmpty(analysis.notTankedCreepwaves) &&
         <li>
           <NotTankedCreepwaves notTankedCreepwaves={analysis.notTankedCreepwaves} heroes={heroes} />

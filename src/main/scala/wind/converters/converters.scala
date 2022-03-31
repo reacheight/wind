@@ -50,6 +50,7 @@ package object converters {
       "badFights" -> analysis.badFights.asJson,
       "glyphUsedOnDeadT2" -> analysis.glyphOnDeadT2.toStringKeyMap.asJson,
       "badSmokeFights" -> analysis.smokeOnVisionButWonFight.asJson,
+      "overlappedStuns" -> analysis.overlappedStuns.asJson,
     )
   )
 

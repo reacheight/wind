@@ -25,7 +25,7 @@ const Micro = ({ analysis, heroes }) => {
       {/*  <li>*/}
       {/*    <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.abilityPt} ptNotOnStrength={analysis.ptNotOnStrength} />*/}
       {/*  </li>}*/}
-      {analysis.overlappedStuns.length !== 0 &&
+      {(analysis.overlappedStuns && analysis.overlappedStuns.length !== 0) &&
         <li>
           <OverlappedStuns overlappedStuns={analysis.overlappedStuns} heroes={heroes} />
         </li>

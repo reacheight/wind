@@ -21,8 +21,8 @@ object Main {
           replayLocation match {
             case None => println(s"Can't find replay for match ${`match`}.")
             case Some(location) =>
-              downloadReplay(location, compressedReplayPath(`match`), cacheReplayPath(`match`))
-              analyze(cacheReplayPath(`match`))
+              if (downloadReplay(location, compressedReplayPath(`match`), cacheReplayPath(`match`)))
+                analyze(cacheReplayPath(`match`))
           }
         }
         else
@@ -190,6 +190,11 @@ object Main {
 
     result.smokeOnVisionButWonFight.foreach { case (fightTime, smokeTime, smokeTeam) =>
       println(s"$smokeTeam used smoke on enemy vision at $smokeTime, but ${Util.getOppositeTeam(smokeTeam)} didn't react and lost fight anyway at $fightTime.")
+    }
+
+    if (result.overlappedStuns.nonEmpty) println("\nOverlapped stuns:")
+    result.overlappedStuns.foreach { case (time, stunnedId, attackerId) =>
+      println(s"${result.heroName(attackerId)} stunned ${result.heroName(stunnedId)} too early at $time")
     }
   }
 

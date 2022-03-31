@@ -31,6 +31,7 @@ object ReplayAnalyzer {
     val scanProcessor = new ScanProcessor
     val creepwaveProcessor = new CreepwaveProcessor
     val fightProcessor = new FightProcessor
+    val modifierProcessor = new ModifierProcessor
 
     val start = System.currentTimeMillis()
     Using.Manager { use =>
@@ -38,7 +39,7 @@ object ReplayAnalyzer {
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, laneProcessor, powerTreadsProcessor, summonsProcessor,
         itemStockProcessor, glyphProcessor, visionProcessor, itemUsageProcessor, rolesProcessor, abilityUsageProcessor,
-        purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor, fightProcessor, new ModifierProcessor)
+        purchasesProcessor, midasProcessor, scanProcessor, creepwaveProcessor, fightProcessor, modifierProcessor)
     }
 
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
@@ -86,7 +87,8 @@ object ReplayAnalyzer {
       fightProcessor.fights,
       fightProcessor.fights.filter(fight => badFightsProcessor.badFights.contains(fight.start)),
       smokeFightProcessor.smokeFights,
-      smokeOnVisionButWonFight
+      smokeOnVisionButWonFight,
+      modifierProcessor.overlappedStuns
     )
   }
 }
@@ -119,5 +121,6 @@ case class AnalysisResult(
   fights: Seq[Fight],
   badFights: Seq[Fight],
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
-  smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)] // (fight start, smoke time, smoked team)
+  smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
+  overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)
 )

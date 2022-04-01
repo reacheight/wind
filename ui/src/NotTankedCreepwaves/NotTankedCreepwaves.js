@@ -1,6 +1,7 @@
 import {Lane} from "../util";
 import styles from "../Analysis/Analysis.module.css";
 import React from "react";
+import AnalysisHint from "../AnalysisHint/AnalysisHint";
 
 const NotTankedCreepwaves = (props) => {
   const notTankedCreepwavesInfo = props.notTankedCreepwaves.map(([time, team, lane, players]) => {
@@ -10,9 +11,13 @@ const NotTankedCreepwaves = (props) => {
     </li>
   })
 
+  let hintContent = <span>
+    Tanking lane creeps for a few seconds to not let them go under you tower allows you to keep the lane near your T1 and farm safely.
+  </span>
   return (
     <>
       <h5 className={styles.analysisTitle}>Not tanked creepwaves 🛡️</h5>
+      <AnalysisHint hint={hintContent} />
       <ul>{notTankedCreepwavesInfo}</ul>
     </>
   )

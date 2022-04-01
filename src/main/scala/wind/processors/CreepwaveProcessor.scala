@@ -49,34 +49,34 @@ class CreepwaveProcessor extends EntitiesProcessor {
     })
   }
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
-  def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
-    val gameState = gameRules.getPropertyForFieldPath[Int](fp)
-    if (gameState != 6) return
-
-    _wastedCreepwaves = creepDeaths.flatMap { case (tower, deaths) =>
-      val (team, lane, tier) = parseTowerName(tower)
-      val (ranges, last) = deaths.foldLeft(Seq.empty[Seq[GameTimeState]], Seq.empty[GameTimeState]) { case ((all, cur), death) =>
-        if (cur.isEmpty || death.gameTime - cur.last.gameTime <= 10)
-          (all, cur :+ death)
-        else
-          (all :+ cur, Seq(death))
-      }
-
-      (ranges :+ last)
-        .filter(range => range.length >= 4)
-        .map(range => (range.head, team, lane, tier))
-    }.toSeq.sortBy(_._1.gameTime)
-  }
-
-  @OnCombatLogEntry
-  def onCreepDied(ctx: Context, cle: CombatLogEntry): Unit = {
-    if (towerKilledCreep(cle)) {
-      val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
-      val time = Util.getGameTimeState(gameRules)
-      addCreepDeath(cle.getAttackerName, time)
-    }
-  }
+//  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
+//  def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+//    val gameState = gameRules.getPropertyForFieldPath[Int](fp)
+//    if (gameState != 6) return
+//
+//    _wastedCreepwaves = creepDeaths.flatMap { case (tower, deaths) =>
+//      val (team, lane, tier) = parseTowerName(tower)
+//      val (ranges, last) = deaths.foldLeft(Seq.empty[Seq[GameTimeState]], Seq.empty[GameTimeState]) { case ((all, cur), death) =>
+//        if (cur.isEmpty || death.gameTime - cur.last.gameTime <= 10)
+//          (all, cur :+ death)
+//        else
+//          (all :+ cur, Seq(death))
+//      }
+//
+//      (ranges :+ last)
+//        .filter(range => range.length >= 4)
+//        .map(range => (range.head, team, lane, tier))
+//    }.toSeq.sortBy(_._1.gameTime)
+//  }
+//
+//  @OnCombatLogEntry
+//  def onCreepDied(ctx: Context, cle: CombatLogEntry): Unit = {
+//    if (towerKilledCreep(cle)) {
+//      val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
+//      val time = Util.getGameTimeState(gameRules)
+//      addCreepDeath(cle.getAttackerName, time)
+//    }
+//  }
 
   def addCreepDeath(tower: String, time: GameTimeState): Unit = {
     if (!creepDeaths.contains(tower))

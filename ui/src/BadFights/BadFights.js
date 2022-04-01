@@ -1,7 +1,8 @@
 import styles from "../Analysis/Analysis.module.css";
 import {Team} from "../util";
 import React from "react";
-import {Box, List, ListItem} from "@chakra-ui/react";
+import { List, ListItem } from "@chakra-ui/react";
+import AnalysisHint from "../AnalysisHint/AnalysisHint";
 
 const BadFights = ({ badFights }) => {
   const badFightsInfo = badFights.map(([team, start]) => {
@@ -11,12 +12,11 @@ const BadFights = ({ badFights }) => {
     </ListItem>
   })
 
+  const hintContent = <span>These fights were lost because some team members showed up far from the teammates, that allowed their opponents to get unequally better fight conditions</span>
   return (
     <>
       <h5 className={styles.analysisTitle}>Outnumbered fights</h5>
-      <Box border={"none"} backgroundColor={"dimgray"} textColor={"gray.100"} borderRadius={10} textAlign={"center"} marginInline={"10%"} marginBottom={3} padding={3}>
-        These fights were lost because some team members showed up far from the teammates, that allowed their opponents to get unequally better fight conditions
-      </Box>
+      <AnalysisHint hint={hintContent} />
       <List>{badFightsInfo}</List>
     </>
   )

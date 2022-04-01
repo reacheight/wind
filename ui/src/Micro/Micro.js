@@ -30,6 +30,10 @@ const Micro = ({ analysis, heroes }) => {
           <OverlappedStuns overlappedStuns={analysis.overlappedStuns} heroes={heroes} />
         </li>
       }
+      {!isEmpty(analysis.couriers) &&
+        <li>
+          <Couriers heroes={heroes} couriers={analysis.couriers} />
+        </li>}
       {!isEmpty(analysis.notTankedCreepwaves) &&
         <li>
           <NotTankedCreepwaves notTankedCreepwaves={analysis.notTankedCreepwaves} heroes={heroes} />
@@ -42,10 +46,6 @@ const Micro = ({ analysis, heroes }) => {
       {!isEmpty(analysis.midasEfficiency) &&
         <li>
           <MidasEfficiency heroes={heroes} midasEfficiency={analysis.midasEfficiency} />
-        </li>}
-      {!isEmpty(analysis.couriers) &&
-        <li>
-          <Couriers heroes={heroes} couriers={analysis.couriers} />
         </li>}
     </ul>
   )

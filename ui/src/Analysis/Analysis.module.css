@@ -59,6 +59,10 @@
   justify-content: center;
 }
 
+.accordionButton:focus {
+  box-shadow:none !important;
+}
+
 .accordionItem {
   border: none;
   margin-bottom: 10px;

@@ -10,7 +10,7 @@ const AnalysisHint = ({ hint }) => {
         <AccordionIcon />
       </AccordionButton>
       <AccordionPanel>
-        <Box border={"none"} borderRadius={10} padding={3}>
+        <Box border={"none"} borderRadius={10}>
           {hint}
         </Box>
       </AccordionPanel>

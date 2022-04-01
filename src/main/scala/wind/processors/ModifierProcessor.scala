@@ -59,9 +59,12 @@ class ModifierProcessor extends EntitiesProcessor {
           val newStun = Stun(time, cle.getStunDuration)
           prevStun match {
             case None => _stun(stunnedId) = newStun
-            case Some(stun) if newStun.end.gameTime > stun.end.gameTime => _stun(stunnedId) = newStun
-            case Some(stun) if (stun.end.gameTime - time.gameTime) > 1 && newStun.duration > 0.5 => _overlappedStuns.addOne((time, stunnedId, attackerId))
-            case _ =>
+            case Some(stun) =>
+              if (newStun.end.gameTime > stun.end.gameTime)
+                _stun(stunnedId) = newStun
+
+              if ((stun.end.gameTime - time.gameTime) > 1 && newStun.duration > 0.5)
+                _overlappedStuns.addOne((time, stunnedId, attackerId))
           }
         }
 

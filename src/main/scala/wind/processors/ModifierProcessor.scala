@@ -63,7 +63,7 @@ class ModifierProcessor extends EntitiesProcessor {
               if (newStun.end.gameTime > stun.end.gameTime)
                 _stun(stunnedId) = newStun
 
-              if ((stun.end.gameTime - time.gameTime) > 1 && newStun.duration > 0.5)
+              if ((stun.end.gameTime - time.gameTime) >= 1.5 && newStun.duration > 0.5)
                 _overlappedStuns.addOne((time, stunnedId, attackerId))
           }
         }

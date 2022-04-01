@@ -5,7 +5,7 @@ import React from "react";
 const AnalysisHint = ({ hint }) => {
   return <Accordion allowToggle textAlign={"center"} marginInline={"10%"}>
     <AccordionItem className={styles.accordionItem} backgroundColor={"dimgray"} textColor={"gray.100"}>
-      <AccordionButton className={styles.accordionButton}>
+      <AccordionButton className={styles.accordionButton} fontSize={15}>
         <span>What does it mean?</span>
         <AccordionIcon />
       </AccordionButton>

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../Analysis/Analysis.module.css'
+import AnalysisHint from "../AnalysisHint/AnalysisHint";
 
 const Couriers = (props) => {
   const courierInfo = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => i * 2).map((id) => {
@@ -14,9 +15,14 @@ const Couriers = (props) => {
     }
   )
 
+  let hintContent = <span>
+    Moving your courier slightly out of your fountain at the start of the game is a little trick that can save you a second or two on item delivery.
+    Just keep it in the shop range. And be careful when you're playing against Monkey King as he can sneak to your base and kill your chickens.
+  </span>
   return (
     <>
       <h5 className={styles.analysisTitle}>Couriers 🐔</h5>
+      <AnalysisHint hint={hintContent} />
       <ul>{courierInfo}</ul>
     </>
   )

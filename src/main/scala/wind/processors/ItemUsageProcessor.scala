@@ -14,6 +14,7 @@ import scala.collection.mutable.ListBuffer
 @UsesStringTable("EntityNames")
 class ItemUsageProcessor extends EntitiesProcessor {
   def unusedItems: Seq[(GameTimeState, PlayerId, String)] = _unusedItems.toSeq
+  def unusedOnAllyItems: Seq[(GameTimeState, PlayerId, PlayerId, String)] = _unusedOnAllyItems.toSeq
 
   @Insert
   private val ctx: Context = null
@@ -21,6 +22,7 @@ class ItemUsageProcessor extends EntitiesProcessor {
   private val GeneralItemName = "CDOTA_Item"
 
   private val _unusedItems: ListBuffer[(GameTimeState, PlayerId, String)] = ListBuffer.empty
+  private val _unusedOnAllyItems: ListBuffer[(GameTimeState, PlayerId, PlayerId, String)] = ListBuffer.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
@@ -41,6 +43,30 @@ class ItemUsageProcessor extends EntitiesProcessor {
     def addUnusedItem(entityName: String, realName: String): Unit =
       findUnusedItem(hero, items, entityName)
         .foreach(_ => _unusedItems.addOne((time, playerId, realName)))
+
+
+    val allies = Entities.filter(Util.isHero)
+      .filter(h => h.getProperty[Int]("m_iTeamNum") == hero.getProperty[Int]("m_iTeamNum"))
+      .filter(Util.isAlive)
+      .filter(h => h.getHandle != hero.getHandle)
+
+    addUnusedOnAllyItem("CDOTA_Item_Mekansm", "Mekansm", 1200)
+    addUnusedOnAllyItem("CDOTA_Item_Guardian_Greaves", "Guardian Greaves", 1200)
+    addUnusedOnAllyItem("CDOTA_Item_GlimmerCape", "Glimmer Cape", 550)
+    addUnusedOnAllyItem("CDOTA_Item_Holy_Locket", "Holy Locket", 500)
+
+    def addUnusedOnAllyItem(entityName: String, realName: String, castRange: Int): Unit = {
+      allies.foreach(ally => {
+        val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
+        findUnusedItem(ally, getItems(ally), entityName)
+          .filter(_ => {
+            val distance = Util.getDistance(hero, ally)
+            val itemCastRange = castRange + getAdditionalCastRange(ally)
+            itemCastRange >= distance
+          })
+          .foreach(_ => _unusedOnAllyItems.addOne(time, playerId, allyPlayerId, realName))
+      })
+    }
   }
 
   private def findUnusedItem(hero: Entity, items: Seq[Entity], name: String): Option[Entity] = {
@@ -61,5 +87,19 @@ class ItemUsageProcessor extends EntitiesProcessor {
     items.find(item => item.getDtClass.getDtName == name ||
       item.getDtClass.getDtName == GeneralItemName &&
         stringTable.getNameByIndex(item.getProperty[Int]("m_pEntity.m_nameStringableIndex")) == name)
+  }
+
+  def getAdditionalCastRange(hero: Entity): Int = {
+    val castRangeItems = Seq(
+      ("CDOTA_Item_Aether_Lens", 225),
+      ("item_octarine_core", 225),
+      ("CDOTA_Item_Keen_Optic", 75),
+      ("CDOTA_Item_Psychic_Headband", 100),
+      ("CDOTA_Item_Seer_Stone", 350),
+      ("CDOTA_Item_Telescope", 110),
+    )
+
+    val items = getItems(hero)
+    castRangeItems.filter(item => findItem(items, item._1).nonEmpty).map(_._2).sum
   }
 }

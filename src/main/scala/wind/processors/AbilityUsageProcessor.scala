@@ -137,18 +137,8 @@ class AbilityUsageProcessor extends EntitiesProcessor {
   }
 
   private def getAdditionalCastRange(hero: Entity): Int = {
-    val castRangeItems = Seq(
-      ("CDOTA_Item_Aether_Lens", 225),
-      ("item_octarine_core", 225),
-      ("CDOTA_Item_Keen_Optic", 75),
-      ("CDOTA_Item_Psychic_Headband", 100),
-      ("CDOTA_Item_Seer_Stone", 350),
-      ("CDOTA_Item_Telescope", 110),
-    )
-
     val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
-    val items = itemUsageProcessor.getItems(hero)
-    castRangeItems.filter(item => itemUsageProcessor.findItem(items, item._1).nonEmpty).map(_._2).sum
+    itemUsageProcessor.getAdditionalCastRange(hero)
   }
 
   private def hasScepter(hero: Entity): Boolean = {

@@ -149,6 +149,11 @@ object Main {
       println(s"${time.toString} ${result.heroName(id)} didn't use $name")
     }
 
+    if (result.unusedOnAllyItems.nonEmpty) println("\nItems not used on ally:")
+    result.unusedOnAllyItems foreach { case (time, deadPlayerId, allyId, item) =>
+      println(s"${time.toString} ${result.heroName(allyId)} didn't use $item for ${result.heroName(deadPlayerId)}")
+    }
+
     if (result.ptNotOnStrength.nonEmpty) println("\nPower Treads not on strength:")
     result.ptNotOnStrength.foreach { case (time, id) =>
       println(s"$time ${result.heroName(id)} didn't switch PT to Strength before death")

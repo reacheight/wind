@@ -13,9 +13,9 @@ import OverlappedStuns from "../OverlappedStuns/OverlappedStuns";
 const Micro = ({ analysis, heroes }) => {
   return (
     <ul className={styles.list}>
-      {(analysis.unusedItems.length !== 0) &&
+      {(analysis.unusedItems.length + analysis.unusedOnAllyItems.length !== 0) &&
         <li>
-          <UnusedItems heroes={heroes} unusedItems={analysis.unusedItems} />
+          <UnusedItems heroes={heroes} unusedItems={analysis.unusedItems} unusedOnAllyItems={analysis.unusedOnAllyItems} />
         </li>}
       {(analysis.unusedAbilities.length + analysis.unusedOnAllyAbilities.length !== 0) &&
         <li>

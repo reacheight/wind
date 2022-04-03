@@ -10,12 +10,20 @@ const UnusedItems = (props) => {
     </li>
   )
 
+  const unusedOnAllyItemsInfo = props.unusedOnAllyItems.map(([time, deadId, allyId, item]) => {
+    let deadHeroName = <span className={styles.glowing}>{props.heroes[deadId]}</span>
+    let allyHeroName = <span className={styles.glowing}>{props.heroes[allyId]}</span>
+    let itemName = <span className={getItemClassName(item)}>{item}</span>
+    return <li key={'unusedOnAllyItem' + deadHeroName + allyHeroName + item}>
+      {allyHeroName} didn't use {itemName} on {deadHeroName} at {time}
+    </li>
+  })
+
   return (
     <>
       <h5 className={styles.analysisTitle}>Unused items ⚰️</h5>
-      <ul>
-        {unusedItemsInfo}
-      </ul>
+      <ul>{unusedItemsInfo}</ul>
+      <ul>{unusedOnAllyItemsInfo}</ul>
     </>
   )
 }

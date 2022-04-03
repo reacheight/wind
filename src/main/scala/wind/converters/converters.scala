@@ -43,6 +43,7 @@ package object converters {
       "unusedAbilities" -> analysis.unusedAbilities.asJson,
       "unusedOnAllyAbilities" -> analysis.unusedOnAllyAbilities.asJson,
       "unusedItems" -> analysis.unusedItems.asJson,
+      "unusedOnAllyItems" -> analysis.unusedOnAllyItems.asJson,
       "purchases" -> analysis.purchases.asJson,
       "midasEfficiency" -> analysis.midasEfficiency.toStringKeyMap.asJson,
       "wastedCreepwaves" -> analysis.wastedCreepwaves.asJson,

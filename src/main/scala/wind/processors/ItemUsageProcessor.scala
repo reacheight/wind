@@ -39,6 +39,7 @@ class ItemUsageProcessor extends EntitiesProcessor {
     addUnusedItem("CDOTA_Item_Essence_Ring", "Essence Ring")
     addUnusedItem("CDOTA_Item_Mekansm", "Mekansm")
     addUnusedItem("CDOTA_Item_Guardian_Greaves", "Guardian Greaves")
+    addUnusedItem("CDOTA_Item_GlimmerCape", "Glimmer Cape")
 
     def addUnusedItem(entityName: String, realName: String): Unit =
       findUnusedItem(hero, items, entityName)

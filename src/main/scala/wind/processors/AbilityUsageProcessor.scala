@@ -15,9 +15,11 @@ import scala.collection.mutable.ListBuffer
 class AbilityUsageProcessor extends EntitiesProcessor {
   def unusedAbilities: Seq[(GameTimeState, PlayerId, String)] = _unusedAbilities.toSeq
   def unusedOnAllyAbilities: Seq[(GameTimeState, PlayerId, PlayerId, String)] = _unusedOnAllyAbilities.toSeq
+  def unusedOnAllyWithBlinkAbilities: Seq[(GameTimeState, PlayerId, PlayerId, String)] = _unusedOnAllyWithBlinkAbilities.toSeq
 
   private val _unusedAbilities: ListBuffer[(GameTimeState, PlayerId, String)] = ListBuffer.empty
   private val _unusedOnAllyAbilities: ListBuffer[(GameTimeState, PlayerId, PlayerId, String)] = ListBuffer.empty
+  private val _unusedOnAllyWithBlinkAbilities: ListBuffer[(GameTimeState, PlayerId, PlayerId, String)] = ListBuffer.empty
 
   @Insert
   private val ctx: Context = null
@@ -85,13 +87,13 @@ class AbilityUsageProcessor extends EntitiesProcessor {
       case 2 => 800
       case 3 => 900
       case 4 => 1000
-    })
+    }, checkBlink = true)
 
     addUnusedOnAllyAbility("CDOTA_Ability_Oracle_FalsePromise", "False Promise", {
       case 1 => 700
       case 2 => 850
       case 3 => 1000
-    })
+    }, checkBlink = true)
 
     addUnusedOnAllyAbility("CDOTA_Ability_Winter_Wyvern_Cold_Embrace", "Cold Embrace", _ => 1000)
     addUnusedOnAllyAbility("CDOTA_Ability_Omniknight_Purification", "Purification", _ => 550)
@@ -99,22 +101,25 @@ class AbilityUsageProcessor extends EntitiesProcessor {
     addUnusedOnAllyAbility("CDOTA_Ability_Abaddon_DeathCoil", "Mist Coil", _ => 575)
     addUnusedOnAllyAbility("CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack", _ => 700)
     addUnusedOnAllyAbility("CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field", _ => 1050)
-    addUnusedOnAllyAbility("CDOTA_Ability_Weaver_TimeLapse", "Time Lapse", _ => 500, requireScepter = true)
-    addUnusedOnAllyAbility("CDOTA_Ability_Pudge_Dismember", "Dismember", _ => 300, requireShard = true)
-    addUnusedOnAllyAbility("CDOTA_Ability_Snapfire_GobbleUp", "Gobble Up", _ => 150, requireScepter = true)
+    addUnusedOnAllyAbility("CDOTA_Ability_Weaver_TimeLapse", "Time Lapse", _ => 500, requireScepter = true, checkBlink = true)
+    addUnusedOnAllyAbility("CDOTA_Ability_Pudge_Dismember", "Dismember", _ => 300, requireShard = true, checkBlink = true)
+    addUnusedOnAllyAbility("CDOTA_Ability_Snapfire_GobbleUp", "Gobble Up", _ => 150, requireScepter = true, checkBlink = true)
 
-    def addUnusedOnAllyAbility(entityName: String, realName: String, castRange: PartialFunction[Int, Int], requireScepter: Boolean = false, requireShard: Boolean = false): Unit = {
+    def addUnusedOnAllyAbility(entityName: String, realName: String, castRange: PartialFunction[Int, Int], requireScepter: Boolean = false, requireShard: Boolean = false, checkBlink: Boolean = false): Unit = {
       allies.foreach(ally => {
         val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
         findUnusedAbility(ally, getAbilities(ally), entityName)
-          .filter(ability => {
-            val distance = Util.getDistance(hero, ally)
-            val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + getAdditionalCastRange(ally)
-            abilityCastRange >= distance
-          })
           .filter(_ => !requireScepter || hasScepter(ally))
           .filter(_ => !requireShard || hasShard(ally))
-          .foreach(_ => _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName))
+          .foreach(ability => {
+            val distance = Util.getDistance(hero, ally)
+            val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + getAdditionalCastRange(ally)
+
+            if (abilityCastRange >= distance)
+              _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName)
+            else if (checkBlink && abilityCastRange + getCastRangeIfHasBlink(ally) >= distance)
+              _unusedOnAllyWithBlinkAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName)
+          })
       })
     }
   }
@@ -139,6 +144,11 @@ class AbilityUsageProcessor extends EntitiesProcessor {
   private def getAdditionalCastRange(hero: Entity): Int = {
     val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
     itemUsageProcessor.getAdditionalCastRange(hero)
+  }
+
+  private def getCastRangeIfHasBlink(hero: Entity): Int = {
+    val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
+    itemUsageProcessor.getCastRangeIfHasBlink(hero)
   }
 
   private def hasScepter(hero: Entity): Boolean = {

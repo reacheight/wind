@@ -144,6 +144,11 @@ object Main {
       println(s"${time.toString} ${result.heroName(allyId)} didn't use $name for ${result.heroName(deadPlayerId)}")
     }
 
+    if (result.unusedOnAllyWithBlinkAbilities.nonEmpty) println("\nAbilities not used with Blink Dagger on ally:")
+    result.unusedOnAllyWithBlinkAbilities foreach { case (time, deadPlayerId, allyId, name) =>
+      println(s"${time.toString} ${result.heroName(allyId)} didn't use Blink Dagger + $name for ${result.heroName(deadPlayerId)}")
+    }
+
     if (result.unusedItems.nonEmpty) println("\nItems not used before death:")
     result.unusedItems.foreach { case (time, id, name) =>
       println(s"${time.toString} ${result.heroName(id)} didn't use $name")

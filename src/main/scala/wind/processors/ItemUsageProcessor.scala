@@ -103,4 +103,12 @@ class ItemUsageProcessor extends EntitiesProcessor {
     val items = getItems(hero)
     castRangeItems.filter(item => findItem(items, item._1).nonEmpty).map(_._2).sum
   }
+
+  def getCastRangeIfHasBlink(hero: Entity): Int = {
+    val blinkItemName = "CDOTA_Item_BlinkDagger"
+    val items = getItems(hero)
+    findItem(items, blinkItemName)
+      .filterNot(Util.isOnCooldown)
+      .map(_ => 1200).getOrElse(0)
+  }
 }

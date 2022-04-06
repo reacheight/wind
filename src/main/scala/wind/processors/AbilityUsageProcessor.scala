@@ -1,7 +1,7 @@
 package wind.processors
 
 import skadistats.clarity.event.Insert
-import skadistats.clarity.model.{Entity, FieldPath}
+import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.processor.stringtables.{StringTables, UsesStringTable}
@@ -23,7 +23,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
   private val ctx: Context = null
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
-  def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
@@ -62,7 +62,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
-  def onHeroDiedForAllies(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onHeroDiedForAllies(hero: Entity, fp: FieldPath): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")

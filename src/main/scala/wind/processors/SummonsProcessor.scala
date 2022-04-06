@@ -1,11 +1,12 @@
 package wind
 package processors
 
-import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
-import skadistats.clarity.processor.entities.{Entities, OnEntityCreated, OnEntityPropertyChanged}
+import skadistats.clarity.model.{CombatLogEntry, Entity}
+import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
+import wind.extensions.FieldPath
 
 import scala.collection.mutable
 
@@ -24,7 +25,7 @@ class SummonsProcessor {
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
-  def onGameEnded(ctx: Context, gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameEnded(ctx: Context, gameRules: Entity, fp: FieldPath): Unit = {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 

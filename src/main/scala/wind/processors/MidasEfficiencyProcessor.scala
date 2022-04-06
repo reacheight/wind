@@ -1,11 +1,12 @@
 package wind.processors
 
-import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
+import skadistats.clarity.model.{CombatLogEntry, Entity}
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import wind.Util
+import wind.extensions.FieldPath
 import wind.models.{GameTimeState, PlayerId}
 
 import scala.collection.mutable
@@ -21,7 +22,7 @@ class MidasEfficiencyProcessor extends EntitiesProcessor {
   private var _midasEfficiency: Map[PlayerId, Float] = Map.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
-  def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameEnded(gameRules: Entity, fp: FieldPath): Unit = {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 

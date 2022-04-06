@@ -1,6 +1,6 @@
 package wind.processors
 
-import skadistats.clarity.model.{Entity, FieldPath}
+import skadistats.clarity.model.{Entity}
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import wind.Util
 import wind.models.Team.Radiant
@@ -31,7 +31,7 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
   private val seenHeroes = mutable.Set.empty[Int]
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath): Unit = {
     val gameTimeState = Util.getGameTimeState(gameRulesEntity)
 
     currentFight.foreach(fight => seenHeroes ++= heroesNotInFight

@@ -1,9 +1,10 @@
 package wind.processors
 
-import skadistats.clarity.model.{Entity, FieldPath}
+import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.runner.Context
 import wind.Util
+import wind.extensions.FieldPath
 import wind.models.Lane.{Bot, Lane, Middle, Top}
 import wind.models.PlayerId
 import wind.models.Role.{HardSupport, MidLane, OffLane, Role, SafeLane, SoftSupport, Undefined}
@@ -13,7 +14,7 @@ class RolesProcessor {
   private var _roles: Map[PlayerId, Role] = Map.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
-  def onGameEnded(ctx: Context, gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameEnded(ctx: Context, gameRules: Entity, fp: FieldPath): Unit = {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 

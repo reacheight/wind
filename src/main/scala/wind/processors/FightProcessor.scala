@@ -1,6 +1,6 @@
 package wind.processors
 
-import skadistats.clarity.model.{Entity, FieldPath}
+import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import wind.Util
 import wind.models.{Fight, GameTimeState, Location, PlayerId}
@@ -23,7 +23,7 @@ class FightProcessor extends EntitiesProcessor {
   private val FIGHT_END_DIFF = 3
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
-  def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameEnded(gameRules: Entity, fp: FieldPath): Unit = {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
@@ -76,7 +76,7 @@ class FightProcessor extends EntitiesProcessor {
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
-  def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))

@@ -1,8 +1,9 @@
 package wind
 package processors
 
-import skadistats.clarity.model.{Entity, FieldPath}
+import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import wind.extensions.FieldPath
 import wind.models.Lane._
 import wind.models.Location
 import wind.models.Team._
@@ -23,7 +24,7 @@ class LaneProcessor extends EntitiesProcessor {
   var laneWinner: Map[Lane, Option[Team]] = Map(Top -> None, Middle -> None, Bot -> None)
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath): Unit = {
     val gameTimeState = Util.getGameTimeState(gameRulesEntity)
     if (!gameTimeState.gameStarted || gameTimeState.gameTime < 30 || currentIteration > LaneStageIterationCount || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
 

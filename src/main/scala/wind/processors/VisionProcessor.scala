@@ -1,12 +1,13 @@
 package wind.processors
 
-import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
+import skadistats.clarity.model.{CombatLogEntry, Entity}
 import skadistats.clarity.processor.entities.{Entities, OnEntityCreated, OnEntityPropertyChanged}
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import wind.models.{GameTimeState, Location, PlayerId}
 import wind.Util
+import wind.extensions.FieldPath
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -32,7 +33,7 @@ class VisionProcessor {
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_NPC_Observer_Ward", propertyPattern = "m_lifeState")
-  private def onObserverEnded(ctx: Context, observer: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  private def onObserverEnded(ctx: Context, observer: Entity, fp: FieldPath): Unit = {
     val time = Util.getGameTimeState(ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy"))
     val current = _observers(observer.getHandle)
     _observers(observer.getHandle) = current.copy(_3 = time)

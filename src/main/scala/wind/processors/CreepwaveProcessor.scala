@@ -1,6 +1,6 @@
 package wind.processors
 
-import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
+import skadistats.clarity.model.{CombatLogEntry, Entity}
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
@@ -25,7 +25,7 @@ class CreepwaveProcessor extends EntitiesProcessor {
   private val lastTowerHitCreepTime: mutable.Map[(Team, Lane), GameTimeState] = mutable.Map.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_BaseNPC_Creep_Lane", propertyPattern = "m_iHealth")
-  def onCreepHPChanged(creep: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onCreepHPChanged(creep: Entity, fp: FieldPath): Unit = {
     val time = Util.getGameTimeState(Entities.getByDtName("CDOTAGamerulesProxy"))
     if (time.gameTime > 60 * 10) return
 
@@ -50,7 +50,7 @@ class CreepwaveProcessor extends EntitiesProcessor {
   }
 
 //  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
-//  def onGameEnded(gameRules: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+//  def onGameEnded(gameRules: Entity, fp: FieldPath): Unit = {
 //    val gameState = gameRules.getPropertyForFieldPath[Int](fp)
 //    if (gameState != 6) return
 //

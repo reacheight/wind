@@ -10,8 +10,8 @@ import skadistats.clarity.wire.common.proto.DotaModifiers
 import skadistats.clarity.wire.common.proto.DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import wind.Util
-import wind.models.{GameTimeState, PlayerId, Stun}
 import wind.extensions._
+import wind.models.{GameTimeState, PlayerId, Stun}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer

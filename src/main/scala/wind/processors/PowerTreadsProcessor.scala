@@ -1,7 +1,7 @@
 package wind
 package processors
 
-import skadistats.clarity.model.{CombatLogEntry, Entity, FieldPath}
+import skadistats.clarity.model.{CombatLogEntry, Entity}
 import skadistats.clarity.processor.entities.{OnEntityCreated, OnEntityPropertyChanged}
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
@@ -46,7 +46,7 @@ class PowerTreadsProcessor extends EntitiesProcessor {
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
-  def onHeroDied(hero: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val playerId = hero.getProperty[Int]("m_iPlayerID")

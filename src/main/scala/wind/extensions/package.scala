@@ -6,6 +6,8 @@ import skadistats.clarity.processor.entities.Entities
 import scala.collection.mutable.ListBuffer
 
 package object extensions {
+  type FieldPath = skadistats.clarity.model.FieldPath[Nothing]
+
   implicit class EntitiesExtension(val entities: Entities) {
     def get(handle: Int) = Option(entities.getByHandle(handle))
     def find(predicate: Entity => Boolean) = Option(entities.getByPredicate(e => predicate(e)))

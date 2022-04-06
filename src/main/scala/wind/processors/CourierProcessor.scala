@@ -1,7 +1,7 @@
 package wind
 package processors
 
-import skadistats.clarity.model.{Entity, FieldPath}
+import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.runner.Context
 import wind.models.{Location, PlayerId}
@@ -13,7 +13,7 @@ class CourierProcessor extends EntitiesProcessor {
   private var _courierIsOut: Map[PlayerId, (Boolean, Boolean)] = Map.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_flGameStartTime")
-  def onGameStartTimeChanged(ctx: Context, e: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameStartTimeChanged(ctx: Context, e: Entity, fp: FieldPath): Unit = {
     val gameTimeState = Util.getGameTimeState(e)
 
     if (gameTimeState.gameStarted) {

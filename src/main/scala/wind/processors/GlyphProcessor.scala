@@ -1,9 +1,10 @@
 package wind.processors
 
-import skadistats.clarity.model.{Entity, FieldPath}
+import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
 import skadistats.clarity.processor.runner.Context
 import wind.Util
+import wind.extensions.FieldPath
 import wind.models.GameTimeState
 import wind.models.Team._
 
@@ -18,7 +19,7 @@ class GlyphProcessor {
   private val _glyphOnDeadT2: Map[Team, ListBuffer[GameTimeState]] = Map(Radiant -> ListBuffer.empty, Dire -> ListBuffer.empty)
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_BaseNPC_Tower", propertyPattern = "m_lifeState")
-  def onTowerLifeStateChanged(ctx: Context, tower: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onTowerLifeStateChanged(ctx: Context, tower: Entity, fp: FieldPath): Unit = {
     if (tower.getPropertyForFieldPath[Int](fp) != 1) return
 
     val towerTeam = Util.getTeam(tower)

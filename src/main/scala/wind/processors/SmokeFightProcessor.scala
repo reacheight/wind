@@ -1,9 +1,10 @@
 package wind.processors
 
-import skadistats.clarity.model.{Entity, FieldPath}
+import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.runner.Context
 import wind.Util
+import wind.extensions.FieldPath
 import wind.models.Team.{Dire, Radiant, Team}
 import wind.models.{Fight, GameTimeState}
 
@@ -19,7 +20,7 @@ class SmokeFightProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
   private val EPS = 0.05
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(ctx: Context, gameRulesEntity: Entity, fp: FieldPath[_ <: FieldPath[_ <: AnyRef]]): Unit = {
+  def onGameTimeChanged(ctx: Context, gameRulesEntity: Entity, fp: FieldPath): Unit = {
     val gameTimeState = Util.getGameTimeState(gameRulesEntity)
 
     fights

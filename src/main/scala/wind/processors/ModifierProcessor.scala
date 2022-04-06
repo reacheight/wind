@@ -56,8 +56,6 @@ class ModifierProcessor extends EntitiesProcessor {
         val prevStun = _stun.get(stunnedId)
 
         if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_MODIFIER_ADD) {
-          if (cle.getAttackerName.contains("slardar"))
-            println(time, cle.getInflictorName, cle.getModifierDuration, cle.getStunDuration, cle.getTargetName)
           val newStun = Stun(time, cle.getStunDuration)
           prevStun match {
             case None => _stun(stunnedId) = newStun

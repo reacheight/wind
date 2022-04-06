@@ -42,6 +42,7 @@ package object converters {
       "obsPlacedOnVision" -> analysis.obsPlacedOnVision.asJson,
       "unusedAbilities" -> analysis.unusedAbilities.asJson,
       "unusedOnAllyAbilities" -> analysis.unusedOnAllyAbilities.asJson,
+      "unusedOnAllyWithBlinkAbilities" -> analysis.unusedOnAllyWithBlinkAbilities.asJson,
       "unusedItems" -> analysis.unusedItems.asJson,
       "unusedOnAllyItems" -> analysis.unusedOnAllyItems.asJson,
       "purchases" -> analysis.purchases.asJson,

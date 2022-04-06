@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../../styles/Analysis.module.css'
+import {getItemClassName} from "../../util";
 
 const UnusedAbilities = (props) => {
   const unusedAbilitiesInfo = props.unusedAbilities.map(entry =>
@@ -14,11 +15,22 @@ const UnusedAbilities = (props) => {
     </li>
   )
 
+  const unusedOnAllyWithBlinkAbilitiesInfo = props.unusedOnAllyWithBlinkAbilities.map(([time, deadId, allyId, ability]) => {
+    let deadHeroName = <span className={styles.glowing}>{props.heroes[deadId]}</span>
+    let allyHeroName = <span className={styles.glowing}>{props.heroes[allyId]}</span>
+    let abilityName = <span className={styles.glowing}>{ability}</span>
+    let blinkDagger = <span className={styles.glowing}>Blink Dagger</span>
+    return <li key={'unusedOnAllyWithBlinkAbility' + deadId + allyId + ability}>
+      {allyHeroName} didn't use {blinkDagger} and {abilityName} on {deadHeroName} at {time}
+    </li>
+  })
+
   return (
     <>
       <h5 className={styles.analysisTitle}>Unused abilities ☠️</h5>
       <ul>{unusedAbilitiesInfo}</ul>
       <ul>{unusedOnAllyAbilitiesInfo}</ul>
+      <ul>{unusedOnAllyWithBlinkAbilitiesInfo}</ul>
     </>
   )
 }

@@ -45,7 +45,7 @@ class ModifierProcessor extends EntitiesProcessor {
 
   @OnCombatLogEntry
   def onCombatLog(cle: CombatLogEntry): Unit = {
-    if (cle.hasStunDuration && cle.getStunDuration > 0.1 && cle.getInflictorName != "modifier_bashed" && !cle.isTargetIllusion) {
+    if (isStun(cle) && !cle.isTargetIllusion) {
       for {
         time <- Util.getGameTimeState(Entities)
         stunnedPlayerId <- combatLogHeroNameToPlayerId.get(cle.getTargetName)
@@ -56,6 +56,8 @@ class ModifierProcessor extends EntitiesProcessor {
         val prevStun = _stun.get(stunnedId)
 
         if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_MODIFIER_ADD) {
+          if (cle.getAttackerName.contains("slardar"))
+            println(time, cle.getInflictorName, cle.getModifierDuration, cle.getStunDuration, cle.getTargetName)
           val newStun = Stun(time, cle.getStunDuration)
           prevStun match {
             case None => _stun(stunnedId) = newStun
@@ -113,5 +115,18 @@ class ModifierProcessor extends EntitiesProcessor {
             _shard.remove(playerId)
       }
     })
+  }
+
+  def isStun(cle: CombatLogEntry): Boolean = {
+    val ignored = Set(
+      "modifier_magnataur_skewer_impact",
+      "modifier_bashed",
+      "modifier_batrider_flaming_lasso_damage",
+      "modifier_pudge_dismember_pull",
+      "modifier_faceless_void_timelock_freeze",
+      "modifier_knockback"
+    )
+
+    cle.hasStunDuration && cle.getStunDuration > 0.1 && !cle.isRootModifier && !ignored.contains(cle.getInflictorName)
   }
 }

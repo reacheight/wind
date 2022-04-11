@@ -8,7 +8,7 @@ import scala.collection.mutable.ListBuffer
 package object extensions {
   type FieldPath = skadistats.clarity.model.FieldPath[Nothing]
 
-  implicit class EntitiesExtension(val entities: Entities) {
+  implicit class EntitiesExtension(val entities: Entities) extends AnyVal {
     def get(handle: Int) = Option(entities.getByHandle(handle))
     def find(predicate: Entity => Boolean) = Option(entities.getByPredicate(e => predicate(e)))
     def filter(predicate: Entity => Boolean) = toList(entities.getAllByPredicate(e => predicate(e)))
@@ -16,7 +16,7 @@ package object extensions {
     def filterByName(className: String) = toList(entities.getAllByDtName(className))
   }
 
-  implicit class EntityExtension(val entity: Entity) {
+  implicit class EntityExtension(val entity: Entity) extends AnyVal {
     def exists(propertyName: String) = entity.hasProperty(propertyName)
     def get[T](propertyName: String) = Option(entity.getProperty[T](propertyName))
   }

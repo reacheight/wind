@@ -82,44 +82,46 @@ class AbilityUsageProcessor extends EntitiesProcessor {
     // todo учитывать роль убитого персонажа ???
     // todo смотреть на бкб
 
-    addUnusedOnAllyAbility("CDOTA_Ability_Dazzle_Shallow_Grave", "Shalow Grave", {
+    addUnusedOnAllyAbility("Dazzle", "CDOTA_Ability_Dazzle_Shallow_Grave", "Shalow Grave", {
       case 1 => 700
       case 2 => 800
       case 3 => 900
       case 4 => 1000
     }, checkBlink = true)
 
-    addUnusedOnAllyAbility("CDOTA_Ability_Oracle_FalsePromise", "False Promise", {
+    addUnusedOnAllyAbility("Oracle", "CDOTA_Ability_Oracle_FalsePromise", "False Promise", {
       case 1 => 700
       case 2 => 850
       case 3 => 1000
     }, checkBlink = true)
 
-    addUnusedOnAllyAbility("CDOTA_Ability_Winter_Wyvern_Cold_Embrace", "Cold Embrace", _ => 1000)
-    addUnusedOnAllyAbility("CDOTA_Ability_Omniknight_Purification", "Purification", _ => 550)
-    addUnusedOnAllyAbility("CDOTA_Ability_Abaddon_AphoticShield", "Aphotic Shield", _ => 550)
-    addUnusedOnAllyAbility("CDOTA_Ability_Abaddon_DeathCoil", "Mist Coil", _ => 575)
-    addUnusedOnAllyAbility("CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack", _ => 700)
-    addUnusedOnAllyAbility("CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field", _ => 1050)
-    addUnusedOnAllyAbility("CDOTA_Ability_Weaver_TimeLapse", "Time Lapse", _ => 500, requireScepter = true, checkBlink = true)
-    addUnusedOnAllyAbility("CDOTA_Ability_Pudge_Dismember", "Dismember", _ => 300, requireShard = true, checkBlink = true)
-    addUnusedOnAllyAbility("CDOTA_Ability_Snapfire_GobbleUp", "Gobble Up", _ => 150, requireScepter = true, checkBlink = true)
+    addUnusedOnAllyAbility("Winter_Wyvern", "CDOTA_Ability_Winter_Wyvern_Cold_Embrace", "Cold Embrace", _ => 1000)
+    addUnusedOnAllyAbility("Omniknight", "CDOTA_Ability_Omniknight_Purification", "Purification", _ => 550)
+    addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_AphoticShield", "Aphotic Shield", _ => 550)
+    addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_DeathCoil", "Mist Coil", _ => 575)
+    addUnusedOnAllyAbility("Legion_Commander", "CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack", _ => 700)
+    addUnusedOnAllyAbility("ArcWarden", "CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field", _ => 1050)
+    addUnusedOnAllyAbility("Weaver", "CDOTA_Ability_Weaver_TimeLapse", "Time Lapse", _ => 500, requireScepter = true, checkBlink = true)
+    addUnusedOnAllyAbility("Pudge", "CDOTA_Ability_Pudge_Dismember", "Dismember", _ => 300, requireShard = true, checkBlink = true)
+    addUnusedOnAllyAbility("Snapfire", "CDOTA_Ability_Snapfire_GobbleUp", "Gobble Up", _ => 150, requireScepter = true, checkBlink = true)
 
-    def addUnusedOnAllyAbility(entityName: String, realName: String, castRange: PartialFunction[Int, Int], requireScepter: Boolean = false, requireShard: Boolean = false, checkBlink: Boolean = false): Unit = {
-      allies.foreach(ally => {
-        val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
-        findUnusedAbility(ally, getAbilities(ally), entityName)
-          .filter(_ => !requireScepter || hasScepter(ally))
-          .filter(_ => !requireShard || hasShard(ally))
-          .foreach(ability => {
-            val distance = Util.getDistance(hero, ally)
-            val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + getAdditionalCastRange(ally)
+    def addUnusedOnAllyAbility(heroName: String, entityName: String, realName: String, castRange: PartialFunction[Int, Int], requireScepter: Boolean = false, requireShard: Boolean = false, checkBlink: Boolean = false): Unit = {
+      allies
+        .find(ally => ally.getDtClass.getDtName.contains(heroName))
+        .foreach(ally => {
+          val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
+          findUnusedAbility(ally, getAbilities(ally), entityName)
+            .filter(_ => !requireScepter || hasScepter(ally))
+            .filter(_ => !requireShard || hasShard(ally))
+            .foreach(ability => {
+              val distance = Util.getDistance(hero, ally)
+              val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + getAdditionalCastRange(ally)
 
-            if (abilityCastRange >= distance)
-              _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName)
-            else if (checkBlink && abilityCastRange + getCastRangeIfHasBlink(ally) >= distance)
-              _unusedOnAllyWithBlinkAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName)
-          })
+              if (abilityCastRange >= distance)
+                _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName)
+              else if (checkBlink && abilityCastRange + getCastRangeIfHasBlink(ally) >= distance)
+                _unusedOnAllyWithBlinkAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, realName)
+            })
       })
     }
   }

@@ -6,7 +6,7 @@ import wind.Util
 import wind.models.{Fight, GameTimeState, Location, PlayerId}
 import wind.extensions._
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 class FightProcessor extends EntitiesProcessor {
   type DeathData = (GameTimeState, PlayerId, Location, Map[PlayerId, Location])
@@ -41,13 +41,13 @@ class FightProcessor extends EntitiesProcessor {
       locations
     }
 
-    val fights = splitByLocation.flatMap(deaths => deaths.foldLeft(Seq(Seq.empty[DeathData])) { case (fights, (deathTime, deadPlayerId, location, heroLocations)) =>
+    val fights = splitByLocation.flatMap(deaths => deaths.foldLeft(List(ArrayBuffer.empty[DeathData])) { case (fights, (deathTime, deadPlayerId, location, heroLocations)) =>
       val curFight = fights.head
-      val prevFights = fights.tail
-      if (curFight.isEmpty || deathTime.gameTime - curFight.last._1.gameTime <= TIME_DISTANCE)
-        (curFight :+ (deathTime, deadPlayerId, location, heroLocations)) +: prevFights
-      else
-        Seq((deathTime, deadPlayerId, location, heroLocations)) +: fights
+      if (curFight.isEmpty || deathTime.gameTime - curFight.last._1.gameTime <= TIME_DISTANCE) {
+        curFight.addOne(deathTime, deadPlayerId, location, heroLocations)
+        fights
+      } else
+        ArrayBuffer((deathTime, deadPlayerId, location, heroLocations)) +: fights
     })
       .filter(_.nonEmpty)
 
@@ -58,7 +58,7 @@ class FightProcessor extends EntitiesProcessor {
       val lastDeathTime = deaths.last._1
       val end = lastDeathTime.copy(gameTime = lastDeathTime.gameTime + FIGHT_END_DIFF)
 
-      val fightLocation = Util.getAverageLocation(deaths.map(_._3))
+      val fightLocation = Util.getAverageLocation(deaths.map(_._3).toSeq)
 
       val deadInFight = deaths.map(_._2).toSet
       val heroesLocations = deaths.flatMap(_._4)
@@ -80,14 +80,16 @@ class FightProcessor extends EntitiesProcessor {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
+    val heroLocation = Util.getLocation(hero)
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     val time = Util.getGameTimeState(gameRules)
 
     val heroes = Entities.filter(Util.isHero)
     val locations = heroes
       .filter(Util.isAlive)
-      .appended(hero)
-      .map(hero => PlayerId(hero.getProperty[Int]("m_iPlayerID")) -> Util.getLocation(hero)).toMap
+      .map(hero => PlayerId(hero.getProperty[Int]("m_iPlayerID")) -> Util.getLocation(hero))
+      .toMap
+      .updated(deadPlayerId, heroLocation)
 
     _deaths.addOne((time, deadPlayerId, Util.getLocation(hero), locations))
   }

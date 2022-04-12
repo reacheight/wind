@@ -17,12 +17,8 @@ class CourierProcessor extends EntitiesProcessor {
     val gameTimeState = Util.getGameTimeState(e)
 
     if (gameTimeState.gameStarted) {
-      val heroProcessor = ctx.getProcessor(classOf[HeroProcessor])
-      val monkeyKingTeam = heroProcessor.heroName
-        .find(_._2.contains("MonkeyKing"))
-        .map(_._1)
-        .map(heroProcessor.heroHandle(_))
-        .flatMap(Entities.get)
+      val monkeyKingTeam = Entities.findByName("CDOTA_Unit_Hero_MonkeyKing")
+        .find(Util.isHero)
         .map(Util.getTeam)
 
       val couriers = Entities.filterByName("CDOTA_Unit_Courier")

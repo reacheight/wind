@@ -21,7 +21,7 @@ object MongoClient {
   private def analyzes = db.map(_.collection("analyzes"))
   private def states = db.map(_.collection("states"))
 
-  def saveAnalysis(analysisResult: AnalysisResult): Future[Unit] = {
+  def saveAnalysis(analysisResult: AnalysisResultInternal): Future[Unit] = {
     analyzes.flatMap(_.insert.one(analysisResult).map(_ =>  {}))
   }
 

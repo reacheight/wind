@@ -13,7 +13,7 @@ import java.nio.file.Path
 import scala.util.Using
 
 object ReplayAnalyzer {
-  def analyze(replay: Path): AnalysisResult = {
+  def analyze(replay: Path): AnalysisResultInternal = {
     val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
     val courierProcessor = new CourierProcessor
     val heroProcessor = new HeroProcessor(gameInfo)
@@ -59,8 +59,11 @@ object ReplayAnalyzer {
         .map { case (_, fight) => (fight.start, smokeTime, smokeTeam) }
     }
 
-    AnalysisResult(
-      gameInfo.getGameInfo.getDota.getMatchId,
+    val game = gameInfo.getGameInfo.getDota
+    AnalysisResultInternal(
+      game.getMatchId,
+      game.getEndTime,
+      game.getGameWinner == 2,
       courierProcessor.courierIsOut,
       laneProcessor.playerLane.map { case (id, lane) => PlayerId(id) -> lane },
       rolesProcessor.roles,
@@ -76,6 +79,7 @@ object ReplayAnalyzer {
       visionProcessor.smokeUsedOnVision,
       visionProcessor.observerPlacedOnVision,
       heroProcessor.heroName.map { case(id, name) => PlayerId(id) -> name },
+      heroProcessor.heroId,
       abilityUsageProcessor.unusedAbilities,
       abilityUsageProcessor.unusedOnAllyAbilities,
       abilityUsageProcessor.unusedOnAllyWithBlinkAbilities,
@@ -95,8 +99,10 @@ object ReplayAnalyzer {
   }
 }
 
-case class AnalysisResult(
+case class AnalysisResultInternal(
   matchId: Long,
+  matchDuration: Int,
+  radiantWon: Boolean,
   couriers: Map[PlayerId, (Boolean, Boolean)],
   lanes: Map[PlayerId, (Lane, Lane)],
   roles: Map[PlayerId, Role],
@@ -112,6 +118,7 @@ case class AnalysisResult(
   smokesUsedOnVision: Seq[(GameTimeState, PlayerId)],
   obsPlacedOnVision: Seq[(GameTimeState, PlayerId)],
   heroName: Map[PlayerId, String],
+  heroId: Map[PlayerId, HeroId],
   unusedAbilities: Seq[(GameTimeState, PlayerId, String)],
   unusedOnAllyAbilities: Seq[(GameTimeState, PlayerId, PlayerId, String)],
   unusedOnAllyWithBlinkAbilities: Seq[(GameTimeState, PlayerId, PlayerId, String)],

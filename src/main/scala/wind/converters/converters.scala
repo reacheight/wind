@@ -2,12 +2,13 @@ package wind
 
 import io.circe.bson._
 import io.circe.syntax._
+import io.circe.generic.auto._
 import io.circe.{Encoder, Json}
 import reactivemongo.api.bson._
 import wind.models.AnalysisStatus._
 import wind.models.Lane.Lane
 import wind.models.Team.Team
-import wind.models.{AnalysisState, AnalysisStatus, Fight, GameTimeState, PlayerId}
+import wind.models.{AnalysisState, AnalysisStatus, Fight, GameTimeState, HeroId, PlayerId}
 
 import scala.util.{Failure, Success}
 
@@ -16,6 +17,7 @@ package object converters {
   implicit val teamToString = (team: Team) => team.id.toString
 
   implicit val fromPlayerId: Encoder[PlayerId] = (id: PlayerId) => id.id.asJson
+  implicit val fromHeroId: Encoder[HeroId] = (id: HeroId) => id.id.asJson
   implicit val fromTeam: Encoder[Team] = (team: Team) => team.id.asJson
   implicit val fromLane: Encoder[Lane] = (lane: Lane) => lane.id.asJson
 
@@ -26,42 +28,45 @@ package object converters {
     def toStringKeyMap(implicit keyToString: K => String) = map.map { case (k, v) => keyToString(k) -> v }
   }
 
-  implicit def analysisResultEncoder: Encoder[AnalysisResult] = (analysis: AnalysisResult) => Json.obj(
-    "info" -> Json.obj(
-      "heroes" -> analysis.heroName.toStringKeyMap.asJson
-    ),
-    "analysis" -> Json.obj(
-      "couriers" -> analysis.couriers.toStringKeyMap.asJson,
-      "abilityPt" -> analysis.abilityUsagesWithPT.toStringKeyMap.asJson,
-      "resourcePt" -> analysis.resourceItemsUsagesWithPT.toStringKeyMap.asJson,
-      "ptNotOnStrength" -> analysis.ptNotOnStrength.asJson,
-      "summonGold" -> analysis.goldFedWithSummons.toStringKeyMap.asJson,
-      "smokeMaxCountTime" -> analysis.maxStockSmokesDuration.toStringKeyMap.asJson,
-      "obsMaxCountTime" -> analysis.maxStockObsDuration.toStringKeyMap.asJson,
-      "smokesUsedOnVision" -> analysis.smokesUsedOnVision.asJson,
-      "obsPlacedOnVision" -> analysis.obsPlacedOnVision.asJson,
-      "unusedAbilities" -> analysis.unusedAbilities.asJson,
-      "unusedOnAllyAbilities" -> analysis.unusedOnAllyAbilities.asJson,
-      "unusedOnAllyWithBlinkAbilities" -> analysis.unusedOnAllyWithBlinkAbilities.asJson,
-      "unusedItems" -> analysis.unusedItems.asJson,
-      "unusedOnAllyItems" -> analysis.unusedOnAllyItems.asJson,
-      "purchases" -> analysis.purchases.asJson,
-      "midasEfficiency" -> analysis.midasEfficiency.toStringKeyMap.asJson,
-      "wastedCreepwaves" -> analysis.wastedCreepwaves.asJson,
-      "notTankedCreepwaves" -> analysis.notTankedCreepwaves.asJson,
-      "badFights" -> analysis.badFights.asJson,
-      "glyphUsedOnDeadT2" -> analysis.glyphOnDeadT2.toStringKeyMap.asJson,
-      "badSmokeFights" -> analysis.smokeOnVisionButWonFight.asJson,
-      "overlappedStuns" -> analysis.overlappedStuns.asJson,
-    )
-  )
+//  implicit def analysisResultEncoder: Encoder[AnalysisResultInternal] = (analysis: AnalysisResultInternal) => Json.obj(
+//    "info" -> Json.obj(
+//      "heroes" -> analysis.heroName.toStringKeyMap.asJson
+//    ),
+//    "analysis" -> Json.obj(
+//      "couriers" -> analysis.couriers.toStringKeyMap.asJson,
+//      "abilityPt" -> analysis.abilityUsagesWithPT.toStringKeyMap.asJson,
+//      "resourcePt" -> analysis.resourceItemsUsagesWithPT.toStringKeyMap.asJson,
+//      "ptNotOnStrength" -> analysis.ptNotOnStrength.asJson,
+//      "summonGold" -> analysis.goldFedWithSummons.toStringKeyMap.asJson,
+//      "smokeMaxCountTime" -> analysis.maxStockSmokesDuration.toStringKeyMap.asJson,
+//      "obsMaxCountTime" -> analysis.maxStockObsDuration.toStringKeyMap.asJson,
+//      "smokesUsedOnVision" -> analysis.smokesUsedOnVision.asJson,
+//      "obsPlacedOnVision" -> analysis.obsPlacedOnVision.asJson,
+//      "unusedAbilities" -> analysis.unusedAbilities.asJson,
+//      "unusedOnAllyAbilities" -> analysis.unusedOnAllyAbilities.asJson,
+//      "unusedOnAllyWithBlinkAbilities" -> analysis.unusedOnAllyWithBlinkAbilities.asJson,
+//      "unusedItems" -> analysis.unusedItems.asJson,
+//      "unusedOnAllyItems" -> analysis.unusedOnAllyItems.asJson,
+//      "purchases" -> analysis.purchases.asJson,
+//      "midasEfficiency" -> analysis.midasEfficiency.toStringKeyMap.asJson,
+//      "wastedCreepwaves" -> analysis.wastedCreepwaves.asJson,
+//      "notTankedCreepwaves" -> analysis.notTankedCreepwaves.asJson,
+//      "badFights" -> analysis.badFights.asJson,
+//      "glyphUsedOnDeadT2" -> analysis.glyphOnDeadT2.toStringKeyMap.asJson,
+//      "badSmokeFights" -> analysis.smokeOnVisionButWonFight.asJson,
+//      "overlappedStuns" -> analysis.overlappedStuns.asJson,
+//    )
+//  )
+
+  implicit def analysisResultEncoder: Encoder[AnalysisResultInternal] = (analysis: AnalysisResultInternal) =>
+    AnalysisResultMapper.toJsonModel(analysis).asJson
 
   implicit def analysisStateJsonEncoder: Encoder[AnalysisState] = (state: AnalysisState) => Json.obj(
     "matchId" -> state.matchId.asJson,
     "status" -> state.status.id.asJson
   )
 
-  implicit def analysisResultWriter: BSONDocumentWriter[AnalysisResult] = (analysis: AnalysisResult) =>
+  implicit def analysisResultWriter: BSONDocumentWriter[AnalysisResultInternal] = (analysis: AnalysisResultInternal) =>
     jsonToBson(analysis.asJson) match {
       case Left(err) => Failure(err)
       case Right(bson) => Success(BSONDocument("_id" -> analysis.matchId, "result" -> bson))

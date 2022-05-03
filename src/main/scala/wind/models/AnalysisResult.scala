@@ -12,11 +12,11 @@ case class CourierState(owner: HeroId, isOut: Boolean, isVersusMK: Boolean)
 case class NotTankedCreepwave(heroes: Seq[HeroId], lane: Lane, time: GameTimeState)
 case class SummonGoldFed(owner: HeroId, gold: Int)
 case class MidasEfficiency(hero: HeroId, efficiency: Float)
-case class ObserverOnVision(hero: HeroId, timeState: GameTimeState)
+case class ObserverOnVision(hero: HeroId, time: GameTimeState)
 case class SmokeOnVision(hero: HeroId, time: GameTimeState)
 case class OutnumberedFight(outnumberedTeam: Team, time: GameTimeState)
 case class BadSmokeFight(smokedTeam: Team, smokeTime: GameTimeState, fightTime: GameTimeState)
-case class WorthlessGlyph(team: Team, time: GameTimeState)
+case class WorthlessGlyph(team: Team, times: Seq[GameTimeState])
 
 case class Analysis(
   unusedItems: Seq[UnusedItem],

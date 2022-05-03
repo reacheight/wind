@@ -1,4 +1,4 @@
-export const Heroes = {
+export const Heroes: { [id: number]: string } = {
   1: "Anti-Mage",
   2: "Axe",
   3: "Bane",

@@ -5,6 +5,7 @@ version := "0.1"
 scalaVersion := "2.13.6"
 
 enablePlugins(JavaAppPackaging)
+enablePlugins(TypeScriptGeneratorPlugin)
 
 Compile/mainClass := Some("wind.WindApp")
 

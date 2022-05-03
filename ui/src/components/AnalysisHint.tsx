@@ -2,7 +2,11 @@ import {Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel
 import styles from "../styles/Analysis.module.css";
 import React from "react";
 
-const AnalysisHint = ({ hint }) => {
+type AnalysisHintProps = {
+  hint: string;
+}
+
+const AnalysisHint = ({ hint }: AnalysisHintProps) => {
   return <Accordion allowToggle textAlign={"center"} marginInline={"10%"}>
     <AccordionItem className={styles.accordionItem} backgroundColor={"dimgray"} textColor={"gray.100"}>
       <AccordionButton className={styles.accordionButton} fontSize={15}>

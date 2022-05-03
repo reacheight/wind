@@ -7,29 +7,31 @@ import React from "react";
 import GlyphOnDeadTower from "./analyzes/GlyphOnDeadTower";
 import BadSmokeFights from "./analyzes/BadSmokeFights";
 
-const Macro = ({ analysis, heroes }) => {
+const Macro = ({ analysis }) => {
   return (
     <ul className={styles.list}>
-      {!isEmpty(analysis.obsPlacedOnVision) &&
+      {analysis.observersOnVision.length !== 0 &&
         <li>
-          <Observers heroes={heroes} observers={analysis.obsPlacedOnVision} />
+          <Observers observersOnVision={analysis.observersOnVision} />
         </li>}
-      {!isEmpty(analysis.smokesUsedOnVision) &&
+      {analysis.smokesOnVision.length !== 0 &&
         <li>
-          <Smokes heroes={heroes} smokes={analysis.smokesUsedOnVision} />
+          <Smokes smokesOnVision={analysis.smokesOnVision} />
         </li>}
-      {!isEmpty(analysis.badFights) &&
+      {analysis.outnumberedFights.length !== 0 &&
         <li>
-          <BadFights badFights={analysis.badFights} />
+          <BadFights outnumberedFights={analysis.outnumberedFights} />
         </li>}
       {analysis.badSmokeFights.length !== 0 &&
         <li>
           <BadSmokeFights badSmokeFights={analysis.badSmokeFights} />
         </li>
       }
-      <li>
-        <GlyphOnDeadTower glyphUsedOnDeadT2={analysis.glyphUsedOnDeadT2}/>
-      </li>
+      {analysis.worthlessGlyphs.length !== 0 &&
+        <li>
+          <GlyphOnDeadTower worthlessGlyphs={analysis.worthlessGlyphs}/>
+        </li>
+      }
     </ul>
   )
 }

@@ -5,47 +5,47 @@ import Summons from "./analyzes/Summons";
 import UnusedItems from "./analyzes/UnusedItems";
 import UnusedAbilities from "./analyzes/UnusedAbilities";
 import Couriers from "./analyzes/Couriers";
-import MidasEfficiency from "./analyzes/MidasEfficiency";
+import MidasEfficiencyComponent from "./analyzes/MidasEfficiency";
 import React from "react";
 import NotTankedCreepwaves from "./analyzes/NotTankedCreepwaves";
 import OverlappedStuns from "./analyzes/OverlappedStuns";
 
-const Micro = ({ analysis, heroes }) => {
+const Micro = ({ analysis }) => {
   return (
     <ul className={styles.list}>
-      {(analysis.unusedItems.length + analysis.unusedOnAllyItems.length !== 0) &&
+      {(analysis.unusedItems.length  !== 0) &&
         <li>
-          <UnusedItems heroes={heroes} unusedItems={analysis.unusedItems} unusedOnAllyItems={analysis.unusedOnAllyItems} />
+          <UnusedItems unusedItems={analysis.unusedItems} />
         </li>}
-      {(analysis.unusedAbilities.length + analysis.unusedOnAllyAbilities.length + analysis.unusedOnAllyWithBlinkAbilities.length !== 0) &&
+      {(analysis.unusedAbilities.length !== 0) &&
         <li>
-          <UnusedAbilities heroes={heroes} unusedAbilities={analysis.unusedAbilities} unusedOnAllyAbilities={analysis.unusedOnAllyAbilities} unusedOnAllyWithBlinkAbilities={analysis.unusedOnAllyWithBlinkAbilities} />
+          <UnusedAbilities unusedAbilities={analysis.unusedAbilities} />
         </li>}
       {/*{(!isEmpty(analysis.abilityPt) || !isEmpty(analysis.ptNotOnStrength)) &&*/}
       {/*  <li>*/}
       {/*    <PowerTreads heroes={heroes} powerThreadsAbilityUsage={analysis.abilityPt} ptNotOnStrength={analysis.ptNotOnStrength} />*/}
       {/*  </li>}*/}
-      {(analysis.overlappedStuns && analysis.overlappedStuns.length !== 0) &&
+      {analysis.overlappedStuns.length !== 0 &&
         <li>
-          <OverlappedStuns overlappedStuns={analysis.overlappedStuns} heroes={heroes} />
+          <OverlappedStuns overlappedStuns={analysis.overlappedStuns} />
         </li>
       }
-      {!isEmpty(analysis.couriers) &&
+      {analysis.couriersState.length !== 0 &&
         <li>
-          <Couriers heroes={heroes} couriers={analysis.couriers} />
+          <Couriers couriersState={analysis.couriersState} />
         </li>}
-      {!isEmpty(analysis.notTankedCreepwaves) &&
+      {analysis.notTankedCreepwaves.length !== 0 &&
         <li>
-          <NotTankedCreepwaves notTankedCreepwaves={analysis.notTankedCreepwaves} heroes={heroes} />
+          <NotTankedCreepwaves notTankedCreepwaves={analysis.notTankedCreepwaves} />
         </li>
       }
-      {!isEmpty(analysis.summonGold) &&
+      {analysis.summonGoldFed.length !== 0 &&
         <li>
-          <Summons heroes={heroes} summons={analysis.summonGold} />
+          <Summons summonGoldFed={analysis.summonGoldFed} />
         </li>}
-      {!isEmpty(analysis.midasEfficiency) &&
+      {analysis.midasEfficiency.length !== 0 &&
         <li>
-          <MidasEfficiency heroes={heroes} midasEfficiency={analysis.midasEfficiency} />
+          <MidasEfficiencyComponent midasEfficiencies={analysis.midasEfficiency} />
         </li>}
     </ul>
   )

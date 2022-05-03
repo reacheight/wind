@@ -23,7 +23,7 @@ object AnalysisResultMapper {
     val smokesOnVision = analysisResult.smokesUsedOnVision.map { case (time, playerId) => SmokeOnVision(heroId(playerId), time) }
     val outnumberedFights = analysisResult.badFights.map(fight => OutnumberedFight(fight.outnumberedTeam.get, fight.start))
     val badSmokeFights = analysisResult.smokeOnVisionButWonFight.map { case (fightStart, smokeTime, smokedTeam) => BadSmokeFight(smokedTeam, smokeTime, fightStart) }
-    val worthlessGlyphs = analysisResult.glyphOnDeadT2.flatMap { case (team, glyphs) => glyphs.map(glyph => WorthlessGlyph(team, glyph)) }.toSeq
+    val worthlessGlyphs = analysisResult.glyphOnDeadT2.map { case (team, glyphs) => WorthlessGlyph(team, glyphs) }.filter(_.times.nonEmpty).toSeq
 
     val analysis = Analysis(
       unusedItems,

@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 
-import Analysis from './Analysis'
+import AnalysisComponent from './Analysis'
 import Header from './Header';
 import {FormControl, Input, Spinner} from '@chakra-ui/react';
 
 import styles from '../styles/App.module.css'
 import Footer from "./Footer";
+import { AnalysisResult } from "../models/AnalysisResult";
 
 const Wind = () => {
   const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
 
   const [matchId, setMatchId] = useState('')
-  const [analysis, setAnalysis] = useState({})
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult>()
   const [loading, setLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const [isDownloadError, setIsDownloadError] = useState(false)
 
-  const getAnalysis = event => {
-    setAnalysis({})
+  const getAnalysis = (event: FormEvent) => {
+    setAnalysisResult(undefined)
     setLoading(true)
     setIsError(false)
     setIsDownloadError(false)
@@ -45,7 +46,7 @@ const Wind = () => {
                   fetch(`${API_ENDPOINT}/analysis/${matchId}`)
                     .then(analysisResponse => analysisResponse.json())
                     .then(json => {
-                      setAnalysis(json)
+                      setAnalysisResult(json)
                       setLoading(false)
                       clearInterval(timer)
                     })
@@ -82,7 +83,7 @@ const Wind = () => {
             <Spinner />
           </div>
         }
-        <Analysis analysis={analysis} />
+        <AnalysisComponent analysisResult={analysisResult} />
         {isError && !isDownloadError &&
           <div className={styles.error}> Error occurred :( </div>
         }

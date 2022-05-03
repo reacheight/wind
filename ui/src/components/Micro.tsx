@@ -1,6 +1,4 @@
 import styles from "../styles/Analysis.module.css";
-import {isEmpty} from "../util";
-import PowerTreads from "./analyzes/PowerTreads";
 import Summons from "./analyzes/Summons";
 import UnusedItems from "./analyzes/UnusedItems";
 import UnusedAbilities from "./analyzes/UnusedAbilities";
@@ -9,8 +7,13 @@ import MidasEfficiencyComponent from "./analyzes/MidasEfficiency";
 import React from "react";
 import NotTankedCreepwaves from "./analyzes/NotTankedCreepwaves";
 import OverlappedStuns from "./analyzes/OverlappedStuns";
+import { Analysis } from "../models/Analysis";
 
-const Micro = ({ analysis }) => {
+type MicroProps = {
+  analysis: Analysis;
+}
+
+const Micro = ({ analysis }: MicroProps) => {
   return (
     <ul className={styles.list}>
       {(analysis.unusedItems.length  !== 0) &&

@@ -1,13 +1,17 @@
 import styles from "../styles/Analysis.module.css";
-import {isEmpty} from "../util";
 import Observers from "./analyzes/Observers";
 import Smokes from "./analyzes/Smokes";
 import BadFights from "./analyzes/BadFights";
 import React from "react";
 import GlyphOnDeadTower from "./analyzes/GlyphOnDeadTower";
 import BadSmokeFights from "./analyzes/BadSmokeFights";
+import { Analysis } from "../models/Analysis";
 
-const Macro = ({ analysis }) => {
+type MacroProps = {
+  analysis: Analysis;
+}
+
+const Macro = ({ analysis }: MacroProps) => {
   return (
     <ul className={styles.list}>
       {analysis.observersOnVision.length !== 0 &&

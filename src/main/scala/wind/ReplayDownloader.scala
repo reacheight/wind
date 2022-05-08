@@ -2,6 +2,7 @@ package wind
 
 import sttp.client3.UriContext
 import sttp.client3.quick.{asFile, backend, quickRequest}
+import wind.models.ReplayLocation
 
 import java.io.File
 import java.nio.file.Path

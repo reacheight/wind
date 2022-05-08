@@ -4,8 +4,8 @@ import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import sttp.client3.circe._
 import sttp.client3.quick._
+import wind.models.ReplayLocation
 
-case class ReplayLocation(matchId: Long, cluster: Long, salt: Long)
 // todo make serialization not that shitty
 case class Match(match_id: Long, match_seq_num: Long, radiant_win: Boolean, start_time: Long, duration: Long, avg_mmr: Option[Int], num_mmr: Option[Int], lobby_type: Int, game_mode: Int, avg_rank_tier: Int, num_rank_tier: Int, cluster: Int, radiant_team: String, dire_team: String)
 

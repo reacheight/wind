@@ -20,7 +20,11 @@ object WindApp extends IOApp {
   private def replayPath(matchId: String) = Paths.get(DownloadingDirectory, s"$matchId.dem")
 
   private def startAnalysis(matchId: String): Unit = {
-    val replayLocation = OdotaClient.getReplayLocation(matchId)
+    val replayLocation = StratzClient.getReplayLocation(matchId) match {
+      case None => OdotaClient.getReplayLocation(matchId)
+      case location => location
+    }
+
     replayLocation
       .flatMap(location => ReplayDownloader.downloadReplay(location, compressedReplayPath(matchId)))
       .foreach(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))

@@ -1,5 +1,6 @@
 package wind
 
+import wind.models.ReplayLocation
 import wind.models.Team.{Dire, Radiant}
 
 import java.nio.file.{Files, Path, Paths}

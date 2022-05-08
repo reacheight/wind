@@ -1,18 +1,19 @@
 package wind
 
 import cats.effect._
-import org.http4s.HttpRoutes
 import org.http4s.blaze.server._
 import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.dsl.io._
 import org.http4s.implicits._
 import org.http4s.server.middleware._
+import org.http4s.{HttpRoutes, StaticFile}
+import wind.constants.Heroes
 import wind.converters._
 import wind.models.{AnalysisState, AnalysisStatus}
 
 import java.nio.file.{Files, Paths}
-import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent._
 
 object WindApp extends IOApp {
   private val DownloadingDirectory = "replays"
@@ -71,6 +72,10 @@ object WindApp extends IOApp {
         case Some(json) => Ok(json)
         case None => NotFound()
       }
+
+    case request @ GET -> Root / "icon" / heroId =>
+      val heroTag = Heroes.getTag(heroId.toInt)
+      StaticFile.fromResource(s"icons/$heroTag.png", Some(request)).getOrElseF(NotFound())
 
   }.orNotFound
 

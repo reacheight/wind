@@ -14,6 +14,7 @@ object Heroes {
   private val nameToId = idToName.map(_.swap)
 
   def getName(id: Int): String = idToName(id)
+  def getTag(id: Int): String = getName(id).replace("npc_dota_hero_", "")
   def getId(name: String): Int = nameToId(name)
 }
 

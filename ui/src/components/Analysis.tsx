@@ -5,6 +5,7 @@ import {Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel
 import Micro from "./Micro";
 import Macro from "./Macro";
 import { AnalysisResult } from "../models/AnalysisResult";
+import TeamIcons from "./TeamIcons";
 
 type AnalysisProps = {
   analysisResult: AnalysisResult | undefined;
@@ -19,6 +20,7 @@ const AnalysisComponent = ({ analysisResult }: AnalysisProps) => {
 
   return (
     <div className={styles.analysis}>
+      <TeamIcons radiant={analysisResult.matchInfo.radiant} dire={analysisResult.matchInfo.dire} />
       <Accordion allowMultiple pl="20px" pr="20px">
         <AccordionItem className={styles.accordionItem}>
           <AccordionButton className={styles.accordionButton} fontSize={20}>

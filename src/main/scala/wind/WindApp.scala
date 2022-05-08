@@ -80,7 +80,7 @@ object WindApp extends IOApp {
   def run(args: List[String]): IO[ExitCode] =
     BlazeServerBuilder[IO]
       .withExecutionContext(global)
-      .bindHttp(sys.env.getOrElse("PORT", "8080").toInt, "0.0.0.0")
+      .bindHttp(sys.env.getOrElse("PORT", "8000").toInt, "0.0.0.0")
       .withHttpApp(corsService)
       .serve
       .compile

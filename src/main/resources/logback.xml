@@ -13,11 +13,12 @@
         </encoder>
     </appender>
 
-    <logger name="clarity.entities" level="OFF" />
-    <logger name="clarity.decoder" level="OFF" />
-    <logger name="clarity.execution" level="OFF" />
+    <logger name="clarity.entities" level="INFO" />
+    <logger name="clarity.decoder" level="INFO" />
+    <logger name="clarity.execution" level="INFO" />
+    <logger name="reactivemongo" level="WARN" />
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>

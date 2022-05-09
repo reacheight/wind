@@ -61,20 +61,20 @@ object WindApp extends IOApp {
         case _ => Future.successful(Created())
       })).flatten
 
-    case GET -> Root / "analysis" / matchId / "state" =>
-      IO.fromFuture(IO(MongoClient.getState(matchId.toLong))) flatMap {
+    case GET -> Root / "analysis" / LongVar(matchId) / "state" =>
+      IO.fromFuture(IO(MongoClient.getState(matchId))) flatMap {
         case Some(state) => Ok(state)
         case None => NotFound()
       }
 
-    case GET -> Root / "analysis" / matchId =>
-      IO.fromFuture(IO(MongoClient.getAnalysisJson(matchId.toLong))) flatMap {
+    case GET -> Root / "analysis" / LongVar(matchId) =>
+      IO.fromFuture(IO(MongoClient.getAnalysisJson(matchId))) flatMap {
         case Some(json) => Ok(json)
         case None => NotFound()
       }
 
-    case request @ GET -> Root / "icon" / heroId =>
-      val heroTag = Heroes.getTag(heroId.toInt)
+    case request @ GET -> Root / "icon" / IntVar(heroId) =>
+      val heroTag = Heroes.getTag(heroId)
       StaticFile.fromResource(s"icons/$heroTag.png", Some(request)).getOrElseF(NotFound())
 
   }.orNotFound

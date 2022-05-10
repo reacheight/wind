@@ -21,12 +21,6 @@ object WindApp extends IOApp {
   private def replayPath(matchId: String) = Paths.get(DownloadingDirectory, s"$matchId.dem")
 
   private def startAnalysis(matchId: String): Unit = {
-    try {
-      val stratzReplayLocation = StratzClient.getReplayLocation(matchId)
-    } catch {
-      case e => println(e.getMessage)
-    }
-
     val replayLocation = StratzClient.getReplayLocation(matchId) match {
       case None => OdotaClient.getReplayLocation(matchId)
       case location => location

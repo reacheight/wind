@@ -1,5 +1,6 @@
 package wind
 
+import com.typesafe.scalalogging.Logger
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import sttp.client3.circe._
@@ -10,12 +11,16 @@ import wind.models.ReplayLocation
 case class Match(match_id: Long, match_seq_num: Long, radiant_win: Boolean, start_time: Long, duration: Long, avg_mmr: Option[Int], num_mmr: Option[Int], lobby_type: Int, game_mode: Int, avg_rank_tier: Int, num_rank_tier: Int, cluster: Int, radiant_team: String, dire_team: String)
 
 object OdotaClient {
+  val logger = Logger[OdotaClient.type]
+
   private implicit val decodeReplayLocation: Decoder[ReplayLocation] =
     Decoder.forProduct3("match_id", "cluster", "replay_salt")(ReplayLocation.apply)
 
   private implicit val decodeMatch: Decoder[Match] = deriveDecoder
 
   def getReplayLocation(matchId: String): Option[ReplayLocation] = {
+    logger.info(s"getting replay location from OpenDota for $matchId")
+
     val response = quickRequest
       .get(uri"https://api.opendota.com/api/replays?match_id=$matchId")
       .response(asJson[List[ReplayLocation]])

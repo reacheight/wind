@@ -1,5 +1,6 @@
 package wind
 
+import com.typesafe.scalalogging.Logger
 import skadistats.clarity.Clarity
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
@@ -13,8 +14,12 @@ import java.nio.file.Path
 import scala.util.Using
 
 object ReplayAnalyzer {
+  val logger = Logger[ReplayAnalyzer.type]
+
   def analyze(replay: Path): AnalysisResultInternal = {
     val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
+    val game = gameInfo.getGameInfo.getDota
+
     val courierProcessor = new CourierProcessor
     val heroProcessor = new HeroProcessor(gameInfo)
     val laneProcessor = new LaneProcessor
@@ -33,7 +38,9 @@ object ReplayAnalyzer {
     val fightProcessor = new FightProcessor
     val modifierProcessor = new ModifierProcessor
 
+    logger.info(s"starting analysis for ${game.getMatchId}")
     val start = System.currentTimeMillis()
+
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
@@ -50,7 +57,7 @@ object ReplayAnalyzer {
       runner.runWith(new ModifierProcessor, badFightsProcessor, smokeFightProcessor, new HeroProcessor(gameInfo))
     }
 
-    println(s"${gameInfo.getGameInfo.getDota.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
+    logger.info(s"${game.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
 
     val smokeOnVisionButWonFight = visionProcessor.smokeUsedOnVision.flatMap { case (smokeTime, playerId) =>
       val smokeTeam = if (Util.RadiantPlayerIds.contains(playerId)) Radiant else Dire
@@ -59,7 +66,7 @@ object ReplayAnalyzer {
         .map { case (_, fight) => (fight.start, smokeTime, smokeTeam) }
     }
 
-    val game = gameInfo.getGameInfo.getDota
+
     AnalysisResultInternal(
       game.getMatchId,
       game.getEndTime,

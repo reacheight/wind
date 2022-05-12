@@ -4,7 +4,6 @@ import Smokes from "./analyzes/Smokes";
 import BadFights from "./analyzes/BadFights";
 import React from "react";
 import GlyphOnDeadTower from "./analyzes/GlyphOnDeadTower";
-import BadSmokeFights from "./analyzes/BadSmokeFights";
 import { Analysis } from "../models/Analysis";
 
 type MacroProps = {
@@ -22,15 +21,10 @@ const Macro = ({ analysis }: MacroProps) => {
         <li>
           <Smokes smokesOnVision={analysis.smokesOnVision} />
         </li>}
-      {analysis.outnumberedFights.length !== 0 &&
+      {(analysis.badFights.length !== 0 || analysis.badSmokeFights.length !== 0) &&
         <li>
-          <BadFights outnumberedFights={analysis.outnumberedFights} />
+          <BadFights badFights={analysis.badFights} badSmokeFights={analysis.badSmokeFights} />
         </li>}
-      {analysis.badSmokeFights.length !== 0 &&
-        <li>
-          <BadSmokeFights badSmokeFights={analysis.badSmokeFights} />
-        </li>
-      }
       {analysis.worthlessGlyphs.length !== 0 &&
         <li>
           <GlyphOnDeadTower worthlessGlyphs={analysis.worthlessGlyphs}/>

@@ -5,7 +5,7 @@ import { CourierState } from './CourierState';
 import { MidasEfficiency } from './MidasEfficiency';
 import { NotTankedCreepwave } from './NotTankedCreepwave';
 import { ObserverOnVision } from './ObserverOnVision';
-import { OutnumberedFight } from './OutnumberedFight';
+import { BadFight } from './BadFight';
 import { OverlappedStun } from './OverlappedStun';
 import { SmokeOnVision } from './SmokeOnVision';
 import { SummonGoldFed } from './SummonGoldFed';
@@ -23,7 +23,7 @@ export interface Analysis {
   midasEfficiency: ReadonlyArray<MidasEfficiency>;
   observersOnVision: ReadonlyArray<ObserverOnVision>;
   smokesOnVision: ReadonlyArray<SmokeOnVision>;
-  outnumberedFights: ReadonlyArray<OutnumberedFight>;
+  badFights: ReadonlyArray<BadFight>;
   badSmokeFights: ReadonlyArray<BadSmokeFight>;
   worthlessGlyphs: ReadonlyArray<WorthlessGlyph>;
 }

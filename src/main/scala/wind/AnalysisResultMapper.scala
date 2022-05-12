@@ -21,7 +21,7 @@ object AnalysisResultMapper {
     val midasEfficiency = analysisResult.midasEfficiency.map { case (playerId, efficiency) => MidasEfficiency(heroId(playerId), efficiency) }.toSeq
     val observersOnVision = analysisResult.obsPlacedOnVision.map { case (time, playerId) => ObserverOnVision(heroId(playerId), time) }
     val smokesOnVision = analysisResult.smokesUsedOnVision.map { case (time, playerId) => SmokeOnVision(heroId(playerId), time) }
-    val outnumberedFights = analysisResult.badFights.map(fight => OutnumberedFight(fight.outnumberedTeam.get, fight.start))
+    val badFights = analysisResult.badFights.map(fight => BadFightJsonModel(fight.fight.outnumberedTeam.get, fight.seenPlayers.map(heroId).toSeq, fight.fight.start))
     val badSmokeFights = analysisResult.smokeOnVisionButWonFight.map { case (fightStart, smokeTime, smokedTeam) => BadSmokeFight(smokedTeam, smokeTime, fightStart) }
     val worthlessGlyphs = analysisResult.glyphOnDeadT2.map { case (team, glyphs) => WorthlessGlyph(team, glyphs) }.filter(_.times.nonEmpty).toSeq
 
@@ -35,7 +35,7 @@ object AnalysisResultMapper {
       midasEfficiency,
       observersOnVision,
       smokesOnVision,
-      outnumberedFights,
+      badFights,
       badSmokeFights,
       worthlessGlyphs
     )

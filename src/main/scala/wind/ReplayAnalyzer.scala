@@ -98,7 +98,7 @@ object ReplayAnalyzer {
       creepwaveProcessor.wastedCreepwaves,
       creepwaveProcessor.notTankedCreepwaves,
       fightProcessor.fights,
-      fightProcessor.fights.filter(fight => badFightsProcessor.badFights.contains(fight.start)),
+      badFightsProcessor.badFights,
       smokeFightProcessor.smokeFights,
       smokeOnVisionButWonFight,
       modifierProcessor.overlappedStuns
@@ -137,7 +137,7 @@ case class AnalysisResultInternal(
   wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
   notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])],
   fights: Seq[Fight],
-  badFights: Seq[Fight],
+  badFights: Seq[BadFight],
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)

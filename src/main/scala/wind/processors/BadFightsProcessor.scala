@@ -1,19 +1,19 @@
 package wind.processors
 
-import skadistats.clarity.model.{Entity}
+import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import wind.Util
-import wind.models.Team.Radiant
-import wind.models.{Fight, GameTimeState, PlayerId}
 import wind.extensions._
+import wind.models.Team.Radiant
+import wind.models.{BadFight, Fight, PlayerId}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
-  def badFights: Seq[GameTimeState] = _badFights.distinct.toSeq
+  def badFights: Seq[BadFight] = _badFights.distinct.toSeq
 
-  private val _badFights: ListBuffer[GameTimeState] = ListBuffer.empty
+  private val _badFights: ListBuffer[BadFight] = ListBuffer.empty
   private val candidates = fights
     .filter(_.start.gameTime > 600)
     .filter(_.isOutnumbered)
@@ -62,7 +62,12 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
         currentFight = None
         fight
       })
-      .filter(_ => seenHeroes.exists(handle => Entities.getByHandle(handle).getProperty[Int]("m_lifeState") == 0))
-      .foreach(fight => _badFights.addOne(fight.start))
+      .map(fight => {
+        val seenPlayers = seenHeroes.map(Entities.getByHandle).filter(Util.isAlive).map(Util.getPlayerId)
+        BadFight(fight, seenPlayers.toSet)
+      })
+      .filter(_.seenPlayers.nonEmpty)
+      .filter(fight => fight.fight.getParticipants(fight.fight.winner.get).size > 5 - fight.seenPlayers.size)
+      .map(fight => _badFights.addOne(fight))
   }
 }

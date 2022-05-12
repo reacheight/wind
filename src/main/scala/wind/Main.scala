@@ -193,7 +193,11 @@ object Main {
       )
     })
 
-    if (result.badFights.nonEmpty) println(s"\nBad fights: ${result.badFights.map(_.start).mkString(", ")}")
+    if (result.badFights.nonEmpty) println("\nBad fights:")
+    result.badFights.foreach(badFight =>
+      println(s"${badFight.fight.start}, seen heroes: ${badFight.seenPlayers.map(id => result.heroName(id)).mkString(", ")}")
+    )
+
     if (result.smokeFights.nonEmpty) println(s"\nSmoke fights:")
     result.smokeFights.foreach { case (smokeTimes, fight) =>
       println(s"${fight.start}: ${smokeTimes.map { case (team, smokeTime) => s"$team smoked at $smokeTime" }.mkString(", ")}")

@@ -14,7 +14,7 @@ case class SummonGoldFed(owner: HeroId, gold: Int)
 case class MidasEfficiency(hero: HeroId, efficiency: Float)
 case class ObserverOnVision(hero: HeroId, time: GameTimeState)
 case class SmokeOnVision(hero: HeroId, time: GameTimeState)
-case class OutnumberedFight(outnumberedTeam: Team, time: GameTimeState)
+case class BadFightJsonModel(outnumberedTeam: Team, seenHeroes: Seq[HeroId], time: GameTimeState)
 case class BadSmokeFight(smokedTeam: Team, smokeTime: GameTimeState, fightTime: GameTimeState)
 case class WorthlessGlyph(team: Team, times: Seq[GameTimeState])
 
@@ -28,7 +28,7 @@ case class Analysis(
   midasEfficiency: Seq[MidasEfficiency],
   observersOnVision: Seq[ObserverOnVision],
   smokesOnVision: Seq[SmokeOnVision],
-  outnumberedFights: Seq[OutnumberedFight],
+  badFights: Seq[BadFightJsonModel],
   badSmokeFights: Seq[BadSmokeFight],
   worthlessGlyphs: Seq[WorthlessGlyph])
 

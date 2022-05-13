@@ -1,26 +1,32 @@
 import styles from "../../styles/Analysis.module.css";
+import '../../items.css'
 import React from "react";
 import { List, ListItem } from "@chakra-ui/react";
 import {BadFight} from "../../models/BadFight";
 import { getOppositeTeam, Team } from "../../models/Team";
 import { Heroes } from "../../constants/heroes";
 import { BadSmokeFight } from "../../models/BadSmokeFight";
+import { LostFightsUnderTheSameWard } from "../../models/LostFightsUnderTheSameWard";
 
 type BadFightsProps = {
   badFights: ReadonlyArray<BadFight>;
-  badSmokeFights: ReadonlyArray<BadSmokeFight>
+  badSmokeFights: ReadonlyArray<BadSmokeFight>;
+  lostFightsUnderTheSameWard: ReadonlyArray<LostFightsUnderTheSameWard>;
 }
 
-const BadFights = ({ badFights, badSmokeFights }: BadFightsProps) => {
+const BadFights = ({ badFights, badSmokeFights, lostFightsUnderTheSameWard }: BadFightsProps) => {
   const list = badFights.map(({ outnumberedTeam, seenHeroes, time }) => {
     let teamName = <span className={styles[Team[outnumberedTeam]]}>{Team[outnumberedTeam]}</span>
     let winnerTeam = getOppositeTeam(outnumberedTeam)
     let winnerTeamName = <span className={styles[Team[winnerTeam]]}>{Team[winnerTeam]}</span>
-    let seenHeroesNames = <span className={styles.glowing}>{seenHeroes.map(id => Heroes[id])}</span>
-    return <ListItem key={time}>
-      {time} — {seenHeroesNames} from {teamName} showed up far on enemy vision, that allowed {winnerTeamName} to outnumber the rest of their opponents in the fight.{" "}
-      {seenHeroesNames} should have come to fight or {teamName} should have retreated.
-    </ListItem>
+    let seenHeroesNames = <span className={styles.glowing}>{seenHeroes.map(id => Heroes[id]).join(", ")}</span>
+    return <>
+      <ListItem key={time}>
+        {time} — {seenHeroesNames} from {teamName} showed up far on enemy vision, that allowed {winnerTeamName} to outnumber the rest of their opponents in the fight.{" "}
+        {seenHeroesNames} should have come to fight or {teamName} should have retreated.
+      </ListItem>
+      <br/>
+    </>
   })
 
   const badSmokeFightsList = badSmokeFights.map(({ smokedTeam, smokeTime, fightTime }) => {
@@ -32,13 +38,23 @@ const BadFights = ({ badFights, badSmokeFights }: BadFightsProps) => {
     </li>
   })
 
+  const lostFightsUnderWardList = lostFightsUnderTheSameWard.map(({ loser, fights, wardOwner }) => {
+    let loserTeamName = <span className={styles[Team[loser]]}>{Team[loser]}</span>
+    let fightsStarts = <span className={styles.glowing}>{fights.join(", ")}</span>
+    let wardOwnerHeroName = <span className={styles.glowing}>{Heroes[wardOwner]}</span>
+
+    return <li key={fights.join(", ")}>
+      {loserTeamName} lost {fights.length} fights at {fightsStarts} under the same <span className={"observer"}>Observer</span> by {wardOwnerHeroName}
+    </li>
+  })
+
   return (
     <>
       <h5 className={styles.analysisTitle}>Bad fights</h5>
-      <List>
-        {list}
-        {badSmokeFightsList}
-      </List>
+      <List>{list}</List>
+      <List>{badSmokeFightsList}</List>
+      {badSmokeFightsList.length !== 0 && <br/>}
+      <List>{lostFightsUnderWardList}</List>
     </>
   )
 }

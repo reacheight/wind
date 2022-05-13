@@ -21,9 +21,9 @@ const Macro = ({ analysis }: MacroProps) => {
         <li>
           <Smokes smokesOnVision={analysis.smokesOnVision} />
         </li>}
-      {(analysis.badFights.length !== 0 || analysis.badSmokeFights.length !== 0) &&
+      {(analysis.badFights.length !== 0 || analysis.badSmokeFights.length !== 0 || analysis.lostFightsUnderTheSameWard.length !== 0) &&
         <li>
-          <BadFights badFights={analysis.badFights} badSmokeFights={analysis.badSmokeFights} />
+          <BadFights badFights={analysis.badFights} badSmokeFights={analysis.badSmokeFights} lostFightsUnderTheSameWard={analysis.lostFightsUnderTheSameWard} />
         </li>}
       {analysis.worthlessGlyphs.length !== 0 &&
         <li>

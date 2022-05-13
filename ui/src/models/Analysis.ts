@@ -12,6 +12,7 @@ import { SummonGoldFed } from './SummonGoldFed';
 import { UnusedAbility } from './UnusedAbility';
 import { UnusedItem } from './UnusedItem';
 import { WorthlessGlyph } from './WorthlessGlyph';
+import { LostFightsUnderTheSameWard } from "./LostFightsUnderTheSameWard";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -26,4 +27,5 @@ export interface Analysis {
   badFights: ReadonlyArray<BadFight>;
   badSmokeFights: ReadonlyArray<BadSmokeFight>;
   worthlessGlyphs: ReadonlyArray<WorthlessGlyph>;
+  lostFightsUnderTheSameWard: ReadonlyArray<LostFightsUnderTheSameWard>;
 }

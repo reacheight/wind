@@ -16,6 +16,7 @@ case class ObserverOnVision(hero: HeroId, time: GameTimeState)
 case class SmokeOnVision(hero: HeroId, time: GameTimeState)
 case class BadFightJsonModel(outnumberedTeam: Team, seenHeroes: Seq[HeroId], time: GameTimeState)
 case class BadSmokeFight(smokedTeam: Team, smokeTime: GameTimeState, fightTime: GameTimeState)
+case class LostFightsUnderTheSameWard(loser: Team, fights: Seq[GameTimeState], wardOwner: HeroId)
 case class WorthlessGlyph(team: Team, times: Seq[GameTimeState])
 
 case class Analysis(
@@ -30,7 +31,9 @@ case class Analysis(
   smokesOnVision: Seq[SmokeOnVision],
   badFights: Seq[BadFightJsonModel],
   badSmokeFights: Seq[BadSmokeFight],
-  worthlessGlyphs: Seq[WorthlessGlyph])
+  worthlessGlyphs: Seq[WorthlessGlyph],
+  lostFightsUnderTheSameWard: Seq[LostFightsUnderTheSameWard]
+)
 
 
 case class MatchInfo(radiant: Seq[HeroId], dire: Seq[HeroId], radiantWon: Boolean, matchLength: Int)

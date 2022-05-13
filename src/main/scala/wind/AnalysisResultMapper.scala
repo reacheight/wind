@@ -1,5 +1,6 @@
 package wind
 
+import wind.models.Team._
 import wind.models._
 
 object AnalysisResultMapper {
@@ -8,7 +9,6 @@ object AnalysisResultMapper {
 
     val unusedItems = analysisResult.unusedItems.map { case (time, id, item) => UnusedItem(heroId(id), heroId(id), item, time) } ++
       analysisResult.unusedOnAllyItems.map { case (time, target, user, item) => UnusedItem(heroId(user), heroId(target), item, time) }
-
 
     val unusedAbilities = analysisResult.unusedAbilities.map { case (time, id, ability) => UnusedAbility(heroId(id), heroId(id), ability, time) } ++
       analysisResult.unusedOnAllyAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), ability, time) } ++
@@ -24,6 +24,8 @@ object AnalysisResultMapper {
     val badFights = analysisResult.badFights.map(fight => BadFightJsonModel(fight.fight.outnumberedTeam.get, fight.seenPlayers.map(heroId).toSeq, fight.fight.start))
     val badSmokeFights = analysisResult.smokeOnVisionButWonFight.map { case (fightStart, smokeTime, smokedTeam) => BadSmokeFight(smokedTeam, smokeTime, fightStart) }
     val worthlessGlyphs = analysisResult.glyphOnDeadT2.map { case (team, glyphs) => WorthlessGlyph(team, glyphs) }.filter(_.times.nonEmpty).toSeq
+    val lostFightsUnderTheSameWard = analysisResult.multipleRadiantLostFightsUnderWard.map { case (observer, fights) => LostFightsUnderTheSameWard(Radiant, fights.map(_.fight.start), heroId(observer.owner))} ++
+      analysisResult.multipleDireLostFightsUnderWard.map { case (observer, fights) => LostFightsUnderTheSameWard(Dire, fights.map(_.fight.start), heroId(observer.owner))}
 
     val analysis = Analysis(
       unusedItems,
@@ -37,7 +39,8 @@ object AnalysisResultMapper {
       smokesOnVision,
       badFights,
       badSmokeFights,
-      worthlessGlyphs
+      worthlessGlyphs,
+      lostFightsUnderTheSameWard
     )
 
     val radiant = analysisResult.heroId.filter(_._1.id < 10).values.toSeq

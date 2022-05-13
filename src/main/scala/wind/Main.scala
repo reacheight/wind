@@ -207,6 +207,21 @@ object Main {
       println(s"$smokeTeam used smoke on enemy vision at $smokeTime, but ${Util.getOppositeTeam(smokeTeam)} didn't react and lost fight anyway at $fightTime.")
     }
 
+    if (result.fightsUnderVision.nonEmpty) println(s"\nFights under vision:")
+    result.fightsUnderVision.foreach(fight =>
+      println(s"${fight.fight.start} - wards: ${fight.observers.map(obs => s"${obs.location} by ${result.heroName(obs.owner)}").mkString(", ")}")
+    )
+
+    if (result.multipleRadiantLostFightsUnderWard.nonEmpty) println(s"\nMultiple lost fights under enemy vision by Radiant:")
+    result.multipleRadiantLostFightsUnderWard.foreach { case (ward, fights) =>
+      println(s"${fights.map(_.fight.start).mkString(", ")} - ward at ${ward.location} by ${result.heroName(ward.owner)}")
+    }
+
+    if (result.multipleDireLostFightsUnderWard.nonEmpty) println(s"\nMultiple lost fights under enemy vision by Dire:")
+    result.multipleDireLostFightsUnderWard.foreach { case (ward, fights) =>
+      println(s"${fights.map(_.fight.start).mkString(", ")} - ward at ${ward.location} by ${result.heroName(ward.owner)}")
+    }
+
     if (result.overlappedStuns.nonEmpty) println("\nOverlapped stuns:")
     result.overlappedStuns.foreach { case (time, stunnedId, attackerId) =>
       println(s"${result.heroName(attackerId)} stunned ${result.heroName(stunnedId)} too early at $time")

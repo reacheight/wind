@@ -16,6 +16,8 @@ import scala.util.Using
 object ReplayAnalyzer {
   val logger = Logger[ReplayAnalyzer.type]
 
+  val OBS_VISION_RADIUS = 1400
+
   def analyze(replay: Path): AnalysisResultInternal = {
     val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
     val game = gameInfo.getGameInfo.getDota
@@ -66,6 +68,22 @@ object ReplayAnalyzer {
         .map { case (_, fight) => (fight.start, smokeTime, smokeTeam) }
     }
 
+    val fightsUnderVision = fightProcessor.fights
+      .map(fight => {
+        val observersInFight = visionProcessor.observers
+          .filter(obs => Util.getDistance(obs.location, fight.location) < OBS_VISION_RADIUS)
+          .filter(obs => obs.created.gameTime < fight.start.gameTime && obs.ended.gameTime > fight.end.gameTime)
+
+        FightUnderVision(fight, observersInFight)
+      })
+      .filter(_.observers.nonEmpty)
+
+    def multipleLostFightsUnderOneWard(team: Team) = fightsUnderVision
+      .filter(_.fight.winner.exists(_ == Util.getOppositeTeam(team)))
+      .filter(_.getTeamWards(Util.getOppositeTeam(team)).nonEmpty)
+      .groupBy(_.observers.head)
+      .filter { case (_, fights) => fights.length >= 3 }
+      .toSeq
 
     AnalysisResultInternal(
       game.getMatchId,
@@ -99,6 +117,9 @@ object ReplayAnalyzer {
       creepwaveProcessor.notTankedCreepwaves,
       fightProcessor.fights,
       badFightsProcessor.badFights,
+      fightsUnderVision,
+      multipleLostFightsUnderOneWard(Radiant),
+      multipleLostFightsUnderOneWard(Dire),
       smokeFightProcessor.smokeFights,
       smokeOnVisionButWonFight,
       modifierProcessor.overlappedStuns
@@ -138,6 +159,9 @@ case class AnalysisResultInternal(
   notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])],
   fights: Seq[Fight],
   badFights: Seq[BadFight],
+  fightsUnderVision: Seq[FightUnderVision],
+  multipleRadiantLostFightsUnderWard: Seq[(Observer, Seq[FightUnderVision])],
+  multipleDireLostFightsUnderWard: Seq[(Observer, Seq[FightUnderVision])],
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)

@@ -18,7 +18,7 @@ object Main {
       val `match` = args(1)
       if (`match`.forall(_.isDigit)) {
         if (!Files.exists(cacheReplayPath(`match`))) {
-          val replayLocation = OdotaClient.getReplayLocation(`match`)
+          val replayLocation = StratzClient.getReplayLocation(`match`)
           replayLocation match {
             case None => println(s"Can't find replay for match ${`match`}.")
             case Some(location) =>
@@ -221,6 +221,11 @@ object Main {
     result.multipleDireLostFightsUnderWard.foreach { case (ward, fights) =>
       println(s"${fights.map(_.fight.start).mkString(", ")} - ward at ${ward.location} by ${result.heroName(ward.owner)}")
     }
+
+    if (result.unreasonableDives.nonEmpty) println(s"\nUnreasonable dives:")
+    result.unreasonableDives.foreach(fight =>
+      println(s"${Util.getOppositeTeam(fight.winner.get)} dived at ${fight.start}")
+    )
 
     if (result.overlappedStuns.nonEmpty) println("\nOverlapped stuns:")
     result.overlappedStuns.foreach { case (time, stunnedId, attackerId) =>

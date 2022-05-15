@@ -53,10 +53,11 @@ object ReplayAnalyzer {
 
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
     val smokeFightProcessor = new SmokeFightProcessor(fightProcessor.fights)
+    val unreasonableDivesProcessor = new UnreasonableDivesProcessor(fightProcessor.fights)
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(new ModifierProcessor, badFightsProcessor, smokeFightProcessor, new HeroProcessor(gameInfo))
+      runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor, unreasonableDivesProcessor)
     }
 
     logger.info(s"${game.getMatchId} analysis time: ${System.currentTimeMillis() - start} ms")
@@ -120,6 +121,7 @@ object ReplayAnalyzer {
       fightsUnderVision,
       multipleLostFightsUnderOneWard(Radiant),
       multipleLostFightsUnderOneWard(Dire),
+      unreasonableDivesProcessor.unreasonableDives,
       smokeFightProcessor.smokeFights,
       smokeOnVisionButWonFight,
       modifierProcessor.overlappedStuns
@@ -162,6 +164,7 @@ case class AnalysisResultInternal(
   fightsUnderVision: Seq[FightUnderVision],
   multipleRadiantLostFightsUnderWard: Seq[(Observer, Seq[FightUnderVision])],
   multipleDireLostFightsUnderWard: Seq[(Observer, Seq[FightUnderVision])],
+  unreasonableDives: Seq[Fight],
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)

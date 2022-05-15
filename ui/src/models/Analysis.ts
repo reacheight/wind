@@ -13,6 +13,7 @@ import { UnusedAbility } from './UnusedAbility';
 import { UnusedItem } from './UnusedItem';
 import { WorthlessGlyph } from './WorthlessGlyph';
 import { LostFightsUnderTheSameWard } from "./LostFightsUnderTheSameWard";
+import { UnreasonableDive } from "./UnreasonableDive";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -28,4 +29,5 @@ export interface Analysis {
   badSmokeFights: ReadonlyArray<BadSmokeFight>;
   worthlessGlyphs: ReadonlyArray<WorthlessGlyph>;
   lostFightsUnderTheSameWard: ReadonlyArray<LostFightsUnderTheSameWard>;
+  unreasonableDives: ReadonlyArray<UnreasonableDive>;
 }

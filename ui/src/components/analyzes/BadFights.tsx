@@ -7,14 +7,16 @@ import { getOppositeTeam, Team } from "../../models/Team";
 import { Heroes } from "../../constants/heroes";
 import { BadSmokeFight } from "../../models/BadSmokeFight";
 import { LostFightsUnderTheSameWard } from "../../models/LostFightsUnderTheSameWard";
+import { UnreasonableDive } from "../../models/UnreasonableDive";
 
 type BadFightsProps = {
   badFights: ReadonlyArray<BadFight>;
   badSmokeFights: ReadonlyArray<BadSmokeFight>;
   lostFightsUnderTheSameWard: ReadonlyArray<LostFightsUnderTheSameWard>;
+  unreasonableDives: ReadonlyArray<UnreasonableDive>;
 }
 
-const BadFights = ({ badFights, badSmokeFights, lostFightsUnderTheSameWard }: BadFightsProps) => {
+const BadFights = ({ badFights, badSmokeFights, lostFightsUnderTheSameWard, unreasonableDives }: BadFightsProps) => {
   const list = badFights.map(({ outnumberedTeam, seenHeroes, time }) => {
     let teamName = <span className={styles[Team[outnumberedTeam]]}>{Team[outnumberedTeam]}</span>
     let winnerTeam = getOppositeTeam(outnumberedTeam)
@@ -48,6 +50,14 @@ const BadFights = ({ badFights, badSmokeFights, lostFightsUnderTheSameWard }: Ba
     </li>
   })
 
+  const dives = unreasonableDives.map(({ loser, time }) => {
+    let loserTeamName = <span className={styles[Team[loser]]}>{Team[loser]}</span>
+    let diveTime = <span className={styles.glowing}>{time}</span>
+    return <li key={time}>
+      {loserTeamName} dived too far at {diveTime}
+    </li>
+  })
+
   return (
     <>
       <h5 className={styles.analysisTitle}>Bad fights</h5>
@@ -55,6 +65,8 @@ const BadFights = ({ badFights, badSmokeFights, lostFightsUnderTheSameWard }: Ba
       <List>{badSmokeFightsList}</List>
       {badSmokeFightsList.length !== 0 && <br/>}
       <List>{lostFightsUnderWardList}</List>
+      {lostFightsUnderWardList.length !== 0 && <br/>}
+      <List>{dives}</List>
     </>
   )
 }

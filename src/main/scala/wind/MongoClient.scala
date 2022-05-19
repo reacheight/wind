@@ -44,4 +44,8 @@ object MongoClient {
     val query = document("matchId" -> matchId)
     states.flatMap(_.find(query).one[AnalysisState])
   }
+
+  def getAnalysisCount: Future[Long] = {
+    states.flatMap(_.count())
+  }
 }

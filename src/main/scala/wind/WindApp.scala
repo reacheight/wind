@@ -77,6 +77,9 @@ object WindApp extends IOApp {
       val heroTag = Heroes.getTag(heroId)
       StaticFile.fromResource(s"icons/$heroTag.png", Some(request)).getOrElseF(NotFound())
 
+    case GET -> Root / "analysis" / "count" =>
+      IO.fromFuture(IO(MongoClient.getAnalysisCount)).flatMap(Ok(_))
+
   }.orNotFound
 
   val corsService = CORS.policy.withAllowOriginAll(analysisService)

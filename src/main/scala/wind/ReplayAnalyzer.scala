@@ -124,7 +124,8 @@ object ReplayAnalyzer {
       unreasonableDivesProcessor.unreasonableDives,
       smokeFightProcessor.smokeFights,
       smokeOnVisionButWonFight,
-      modifierProcessor.overlappedStuns
+      modifierProcessor.overlappedStuns,
+      visionProcessor.observerPlacedOnVision.filter(obs => obs.isFullTime),
     )
   }
 }
@@ -146,7 +147,7 @@ case class AnalysisResultInternal(
   glyphNotUsedOnT1: Map[Team, Int],
   glyphOnDeadT2: Map[Team, Seq[GameTimeState]],
   smokesUsedOnVision: Seq[(GameTimeState, PlayerId)],
-  obsPlacedOnVision: Seq[(GameTimeState, PlayerId)],
+  obsPlacedOnVision: Seq[Observer],
   heroName: Map[PlayerId, String],
   heroId: Map[PlayerId, HeroId],
   unusedAbilities: Seq[(GameTimeState, PlayerId, String)],
@@ -168,4 +169,5 @@ case class AnalysisResultInternal(
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)
+  obsesPlacedOnVisionButNotDestroyed: Seq[Observer],
 )

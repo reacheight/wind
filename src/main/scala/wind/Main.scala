@@ -131,9 +131,9 @@ object Main {
     }
 
     if (result.obsPlacedOnVision.nonEmpty) println("\nObserver wards placed on enemy vision:")
-    result.obsPlacedOnVision.foreach { case (time, id) =>
-      println(s"$time ${result.heroName(id)}")
-    }
+    result.obsPlacedOnVision.foreach(obs =>
+      println(s"${obs.created} ${result.heroName(obs.owner)}${if (obs.isFullTime) " - not destroyed" else ""}")
+    )
 
     if (result.unusedAbilities.nonEmpty) println("\nAbilities not used before death:")
     result.unusedAbilities.foreach { case (time, id, name) =>

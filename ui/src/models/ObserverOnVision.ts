@@ -5,4 +5,5 @@ import { HeroId } from './HeroId';
 export interface ObserverOnVision {
   hero: HeroId;
   time: string;
+  destroyed: Boolean;
 }

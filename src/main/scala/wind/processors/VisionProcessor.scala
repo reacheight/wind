@@ -13,8 +13,14 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class VisionProcessor {
+  val OBS_TTL = 360
+  val EPS = 0.01
+
   def smokeUsedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_smoke_of_deceit").toSeq
-  def observerPlacedOnVision: Seq[(GameTimeState, PlayerId)] = itemUsages("item_ward_observer").toSeq
+  def observerPlacedOnVision: Seq[Observer] =
+    itemUsages("item_ward_observer")
+      .toSeq
+      .flatMap { case (time, owner) => observers.find(obs => obs.created == time && obs.owner == owner) }
 
   def observers: Seq[Observer] = _observers.toMap.values.toSeq
 

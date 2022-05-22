@@ -12,7 +12,7 @@ const Observers = ({ observersOnVision }: ObserversOnVisionProps) => {
   const observers = observersOnVision
     .map((observer) =>
       <li key={observer.time}>
-        <span className={styles.glowing}>{Heroes[observer.hero]}</span> at {observer.time}
+        <span className={styles.glowing}>{Heroes[observer.hero]}</span> at {observer.time} {!observer.destroyed && <> — but not destroyed by opponents</>}
       </li>
     )
     

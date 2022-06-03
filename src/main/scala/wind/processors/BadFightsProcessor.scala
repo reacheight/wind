@@ -48,7 +48,7 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
         currentFight = Some(fight)
         seenHeroes.clear()
 
-        val teamPredicate: PlayerId => Boolean = if (fight.outnumberedTeam.contains(Radiant)) p => p.id <= 4 else p => p.id > 4
+        val teamPredicate: PlayerId => Boolean = if (fight.outnumberedTeam.contains(Radiant)) p => p.id < 10 else p => p.id >= 10
         heroesNotInFight = players
           .diff(fight.participants)
           .filter(teamPredicate)

@@ -12,7 +12,7 @@ type UnusedItemsProps = {
 const UnusedItems = ({ unusedItems }: UnusedItemsProps) => {
   const unusedItemsList = unusedItems.map(({ user, target, item, time}) => {
     let targetName = <span className={styles.glowing}>{Heroes[target]}</span>
-    let userName = <span className={styles.glowing}>{Heroes[target]}</span>
+    let userName = <span className={styles.glowing}>{Heroes[user]}</span>
     let itemName = <span className={getItemClassName(item)}>{item}</span>
 
     if (user === target)

@@ -40,6 +40,20 @@ class ItemUsageProcessor extends EntitiesProcessor {
     addUnusedItem("CDOTA_Item_Mekansm", "Mekansm")
     addUnusedItem("CDOTA_Item_Guardian_Greaves", "Guardian Greaves")
     addUnusedItem("CDOTA_Item_GlimmerCape", "Glimmer Cape")
+    addUnusedItem("item_lotus_orb", "Lotus Orb")
+    addUnusedItem("CDOTA_Item_Cyclone", "Eul's Scepter")
+    addUnusedItem("CDOTA_Item_Wind_Waker", "Wind Waker")
+    addUnusedItem("CDOTA_Item_ForceStaff", "Force Staff")
+    addUnusedItem("CDOTA_Item_Hurricane_Pike", "Hurricane Pike")
+    addUnusedItem("CDOTA_Item_MantaStyle", "Manta Style")
+    addUnusedItem("item_satanic", "Satanic")
+    addUnusedItem("CDOTA_Item_Bloodstone", "Bloodstone")
+    addUnusedItem("item_eternal_shroud", "Eternal Shroud")
+    addUnusedItem("item_blade_mail", "Blade Mail")
+    addUnusedItem("CDOTA_Item_Crimson_Guard", "Crimson Guard")
+    addUnusedItem("item_hood_of_defiance", "Hood of Defiance")
+    addUnusedItem("CDOTA_Item_Trickster_Cloak", "Trickster Cloak")
+    addUnusedItem("CDOTA_Item_Pipe", "Pipe of Insight")
 
     def addUnusedItem(entityName: String, realName: String): Unit =
       findUnusedItem(hero, items, entityName)
@@ -55,6 +69,12 @@ class ItemUsageProcessor extends EntitiesProcessor {
     addUnusedOnAllyItem("CDOTA_Item_Guardian_Greaves", "Guardian Greaves", 1200)
     addUnusedOnAllyItem("CDOTA_Item_GlimmerCape", "Glimmer Cape", 550)
     addUnusedOnAllyItem("CDOTA_Item_Holy_Locket", "Holy Locket", 500)
+    addUnusedOnAllyItem("item_lotus_orb", "Lotus Orb", 900)
+    addUnusedOnAllyItem("CDOTA_Item_Wind_Waker", "Wind Waker", 1100)
+    addUnusedOnAllyItem("CDOTA_Item_ForceStaff", "Force Staff", 550)
+    addUnusedOnAllyItem("CDOTA_Item_Hurricane_Pike", "Hurricane Pike", 650)
+    addUnusedOnAllyItem("CDOTA_Item_Crimson_Guard", "Crimson Guard", 1200)
+    addUnusedOnAllyItem("CDOTA_Item_Pipe", "Pipe of Insight", 1200)
 
     def addUnusedOnAllyItem(entityName: String, realName: String, castRange: Int): Unit = {
       allies.foreach(ally => {

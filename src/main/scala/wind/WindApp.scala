@@ -1,6 +1,7 @@
 package wind
 
 import cats.effect._
+import io.circe.Json
 import org.http4s.blaze.server._
 import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.dsl.io._
@@ -79,6 +80,9 @@ object WindApp extends IOApp {
 
     case GET -> Root / "analysis" / "count" =>
       IO.fromFuture(IO(MongoClient.getAnalysisCount)).flatMap(Ok(_))
+
+    case GET -> Root / "secret-message" =>
+      Ok(Map("from" -> "roma", "to" -> "nastya", "message" -> "<3"))
 
   }.orNotFound
 

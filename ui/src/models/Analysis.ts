@@ -15,6 +15,7 @@ import { WorthlessGlyph } from './WorthlessGlyph';
 import { LostFightsUnderTheSameWard } from "./LostFightsUnderTheSameWard";
 import { UnreasonableDive } from "./UnreasonableDive";
 import { FightLostUnderEnemyVision } from "./FightLostUnderEnemyVision";
+import { MouseClickItemDelivery } from "./MouseClickItemDelivery";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -32,4 +33,5 @@ export interface Analysis {
   lostFightsUnderTheSameWard: ReadonlyArray<LostFightsUnderTheSameWard>;
   fightsLostUnderEnemyVision: ReadonlyArray<FightLostUnderEnemyVision>;
   unreasonableDives: ReadonlyArray<UnreasonableDive>;
+  mouseClickItemDeliveries: ReadonlyArray<MouseClickItemDelivery>;
 }

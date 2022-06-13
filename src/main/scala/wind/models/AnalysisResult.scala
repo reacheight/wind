@@ -20,6 +20,7 @@ case class LostFightsUnderTheSameWard(loser: Team, fights: Seq[GameTimeState], w
 case class FightLostUnderEnemyVision(loser: Team, time: GameTimeState)
 case class UnreasonableDive(loser: Team, time: GameTimeState)
 case class WorthlessGlyph(team: Team, times: Seq[GameTimeState])
+case class MouseClickItemDelivery(heroId: HeroId, time: GameTimeState)
 
 case class Analysis(
   unusedItems: Seq[UnusedItem],
@@ -37,6 +38,7 @@ case class Analysis(
   lostFightsUnderTheSameWard: Seq[LostFightsUnderTheSameWard],
   fightsLostUnderEnemyVision: Seq[FightLostUnderEnemyVision],
   unreasonableDives: Seq[UnreasonableDive],
+  mouseClickItemDeliveries: Seq[MouseClickItemDelivery],
 )
 
 

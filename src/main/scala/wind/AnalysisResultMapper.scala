@@ -27,6 +27,9 @@ object AnalysisResultMapper {
     val lostFightsUnderTheSameWard = analysisResult.multipleRadiantLostFightsUnderWard.map { case (observer, fights) => LostFightsUnderTheSameWard(Radiant, fights.map(_.fight.start), heroId(observer.owner))} ++
       analysisResult.multipleDireLostFightsUnderWard.map { case (observer, fights) => LostFightsUnderTheSameWard(Dire, fights.map(_.fight.start), heroId(observer.owner))}
 
+    val fightsLostUnderEnemyVision = analysisResult.fightsUnderVision.filter(f => f.fight.winner.exists(winner => f.getTeamWards(Util.getOppositeTeam(winner)).isEmpty))
+      .map(f => FightLostUnderEnemyVision(Util.getOppositeTeam(f.fight.winner.get), f.fight.start))
+
     val unreasonableDives = analysisResult.unreasonableDives.map(fight => UnreasonableDive(Util.getOppositeTeam(fight.winner.get), fight.start))
 
     val analysis = Analysis(
@@ -43,6 +46,7 @@ object AnalysisResultMapper {
       badSmokeFights,
       worthlessGlyphs,
       lostFightsUnderTheSameWard,
+      fightsLostUnderEnemyVision,
       unreasonableDives,
     )
 

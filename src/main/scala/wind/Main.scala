@@ -207,8 +207,16 @@ object Main {
       println(s"$smokeTeam used smoke on enemy vision at $smokeTime, but ${Util.getOppositeTeam(smokeTeam)} didn't react and lost fight anyway at $fightTime.")
     }
 
-    if (result.fightsUnderVision.nonEmpty) println(s"\nFights under vision:")
-    result.fightsUnderVision.foreach(fight =>
+    val lostFightsUnderVisionByDire = result.fightsUnderVision.filter(f => f.fight.winner.contains(Radiant) && f.fight.dead.size >= 2 && f.getTeamWards(Dire).isEmpty)
+    val lostFightsUnderVisionByRadiant = result.fightsUnderVision.filter(f => f.fight.winner.contains(Dire) && f.fight.dead.size >= 2 && f.getTeamWards(Radiant).isEmpty)
+
+    if (lostFightsUnderVisionByDire.nonEmpty) println(s"\nLost fights under enemy vision by Dire:")
+    lostFightsUnderVisionByDire.foreach(fight =>
+      println(s"${fight.fight.start} - wards: ${fight.observers.map(obs => s"${obs.location} by ${result.heroName(obs.owner)}").mkString(", ")}")
+    )
+
+    if (lostFightsUnderVisionByRadiant.nonEmpty) println(s"\nLost fights under enemy vision by Radiant:")
+    lostFightsUnderVisionByRadiant.foreach(fight =>
       println(s"${fight.fight.start} - wards: ${fight.observers.map(obs => s"${obs.location} by ${result.heroName(obs.owner)}").mkString(", ")}")
     )
 

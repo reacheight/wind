@@ -8,15 +8,17 @@ import { Heroes } from "../../constants/heroes";
 import { BadSmokeFight } from "../../models/BadSmokeFight";
 import { LostFightsUnderTheSameWard } from "../../models/LostFightsUnderTheSameWard";
 import { UnreasonableDive } from "../../models/UnreasonableDive";
+import { FightLostUnderEnemyVision } from "../../models/FightLostUnderEnemyVision";
 
 type BadFightsProps = {
   badFights: ReadonlyArray<BadFight>;
   badSmokeFights: ReadonlyArray<BadSmokeFight>;
   lostFightsUnderTheSameWard: ReadonlyArray<LostFightsUnderTheSameWard>;
   unreasonableDives: ReadonlyArray<UnreasonableDive>;
+  fightsLostUnderEnemyVision: ReadonlyArray<FightLostUnderEnemyVision>;
 }
 
-const BadFights = ({ badFights, badSmokeFights, lostFightsUnderTheSameWard, unreasonableDives }: BadFightsProps) => {
+const BadFights = ({ badFights, badSmokeFights, lostFightsUnderTheSameWard, unreasonableDives, fightsLostUnderEnemyVision }: BadFightsProps) => {
   const list = badFights.map(({ outnumberedTeam, seenHeroes, time }) => {
     let teamName = <span className={styles[Team[outnumberedTeam]]}>{Team[outnumberedTeam]}</span>
     let winnerTeam = getOppositeTeam(outnumberedTeam)
@@ -58,12 +60,22 @@ const BadFights = ({ badFights, badSmokeFights, lostFightsUnderTheSameWard, unre
     </li>
   })
 
+  const fightLostUnderVision = fightsLostUnderEnemyVision.map(({ loser, time }) => {
+    let loserTeamName = <span className={styles[Team[loser]]}>{Team[loser]}</span>
+    let fightTime = <span className={styles.glowing}>{time}</span>
+    return <li key={time}>
+      {loserTeamName} lost fight under enemy vision at {fightTime}
+    </li>
+  })
+
   return (
     <>
       <h5 className={styles.analysisTitle}>Bad fights</h5>
       <List>{list}</List>
       <List>{badSmokeFightsList}</List>
       {badSmokeFightsList.length !== 0 && <br/>}
+      <List>{fightLostUnderVision}</List>
+      {fightLostUnderVision.length !== 0 && <br/>}
       <List>{lostFightsUnderWardList}</List>
       {lostFightsUnderWardList.length !== 0 && <br/>}
       <List>{dives}</List>

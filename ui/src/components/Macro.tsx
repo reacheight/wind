@@ -21,9 +21,9 @@ const Macro = ({ analysis }: MacroProps) => {
         <li>
           <Smokes smokesOnVision={analysis.smokesOnVision} />
         </li>}
-      {(analysis.badFights.length !== 0 || analysis.badSmokeFights.length !== 0 || analysis.lostFightsUnderTheSameWard.length !== 0 || analysis.unreasonableDives.length !== 0) &&
+      {(analysis.badFights.length !== 0 || analysis.badSmokeFights.length !== 0 || analysis.lostFightsUnderTheSameWard.length !== 0 || analysis.unreasonableDives.length !== 0 || analysis.fightsLostUnderEnemyVision.length !== 0) &&
         <li>
-          <BadFights badFights={analysis.badFights} badSmokeFights={analysis.badSmokeFights} lostFightsUnderTheSameWard={analysis.lostFightsUnderTheSameWard} unreasonableDives={analysis.unreasonableDives} />
+          <BadFights badFights={analysis.badFights} badSmokeFights={analysis.badSmokeFights} lostFightsUnderTheSameWard={analysis.lostFightsUnderTheSameWard} unreasonableDives={analysis.unreasonableDives} fightsLostUnderEnemyVision={analysis.fightsLostUnderEnemyVision} />
         </li>}
       {analysis.worthlessGlyphs.length !== 0 &&
         <li>

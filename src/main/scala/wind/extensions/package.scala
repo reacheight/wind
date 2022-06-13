@@ -21,7 +21,7 @@ package object extensions {
     def get[T](propertyName: String) = Option(entity.getProperty[T](propertyName))
   }
 
-  private def toList[T](iterator: java.util.Iterator[T]): List[T] = {
+  def toList[T](iterator: java.util.Iterator[T]): List[T] = {
     val result = ListBuffer.empty[T]
     iterator.forEachRemaining(i => { result += i })
     result.toList

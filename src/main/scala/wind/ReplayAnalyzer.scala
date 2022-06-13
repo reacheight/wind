@@ -39,6 +39,7 @@ object ReplayAnalyzer {
     val creepwaveProcessor = new CreepwaveProcessor
     val fightProcessor = new FightProcessor
     val modifierProcessor = new ModifierProcessor
+    val cursorProcessor = new CursorProcessor
 
     logger.info(s"starting analysis for ${game.getMatchId}")
     val start = System.currentTimeMillis()
@@ -48,7 +49,7 @@ object ReplayAnalyzer {
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
         glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
-        purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor)
+        purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor)
     }
 
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
@@ -126,6 +127,7 @@ object ReplayAnalyzer {
       smokeOnVisionButWonFight,
       modifierProcessor.overlappedStuns,
       visionProcessor.observerPlacedOnVision.filter(obs => obs.isFullTime),
+      cursorProcessor.mouseClicksItemDelivery,
     )
   }
 }
@@ -170,4 +172,5 @@ case class AnalysisResultInternal(
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)
   obsesPlacedOnVisionButNotDestroyed: Seq[Observer],
+  mouseItemDelivery: Seq[(PlayerId, GameTimeState)],
 )

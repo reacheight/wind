@@ -239,6 +239,11 @@ object Main {
     result.overlappedStuns.foreach { case (time, stunnedId, attackerId) =>
       println(s"${result.heroName(attackerId)} stunned ${result.heroName(stunnedId)} too early at $time")
     }
+
+    if (result.mouseItemDelivery.nonEmpty) println("\nMouse click item delivery:")
+    result.mouseItemDelivery.foreach { case (playerId, time) =>
+      println(s"${result.heroName(playerId)} at $time")
+    }
   }
 
   def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {

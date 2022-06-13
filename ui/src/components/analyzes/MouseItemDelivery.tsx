@@ -18,7 +18,7 @@ const MouseItemDelivery = ({ mouseClickItemDeliveries }: MouseItemDeliveryProps)
 
   return (
     <>
-      <h5 className={styles.analysisTitle}>Delivering items using <span className={styles.red}>mouse</span> instead of <span className={styles.green}>keybinding</span></h5>
+      <h5 className={styles.analysisTitle}>Delivering items using <span className={styles.red}>mouse</span> instead of <span className={styles.green}>hotkey</span></h5>
       <ul>{mouseItemDeliveries}</ul>
     </>
   )

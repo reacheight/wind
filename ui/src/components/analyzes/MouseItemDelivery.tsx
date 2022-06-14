@@ -8,11 +8,11 @@ type MouseItemDeliveryProps = {
 }
 
 const MouseItemDelivery = ({ mouseClickItemDeliveries }: MouseItemDeliveryProps) => {
-  const mouseItemDeliveries = mouseClickItemDeliveries.map(({ heroId, time }) => {
+  const mouseItemDeliveries = mouseClickItemDeliveries.map(({ heroId, count }) => {
     let heroName = <span className={styles.glowing}>{Heroes[heroId]}</span>
-    let usageTime = <span className={styles.glowing}>{time}</span>
-    return <li key={time + heroId}>
-      {heroName} (first at {usageTime})
+    let usageCount = <span className={styles.glowing}>{count}</span>
+    return <li key={heroId}>
+      {heroName} — {usageCount} times
     </li>
   })
 

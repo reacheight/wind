@@ -172,5 +172,5 @@ case class AnalysisResultInternal(
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)
   obsesPlacedOnVisionButNotDestroyed: Seq[Observer],
-  mouseItemDelivery: Seq[(PlayerId, GameTimeState)],
+  mouseItemDelivery: Seq[(PlayerId, Int)],
 )

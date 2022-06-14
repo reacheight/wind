@@ -31,7 +31,7 @@ object AnalysisResultMapper {
       .map(f => FightLostUnderEnemyVision(Util.getOppositeTeam(f.fight.winner.get), f.fight.start))
 
     val unreasonableDives = analysisResult.unreasonableDives.map(fight => UnreasonableDive(Util.getOppositeTeam(fight.winner.get), fight.start))
-    val mouseClickItemDeliveries = analysisResult.mouseItemDelivery.map { case (playerId, time) => MouseClickItemDelivery(heroId(playerId), time) }
+    val mouseClickItemDeliveries = analysisResult.mouseItemDelivery.map { case (playerId, count) => MouseClickItemDelivery(heroId(playerId), count) }
 
     val analysis = Analysis(
       unusedItems,

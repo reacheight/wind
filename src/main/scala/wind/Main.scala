@@ -241,8 +241,8 @@ object Main {
     }
 
     if (result.mouseItemDelivery.nonEmpty) println("\nMouse click item delivery:")
-    result.mouseItemDelivery.foreach { case (playerId, time) =>
-      println(s"${result.heroName(playerId)} at $time")
+    result.mouseItemDelivery.foreach { case (playerId, count) =>
+      println(s"${result.heroName(playerId)} $count times")
     }
   }
 

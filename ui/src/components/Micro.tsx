@@ -8,7 +8,7 @@ import React from "react";
 import NotTankedCreepwaves from "./analyzes/NotTankedCreepwaves";
 import OverlappedStuns from "./analyzes/OverlappedStuns";
 import { Analysis } from "../models/Analysis";
-import MouseItemDelivery from "./analyzes/MouseItemDelivery";
+import MouseClicks from "./analyzes/MouseClicks";
 
 type MicroProps = {
   analysis: Analysis;
@@ -43,9 +43,9 @@ const Micro = ({ analysis }: MicroProps) => {
           <NotTankedCreepwaves notTankedCreepwaves={analysis.notTankedCreepwaves} />
         </li>
       }
-      {analysis.mouseClickItemDeliveries.length !== 0 &&
+      {(analysis.mouseClickItemDeliveries.length !== 0 && analysis.mouseClickQuickBuys.length !== 0) &&
         <li>
-          <MouseItemDelivery mouseClickItemDeliveries={analysis.mouseClickItemDeliveries} />
+          <MouseClicks mouseClickItemDeliveries={analysis.mouseClickItemDeliveries} mouseClickQuickBuys={analysis.mouseClickQuickBuys} />
         </li>
       }
       {analysis.summonGoldFed.length !== 0 &&

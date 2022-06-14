@@ -16,6 +16,7 @@ import { LostFightsUnderTheSameWard } from "./LostFightsUnderTheSameWard";
 import { UnreasonableDive } from "./UnreasonableDive";
 import { FightLostUnderEnemyVision } from "./FightLostUnderEnemyVision";
 import { MouseClickItemDelivery } from "./MouseClickItemDelivery";
+import { MouseClickQuickBuy } from "./MouseClickQuickBuy";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -34,4 +35,5 @@ export interface Analysis {
   fightsLostUnderEnemyVision: ReadonlyArray<FightLostUnderEnemyVision>;
   unreasonableDives: ReadonlyArray<UnreasonableDive>;
   mouseClickItemDeliveries: ReadonlyArray<MouseClickItemDelivery>;
+  mouseClickQuickBuys: ReadonlyArray<MouseClickQuickBuy>;
 }

@@ -128,6 +128,7 @@ object ReplayAnalyzer {
       modifierProcessor.overlappedStuns,
       visionProcessor.observerPlacedOnVision.filter(obs => obs.isFullTime),
       cursorProcessor.mouseClicksItemDelivery,
+      cursorProcessor.mouseClicksQuickBuy,
     )
   }
 }
@@ -173,4 +174,5 @@ case class AnalysisResultInternal(
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)
   obsesPlacedOnVisionButNotDestroyed: Seq[Observer],
   mouseItemDelivery: Seq[(PlayerId, Int)],
+  mouseQuickBuy: Seq[(PlayerId, Int)],
 )

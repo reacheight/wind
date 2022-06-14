@@ -244,6 +244,11 @@ object Main {
     result.mouseItemDelivery.foreach { case (playerId, count) =>
       println(s"${result.heroName(playerId)} $count times")
     }
+
+    if (result.mouseQuickBuy.nonEmpty) println("\nMouse click quick buy:")
+    result.mouseQuickBuy.foreach { case (playerId, count) =>
+      println(s"${result.heroName(playerId)} $count times")
+    }
   }
 
   def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {

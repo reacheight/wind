@@ -11,13 +11,13 @@ const TeamIcons = ({ radiant, dire }: TeamIconsProps) => {
   const ICONS_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/icon`
 
   const getIconsImg = (heroes: ReadonlyArray<HeroId>) => heroes
-    .map(heroId => <li key={heroId}><Img src={`${ICONS_ENDPOINT}/${heroId}`} alt={"hero icon"} marginInline={"auto"} /></li>)
+    .map(heroId => <li key={heroId}><Img src={`${ICONS_ENDPOINT}/${heroId}`} width={"65%"} alt={"hero icon"} marginInline={"auto"} /></li>)
 
   const radiantIcons = getIconsImg(radiant)
   const direIcons = getIconsImg(dire)
 
   return (
-    <List display={"grid"} gridTemplateColumns={"repeat(5, 1fr)"} rowGap={"5"} backgroundColor={"dimgray"} border={"none"} borderRadius={10} marginInline={"40%"} marginBottom={2} padding={4}>
+    <List display={"grid"} gridTemplateColumns={"repeat(5, 1fr)"} rowGap={"2"} backgroundColor={"gray"} border={"none"} borderRadius={10} marginInline={"40%"} marginBottom={2} padding={2}>
       {radiantIcons}
       {direIcons}
     </List>

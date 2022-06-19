@@ -18,7 +18,7 @@ class FightProcessor extends EntitiesProcessor {
 
   private val TIME_DISTANCE = 20
   private val FIGHT_LOCATION_DISTANCE = 3000
-  private val HERO_IN_FIGHT_DISTANCE = 2000
+  private val HERO_IN_FIGHT_DISTANCE = 1500
   private val FIGHT_START_DIFF = 8
   private val FIGHT_END_DIFF = 3
 
@@ -27,7 +27,16 @@ class FightProcessor extends EntitiesProcessor {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
-    val splitByLocation = _deaths.foldLeft(ListBuffer.empty[ListBuffer[DeathData]]) { case (locations, (deathTime, deadPlayerId, deathLocation, heroLocations)) =>
+    val splitByTime = _deaths.foldLeft(List(ArrayBuffer.empty[DeathData])) { case (fights, (deathTime, deadPlayerId, deathLocation, heroLocations)) =>
+      val curFight = fights.head
+      if (curFight.isEmpty || deathTime.gameTime - curFight.last._1.gameTime <= TIME_DISTANCE) {
+        curFight.addOne(deathTime, deadPlayerId, deathLocation, heroLocations)
+        fights
+      } else
+        ArrayBuffer((deathTime, deadPlayerId, deathLocation, heroLocations)) +: fights
+    }
+
+    val splitByLocation = splitByTime.flatMap(deaths => deaths.foldLeft(ListBuffer.empty[ListBuffer[DeathData]]) { case (locations, (deathTime, deadPlayerId, deathLocation, heroLocations)) =>
       locations.find(location => {
         val averageLocation = Util.getAverageLocation(location.map(_._3).toSeq)
         val distance = Util.getDistance(averageLocation, deathLocation)
@@ -39,19 +48,10 @@ class FightProcessor extends EntitiesProcessor {
       }
 
       locations
-    }
-
-    val fights = splitByLocation.flatMap(deaths => deaths.foldLeft(List(ArrayBuffer.empty[DeathData])) { case (fights, (deathTime, deadPlayerId, location, heroLocations)) =>
-      val curFight = fights.head
-      if (curFight.isEmpty || deathTime.gameTime - curFight.last._1.gameTime <= TIME_DISTANCE) {
-        curFight.addOne(deathTime, deadPlayerId, location, heroLocations)
-        fights
-      } else
-        ArrayBuffer((deathTime, deadPlayerId, location, heroLocations)) +: fights
     })
       .filter(_.nonEmpty)
 
-    _fights = fights.map(deaths => {
+    _fights = splitByLocation.map(deaths => {
       val firstDeathTime = deaths.head._1
       val start = firstDeathTime.copy(gameTime = firstDeathTime.gameTime - FIGHT_START_DIFF)
 
@@ -72,7 +72,6 @@ class FightProcessor extends EntitiesProcessor {
       .filter(_.radiantParticipants.nonEmpty)
       .filter(_.direParticipants.nonEmpty)
       .sortBy(_.start.gameTime)
-      .toSeq
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")

@@ -37,7 +37,7 @@ object WindApp extends IOApp {
       val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
       Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
       MongoClient.saveAnalysis(analysis)
-      MongoClient.setState(matchId.toLong, AnalysisStatus.Finished)
+        .flatMap(_ => MongoClient.setState(matchId.toLong, AnalysisStatus.Finished))
     }
   }
 

@@ -1,7 +1,10 @@
 package wind.processors
 
-import skadistats.clarity.model.Entity
+import skadistats.clarity.model.{CombatLogEntry, Entity}
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import skadistats.clarity.processor.gameevents.OnCombatLogEntry
+import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import wind.Util
 import wind.models.{Fight, GameTimeState, Location, PlayerId}
 import wind.extensions._
@@ -10,10 +13,12 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 class FightProcessor extends EntitiesProcessor {
   type DeathData = (GameTimeState, PlayerId, Location, Map[PlayerId, Location])
+  case class DamageData(time: GameTimeState, attacker: PlayerId, target: PlayerId, damage: Int)
 
   def fights: Seq[Fight] = _fights
 
   private val _deaths: ListBuffer[DeathData] = ListBuffer.empty
+  private val _damage: ListBuffer[DamageData] = ListBuffer.empty
   private var _fights: Seq[Fight] = Seq.empty
 
   private val TIME_DISTANCE = 20
@@ -21,6 +26,7 @@ class FightProcessor extends EntitiesProcessor {
   private val HERO_IN_FIGHT_DISTANCE = 1500
   private val FIGHT_START_DIFF = 8
   private val FIGHT_END_DIFF = 3
+  private val DAMAGE_GROUP_THRESHOLD = 3
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
   def onGameEnded(gameRules: Entity, fp: FieldPath): Unit = {
@@ -52,20 +58,44 @@ class FightProcessor extends EntitiesProcessor {
       .filter(_.nonEmpty)
 
     _fights = splitByLocation.map(deaths => {
-      val firstDeathTime = deaths.head._1
-      val start = firstDeathTime.copy(gameTime = firstDeathTime.gameTime - FIGHT_START_DIFF)
-
-      val lastDeathTime = deaths.last._1
-      val end = lastDeathTime.copy(gameTime = lastDeathTime.gameTime + FIGHT_END_DIFF)
-
       val fightLocation = Util.getAverageLocation(deaths.map(_._3).toSeq)
 
-      val deadInFight = deaths.map(_._2).toSet
       val heroesLocations = deaths.flatMap(_._4)
       val heroesInFight = heroesLocations
         .filter { case (_, location) => Util.getDistance(location, fightLocation) < HERO_IN_FIGHT_DISTANCE }
         .map(_._1)
         .toSet
+
+      val firstDeathTime = deaths.head._1
+      val lastDeathTime = deaths.last._1
+
+      val damageGroupedByFightParticipants = _damage.filter(d => heroesInFight.contains(d.target))
+      val damageGroupedByTime = damageGroupedByFightParticipants
+        .filter(d => d.time.gameTime >= firstDeathTime.gameTime - 10 && d.time.gameTime <= lastDeathTime.gameTime + 10)
+        .foldLeft(ArrayBuffer(ArrayBuffer.empty[DamageData])) { case (ranges, data) =>
+          val curRange = ranges.last
+          if (curRange.isEmpty || data.time.gameTime - curRange.last.time.gameTime <= DAMAGE_GROUP_THRESHOLD) {
+            curRange.addOne(data)
+            ranges
+          } else {
+            ranges.addOne(ArrayBuffer(data))
+          }
+        }
+        .filter(range => range.last.time.gameTime - range.head.time.gameTime >= 5)
+
+      val firstDamageRange = damageGroupedByTime.find(range => firstDeathTime.gameTime >= range.head.time.gameTime)
+      val start = firstDamageRange match {
+        case None => firstDeathTime.copy(gameTime = firstDeathTime.gameTime - FIGHT_START_DIFF)
+        case Some(range) => range.head.time
+      }
+
+      val lastDamageRange = damageGroupedByTime.findLast(range => lastDeathTime.gameTime <= range.last.time.gameTime)
+      val end = lastDamageRange match {
+        case None => lastDeathTime.copy(gameTime = lastDeathTime.gameTime + FIGHT_END_DIFF)
+        case Some(range) => range.last.time
+      }
+
+      val deadInFight = deaths.map(_._2).toSet
 
       Fight(start, end, fightLocation, heroesInFight, deadInFight)
     })
@@ -92,4 +122,22 @@ class FightProcessor extends EntitiesProcessor {
 
     _deaths.addOne((time, deadPlayerId, Util.getLocation(hero), locations))
   }
+
+  @OnCombatLogEntry
+  def onHeroDamage(ctx: Context, cle: CombatLogEntry): Unit = {
+    if (isHeroDamagedAnotherHeroEvent(cle)) {
+      val heroesProcessor = ctx.getProcessor(classOf[HeroProcessor])
+      val time = Util.getGameTimeState(Entities.getByDtName("CDOTAGamerulesProxy"))
+      val attacker = PlayerId(heroesProcessor.combatLogNameToPlayerId(cle.getDamageSourceName))
+      val target = PlayerId(heroesProcessor.combatLogNameToPlayerId(cle.getTargetName))
+      val damage = cle.getValue
+
+      _damage.addOne(DamageData(time, attacker, target, damage))
+    }
+  }
+
+  private def isHeroDamagedAnotherHeroEvent(cle: CombatLogEntry): Boolean =
+    cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DAMAGE &&
+      cle.getDamageSourceName.startsWith("npc_dota_hero") && cle.getTargetName.startsWith("npc_dota_hero") &&
+      cle.getDamageSourceName != cle.getTargetName
 }

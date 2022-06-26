@@ -16,13 +16,14 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
   private val _badFights: ListBuffer[BadFight] = ListBuffer.empty
   private val candidates = fights
     .filter(_.start.gameTime > 600)
+    .filter(_.isOutnumbered)
     .filter(_.participants.size >= 4)
     .filter(_.winner.nonEmpty)
-    .filter(fight => fight.getParticipants(fight.winner.get).size >= fight.getParticipants(Util.getOppositeTeam(fight.winner.get)).size)
+    .filter(fight => Util.getOppositeTeam(fight.outnumberedTeam.get) == fight.winner.get)
 
   private val players = Util.PlayerIds.map(PlayerId).toSet
   private val EPS = 0.05
-  private val FAR_FROM_FIGHT_DISTANCE = 4000
+  private val NOT_IN_FIGHT_DISTANCE = 6000
   private val CHECK_HEROES_NOT_IN_FIGHT_DIFF = 10
 
   private var currentFight: Option[Fight] = None
@@ -38,7 +39,7 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
         val hero = Entities.getByHandle(handle)
         val heroLocation = Util.getLocation(hero)
         val fightLocation = fight.location
-        Util.isAlive(hero) && Util.isVisibleByEnemies(hero) && Util.getDistance(heroLocation, fightLocation) > FAR_FROM_FIGHT_DISTANCE
+        Util.isVisibleByEnemies(hero) && Util.getDistance(heroLocation, fightLocation) > NOT_IN_FIGHT_DISTANCE
       }))
 
     candidates
@@ -47,10 +48,10 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
         currentFight = Some(fight)
         seenHeroes.clear()
 
-        val loserTeamPredicate: PlayerId => Boolean = if (fight.winner.contains(Radiant)) p => p.id >= 10 else p => p.id < 10
+        val teamPredicate: PlayerId => Boolean = if (fight.outnumberedTeam.contains(Radiant)) p => p.id < 10 else p => p.id >= 10
         heroesNotInFight = players
           .diff(fight.participants)
-          .filter(loserTeamPredicate)
+          .filter(teamPredicate)
           .flatMap(id => Entities.find(e => Util.isHero(e) && e.getProperty[Int]("m_iPlayerID") == id.id))
           .map(_.getHandle)
       })
@@ -66,12 +67,7 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
         BadFight(fight, seenPlayers.toSet)
       })
       .filter(_.seenPlayers.nonEmpty)
-      .filter(fight => {
-        val winner = fight.fight.winner.get
-        val loser = Util.getOppositeTeam(winner)
-        val aliveLosers = Entities.filter(e => Util.isHero(e) && Util.getTeam(e) == loser && Util.isAlive(e))
-        fight.fight.getParticipants(winner).size >= aliveLosers.length - fight.seenPlayers.size
-      })
+      .filter(fight => fight.fight.getParticipants(fight.fight.winner.get).size > 5 - fight.seenPlayers.size)
       .map(fight => _badFights.addOne(fight))
   }
 }

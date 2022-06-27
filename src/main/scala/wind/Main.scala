@@ -3,7 +3,8 @@ package wind
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
 import wind.models.ReplayLocation
-import wind.models.Team.{Dire, Radiant}
+import wind.models.Team._
+import wind.models.Lane._
 import wind.processors.CurrentMapProcessor
 
 import java.nio.file.{Files, Path, Paths}
@@ -146,7 +147,7 @@ object Main {
 
     if (result.obsPlacedOnVision.nonEmpty) println("\nObserver wards placed on enemy vision:")
     result.obsPlacedOnVision.foreach(obs =>
-      println(s"${obs.created} ${result.heroName(obs.owner)}${if (obs.isFullTime) " - not destroyed" else ""}")
+      println(s"${obs.created} ${result.heroName(obs.owner)}${if (obs.isFullDuration) " - not destroyed" else ""}")
     )
 
     if (result.unusedAbilities.nonEmpty) println("\nAbilities not used before death:")
@@ -263,6 +264,26 @@ object Main {
     result.mouseQuickBuy.foreach { case (playerId, count) =>
       println(s"${result.heroName(playerId)} $count times")
     }
+
+    if (result.notUnblockedCamps(Radiant)(Bot).nonEmpty) println("\nNot unblocked radiant bot easy camp:")
+    result.notUnblockedCamps(Radiant)(Bot).foreach(ward =>
+      println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
+    )
+
+    if (result.notUnblockedCamps(Radiant)(Top).nonEmpty) println("\nNot unblocked radiant top hard camp:")
+    result.notUnblockedCamps(Radiant)(Top).foreach(ward =>
+      println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
+    )
+
+    if (result.notUnblockedCamps(Dire)(Bot).nonEmpty) println("\nNot unblocked dire bottom hard camp:")
+    result.notUnblockedCamps(Dire)(Bot).foreach(ward =>
+      println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
+    )
+
+    if (result.notUnblockedCamps(Dire)(Top).nonEmpty) println("\nNot unblocked dire top easy camp:")
+    result.notUnblockedCamps(Dire)(Top).foreach(ward =>
+      println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
+    )
   }
 
   def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {

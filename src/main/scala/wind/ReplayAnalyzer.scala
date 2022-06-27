@@ -40,6 +40,7 @@ object ReplayAnalyzer {
     val fightProcessor = new FightProcessor
     val modifierProcessor = new ModifierProcessor
     val cursorProcessor = new CursorProcessor
+    val blockedCampsProcessor = new BlockedCampsProcessor
 
     logger.info(s"starting analysis for ${game.getMatchId}")
     val start = System.currentTimeMillis()
@@ -49,7 +50,9 @@ object ReplayAnalyzer {
       val runner = new SimpleRunner(source)
       runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
         glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
-        purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor)
+        purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
+        blockedCampsProcessor
+      )
     }
 
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
@@ -126,9 +129,10 @@ object ReplayAnalyzer {
       smokeFightProcessor.smokeFights,
       smokeOnVisionButWonFight,
       modifierProcessor.overlappedStuns,
-      visionProcessor.observerPlacedOnVision.filter(obs => obs.isFullTime),
+      visionProcessor.observerPlacedOnVision.filter(obs => obs.isFullDuration),
       cursorProcessor.mouseClicksItemDelivery,
       cursorProcessor.mouseClicksQuickBuy,
+      blockedCampsProcessor.notUnblockedCamps,
     )
   }
 }
@@ -150,7 +154,7 @@ case class AnalysisResultInternal(
   glyphNotUsedOnT1: Map[Team, Int],
   glyphOnDeadT2: Map[Team, Seq[GameTimeState]],
   smokesUsedOnVision: Seq[(GameTimeState, PlayerId)],
-  obsPlacedOnVision: Seq[Observer],
+  obsPlacedOnVision: Seq[Ward],
   heroName: Map[PlayerId, String],
   heroId: Map[PlayerId, HeroId],
   unusedAbilities: Seq[(GameTimeState, PlayerId, String)],
@@ -166,13 +170,14 @@ case class AnalysisResultInternal(
   fights: Seq[Fight],
   badFights: Seq[BadFight],
   fightsUnderVision: Seq[FightUnderVision],
-  multipleRadiantLostFightsUnderWard: Seq[(Observer, Seq[FightUnderVision])],
-  multipleDireLostFightsUnderWard: Seq[(Observer, Seq[FightUnderVision])],
+  multipleRadiantLostFightsUnderWard: Seq[(Ward, Seq[FightUnderVision])],
+  multipleDireLostFightsUnderWard: Seq[(Ward, Seq[FightUnderVision])],
   unreasonableDives: Seq[Fight],
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)
-  obsesPlacedOnVisionButNotDestroyed: Seq[Observer],
+  obsesPlacedOnVisionButNotDestroyed: Seq[Ward],
   mouseItemDelivery: Seq[(PlayerId, Int)],
   mouseQuickBuy: Seq[(PlayerId, Int)],
+  notUnblockedCamps: Map[Team, Map[Lane, Seq[Ward]]],
 )

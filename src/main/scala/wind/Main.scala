@@ -1,9 +1,13 @@
 package wind
 
+import skadistats.clarity.processor.runner.SimpleRunner
+import skadistats.clarity.source.MappedFileSource
 import wind.models.ReplayLocation
 import wind.models.Team.{Dire, Radiant}
+import wind.processors.CurrentMapProcessor
 
 import java.nio.file.{Files, Path, Paths}
+import scala.util.Using
 
 object Main {
   private val CacheReplayDirectory = Paths.get("replays")
@@ -14,7 +18,7 @@ object Main {
   def compressedReplayPath(matchId: String) = Paths.get(TmpReplayDirectory.toString, s"${matchId}_compressed")
 
   def main(args: Array[String]): Unit = {
-    if (args(0) == "analyze") {
+    if (args(0) == "analyze" || args(0) == "state") {
       val `match` = args(1)
       if (`match`.forall(_.isDigit)) {
         if (!Files.exists(cacheReplayPath(`match`))) {
@@ -22,15 +26,16 @@ object Main {
           replayLocation match {
             case None => println(s"Can't find replay for match ${`match`}.")
             case Some(location) =>
-              if (downloadReplay(location, compressedReplayPath(`match`), cacheReplayPath(`match`)))
-                analyze(cacheReplayPath(`match`))
+              if (downloadReplay(location, compressedReplayPath(`match`), cacheReplayPath(`match`))) {
+                if (args(0) == "analyze") analyze(cacheReplayPath(`match`)) else printCurrentState(cacheReplayPath(`match`))
+              }
           }
         }
         else
-          analyze(cacheReplayPath(`match`))
+          if (args(0) == "analyze") analyze(cacheReplayPath(`match`)) else printCurrentState(cacheReplayPath(`match`))
       }
       else {
-        analyze(Paths.get(`match`))
+        if (args(0) == "analyze") analyze(Paths.get(`match`)) else printCurrentState(Paths.get(`match`))
       }
     }
     else if (args(0) == "collect") {
@@ -65,6 +70,15 @@ object Main {
       case _ =>
         println(s"Can't find matches less than match $lastMatchId")
         ""
+    }
+  }
+
+  def printCurrentState(replay: Path): Unit = {
+    val currentMapProcessor = new CurrentMapProcessor
+    Using.Manager { use =>
+      val source = use(new MappedFileSource(replay))(s => s.close())
+      val runner = new SimpleRunner(source)
+      runner.runWith(currentMapProcessor)
     }
   }
 

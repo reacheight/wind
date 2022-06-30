@@ -5,6 +5,7 @@ import BadFights from "./analyzes/BadFights";
 import React from "react";
 import GlyphOnDeadTower from "./analyzes/GlyphOnDeadTower";
 import { Analysis } from "../models/Analysis";
+import NotUnblockedCamps from "./analyzes/NotUnblockedCamps";
 
 type MacroProps = {
   analysis: Analysis;
@@ -28,6 +29,11 @@ const Macro = ({ analysis }: MacroProps) => {
       {analysis.worthlessGlyphs.length !== 0 &&
         <li>
           <GlyphOnDeadTower worthlessGlyphs={analysis.worthlessGlyphs}/>
+        </li>
+      }
+      {analysis.notUnblockedCamps.length !== 0 &&
+        <li>
+          <NotUnblockedCamps notUnblockedCamps={analysis.notUnblockedCamps} />
         </li>
       }
     </ul>

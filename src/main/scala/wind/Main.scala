@@ -1,11 +1,13 @@
 package wind
 
+import io.circe.syntax.EncoderOps
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
 import wind.models.ReplayLocation
 import wind.models.Team._
 import wind.models.Lane._
 import wind.processors.CurrentMapProcessor
+import wind.converters._
 
 import java.nio.file.{Files, Path, Paths}
 import scala.util.Using
@@ -88,6 +90,7 @@ object Main {
 
     val analyzer = ReplayAnalyzer
     val result = analyzer.analyze(replay)
+    val json = result.asJson
 
     println("Couriers location at the start of the game:")
     result.couriers foreach { case (playerId, (isOut, isVersusMK)) =>

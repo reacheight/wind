@@ -17,6 +17,7 @@ import { UnreasonableDive } from "./UnreasonableDive";
 import { FightLostUnderEnemyVision } from "./FightLostUnderEnemyVision";
 import { MouseClickItemDelivery } from "./MouseClickItemDelivery";
 import { MouseClickQuickBuy } from "./MouseClickQuickBuy";
+import { NotUnblockedCamp } from "./NotUnblockedCamp";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -36,4 +37,5 @@ export interface Analysis {
   unreasonableDives: ReadonlyArray<UnreasonableDive>;
   mouseClickItemDeliveries: ReadonlyArray<MouseClickItemDelivery>;
   mouseClickQuickBuys: ReadonlyArray<MouseClickQuickBuy>;
+  notUnblockedCamps: ReadonlyArray<NotUnblockedCamp>;
 }

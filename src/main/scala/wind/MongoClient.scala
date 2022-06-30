@@ -1,6 +1,7 @@
 package wind
 
 import io.circe.Json
+import io.circe.syntax.EncoderOps
 import reactivemongo.api.bson.collection._
 import reactivemongo.api.bson.document
 import reactivemongo.api.{AsyncDriver, MongoConnection}
@@ -22,6 +23,7 @@ object MongoClient {
   private def states = db.map(_.collection("states"))
 
   def saveAnalysis(analysisResult: AnalysisResultInternal): Future[Unit] = {
+    val json = analysisResult.asJson
     analyzes.flatMap(_.insert.one(analysisResult).map(_ =>  {}))
   }
 

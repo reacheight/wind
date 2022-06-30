@@ -22,6 +22,7 @@ case class UnreasonableDive(loser: Team, time: GameTimeState)
 case class WorthlessGlyph(team: Team, times: Seq[GameTimeState])
 case class MouseClickItemDelivery(heroId: HeroId, count: Int)
 case class MouseClickQuickBuy(heroId: HeroId, count: Int)
+case class NotUnblockedCamp(team: Team, lane: Lane, blocks: Seq[GameTimeState])
 
 case class Analysis(
   unusedItems: Seq[UnusedItem],
@@ -41,6 +42,7 @@ case class Analysis(
   unreasonableDives: Seq[UnreasonableDive],
   mouseClickItemDeliveries: Seq[MouseClickItemDelivery],
   mouseClickQuickBuys: Seq[MouseClickQuickBuy],
+  notUnblockedCamps: Seq[NotUnblockedCamp],
 )
 
 

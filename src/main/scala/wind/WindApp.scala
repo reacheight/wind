@@ -1,7 +1,6 @@
 package wind
 
 import cats.effect._
-import io.circe.Json
 import org.http4s.blaze.server._
 import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.dsl.io._

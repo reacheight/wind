@@ -4,13 +4,18 @@ import './index.css';
 import Wind from './components/Wind';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider>
-      <Wind />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Wind />} />
+        </Routes>
+      </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root')

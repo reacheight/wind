@@ -46,7 +46,7 @@ class SummonsProcessor {
       isHeroName(cle.getTargetSourceName) && isHeroName(cle.getAttackerName) &&
       cle.getTargetSourceNameIdx != cle.getAttackerNameIdx && cle.getTargetSourceNameIdx != cle.getTargetNameIdx &&
       !cle.getTargetName.contains("sentry_wards") && !cle.getTargetName.contains("observer_wards") &&
-      !cle.getTargetName.contains("courier")
+      !cle.getTargetName.contains("courier") && !cle.getTargetName.contains("phoenix_sun")
 
   private def isHeroName(name: String): Boolean = name.startsWith("npc_dota_hero")
 }

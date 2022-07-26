@@ -9,15 +9,15 @@ enablePlugins(TypeScriptGeneratorPlugin)
 
 Compile/mainClass := Some("wind.WindApp")
 
-val Http4sVersion = "0.23.10"
-val CirceVersion = "0.14.1"
+val Http4sVersion = "0.23.12"
+val CirceVersion = "0.14.2"
 
 libraryDependencies ++= Seq(
-  "com.skadistats"                % "clarity"              % "2.7.0",
-  "com.typesafe.scala-logging"    %% "scala-logging"       % "3.9.4",
-  "ch.qos.logback"                %  "logback-classic"     % "1.2.10",
-  "com.softwaremill.sttp.client3" %% "core"                % "3.3.16",
-  "com.softwaremill.sttp.client3" %% "circe"               % "3.3.16",
+  "com.skadistats"                % "clarity"              % "2.7.1",
+  "com.typesafe.scala-logging"    %% "scala-logging"       % "3.9.5",
+  "ch.qos.logback"                %  "logback-classic"     % "1.2.11",
+  "com.softwaremill.sttp.client3" %% "core"                % "3.6.2",
+  "com.softwaremill.sttp.client3" %% "circe"               % "3.6.2",
   "io.circe"                      %% "circe-core"          % CirceVersion,
   "io.circe"                      %% "circe-generic"       % CirceVersion,
   "io.circe"                      %% "circe-parser"        % CirceVersion,
@@ -30,5 +30,5 @@ libraryDependencies ++= Seq(
   "org.http4s"                    %% "http4s-circe"        % Http4sVersion,
   "org.http4s"                    %% "http4s-dsl"          % Http4sVersion,
   "org.scalameta"                 %% "svm-subs"            % "20.2.0",
-  "org.reactivemongo"             %% "reactivemongo"       % "1.0.7"
+  "org.reactivemongo"             %% "reactivemongo"       % "1.0.10"
 )

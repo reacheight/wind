@@ -1,0 +1,5 @@
+POST    /analysis/:matchId          controllers.AnalysisController.postAnalysis(matchId: Long)
+
+GET     /analysis/:matchId/state    controllers.AnalysisController.getAnalysisState(matchId: Long)
+
+GET     /analysis/:matchId          controllers.AnalysisController.getAnalysis(matchId: Long)

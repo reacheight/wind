@@ -8,7 +8,7 @@ type TeamIconsProps = {
 }
 
 const TeamIcons = ({ radiant, dire }: TeamIconsProps) => {
-  const ICONS_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/icon`
+  const ICONS_ENDPOINT = `${process.env.REACT_APP_API_ENDPOINT}/icons`
 
   const getIconsImg = (heroes: ReadonlyArray<HeroId>) => heroes
     .map(heroId => <li key={heroId}><Img src={`${ICONS_ENDPOINT}/${heroId}`} width={"65%"} alt={"hero icon"} marginInline={"auto"} /></li>)

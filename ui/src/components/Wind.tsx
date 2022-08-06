@@ -42,7 +42,7 @@ const Wind = () => {
                 return stateResponse.json()
               })
               .then(state => {
-                if (state.status === 1) {
+                if (state === 1) {
                   fetch(`${API_ENDPOINT}/analysis/${matchId}`)
                     .then(analysisResponse => analysisResponse.json())
                     .then(json => {
@@ -51,7 +51,7 @@ const Wind = () => {
                       clearInterval(timer)
                     })
                 }
-                if (state.status === 2) {
+                if (state === 2) {
                   setIsError(true)
                   setLoading(false)
                   setIsDownloadError(true)

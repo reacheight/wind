@@ -1,1 +1,1 @@
-web: target/universal/stage/bin/wind
+web: target/universal/stage/bin/windota

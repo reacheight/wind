@@ -10,7 +10,7 @@ import windota.external.valve.ValveClient
 import windota.models.AnalysisStatus
 import windota.{BZip2Decompressor, MongoClient, ReplayAnalyzer}
 
-import java.nio.file.Paths
+import java.nio.file.{Files, Paths}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -49,6 +49,9 @@ class AnalysisController @Inject()(val controllerComponents: ControllerComponent
   }
 
   private def startAnalysis(matchId: Long): Unit = {
+    if (!Files.exists(Paths.get(DownloadingDirectory)))
+      Files.createDirectory(Paths.get(DownloadingDirectory))
+
     val replayTry = StratzClient.getReplayLocation(matchId)
       .flatMap(location => ValveClient.downloadReplay(location, compressedReplayPath(matchId)))
       .flatMap(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))

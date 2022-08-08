@@ -2,6 +2,8 @@ POST    /analysis/:matchId          controllers.AnalysisController.postAnalysis(
 
 GET     /analysis/:matchId/state    controllers.AnalysisController.getAnalysisState(matchId: Long)
 
+GET     /analysis/count             controllers.AnalysisController.getAnalysisCount
+
 GET     /analysis/:matchId          controllers.AnalysisController.getAnalysis(matchId: Long)
 
 GET     /icons/:heroId              controllers.IconsController.getIcon(heroId: Int)

@@ -48,6 +48,10 @@ class AnalysisController @Inject()(val controllerComponents: ControllerComponent
     }
   }
 
+  def getAnalysisCount = Action.async {
+    MongoClient.getAnalysisCount.map(count => Ok(count.toString))
+  }
+
   private def startAnalysis(matchId: Long): Unit = {
     if (!Files.exists(Paths.get(DownloadingDirectory)))
       Files.createDirectory(Paths.get(DownloadingDirectory))

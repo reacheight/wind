@@ -7,3 +7,7 @@ GET     /analysis/count             controllers.AnalysisController.getAnalysisCo
 GET     /analysis/:matchId          controllers.AnalysisController.getAnalysis(matchId: Long)
 
 GET     /icons/:heroId              controllers.IconsController.getIcon(heroId: Int)
+
+GET     /login                      controllers.AccountController.login
+
+GET     /login-callback             controllers.AccountController.loginCallback

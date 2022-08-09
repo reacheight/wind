@@ -1,0 +1,16 @@
+.main {
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 4rem;
+}
+
+.description {
+  margin: 4rem 0;
+}
+
+.title,
+.description {
+  text-align: center;
+}

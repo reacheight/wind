@@ -16,17 +16,21 @@ import scala.util._
 
 class AccountController @Inject()(val openIdClient: OpenIdClient, val controllerComponents: ControllerComponents, val environment: Environment) extends BaseController with Circe {
   val steamOpenId = "https://steamcommunity.com/openid/"
-  val loginCallbackRedirect = if (environment.mode == Dev) "http://localhost:3000" else "https://windota.xyz"
+  val mainPageUrl = if (environment.mode == Dev) "http://localhost:3000" else "https://windota.xyz"
 
   def login = Action.async { implicit request =>
     openIdClient.redirectURL(steamOpenId, routes.AccountController.loginCallback.absoluteURL())
       .map(url => Redirect(url, status=FOUND))
   }
 
+  def logout = Action {
+    Redirect(mainPageUrl).withNewSession
+  }
+
   def loginCallback = Action.async { implicit request: Request[AnyContent] =>
     openIdClient
       .verifiedId(request)
-      .map(info => Redirect(loginCallbackRedirect).withSession("id" -> info.id.split('/').last))
+      .map(info => Redirect(mainPageUrl).withSession("id" -> info.id.split('/').last))
   }
 
   def getUser = Action { request =>

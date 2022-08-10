@@ -5,7 +5,6 @@ import theme from "../theme";
 const Document = () =>
   <Html>
     <Head>
-      <title>WINDOTA</title>
       <meta name="description" content="Dota 2 post match replay analysis" />
       <link rel="icon" href="/favicon.ico" />
     </Head>

@@ -1,8 +1,6 @@
-import { Button } from "@chakra-ui/button";
-import { Link } from "@chakra-ui/react";
 import styles from '../styles/Home.module.css'
 import { getUserContext } from "../components/UserContextWrapper";
-import AccountRoutes from "../api/account";
+import LoginButton from "../components/LoginButton";
 
 const Home = () => {
   let userContext = getUserContext()
@@ -17,9 +15,9 @@ const Home = () => {
           Dota 2 post match analysis
         </h1>
         {userContext.user === null &&
-          <p className={styles.description}>
-            <Link href={AccountRoutes.login}><Button>Log in with Steam</Button></Link>
-          </p>
+          <div className={styles.loginButton}>
+            <LoginButton />
+          </div>
         }
       </main>
     </div>

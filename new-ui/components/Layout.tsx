@@ -1,9 +1,9 @@
 import styles from '../styles/Layout.module.css'
-import Logo from "./Logo";
+import Header from "./Header";
 
 const Layout = ({ children }) =>
   <div className={styles.container}>
-    <Logo />
+    <Header />
     {children}
   </div>
 

@@ -6,11 +6,11 @@
   font-size: 4rem;
 }
 
-.description {
+.loginButton {
   margin: 4rem 0;
 }
 
 .title,
-.description {
+.loginButton {
   text-align: center;
 }

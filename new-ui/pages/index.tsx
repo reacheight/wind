@@ -2,9 +2,9 @@ import { Button } from "@chakra-ui/button";
 import { Link } from "@chakra-ui/react";
 import styles from '../styles/Home.module.css'
 import { getUserContext } from "../components/UserContextWrapper";
+import AccountRoutes from "../api/account";
 
 const Home = () => {
-  const loginLink = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/login`
   let userContext = getUserContext()
 
   if (userContext.loading)
@@ -18,7 +18,7 @@ const Home = () => {
         </h1>
         {userContext.user === null &&
           <p className={styles.description}>
-            <Link href={loginLink}><Button>Log in with Steam</Button></Link>
+            <Link href={AccountRoutes.login}><Button>Log in with Steam</Button></Link>
           </p>
         }
       </main>

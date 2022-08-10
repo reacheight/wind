@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import User from "../models/User";
+import AccountRoutes from "../api/account";
 
 interface UserContext {
   loading: boolean
@@ -13,7 +14,7 @@ const UserContextWrapper = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/user`, { credentials: 'include' })
+    fetch(AccountRoutes.user, { credentials: 'include' })
       .then(response => response.json())
       .then(json => setUser(json))
       .catch(() => setUser(null))

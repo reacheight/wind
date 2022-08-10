@@ -5,6 +5,8 @@ import io.circe.{Decoder, HCursor}
 import sttp.client3.circe.asJson
 import sttp.client3.quick.backend
 import sttp.client3.{UriContext, basicRequest}
+import windota.external.stratz.decoders._
+import windota.external.stratz.models.User
 import windota.models.ReplayLocation
 
 import scala.util.Try
@@ -31,6 +33,20 @@ object StratzClient {
       .get(buildQueryUrl(query))
       .header("Authorization", authorizationToken)
       .response(asJson[ReplayLocation])
+      .send(backend)
+
+    response.body.toTry
+  }
+
+  def getUser(accountId: Long): Try[User] = {
+    logger.info(s"Getting user from Stratz for account $accountId.")
+
+    val query = s"{ player(steamAccountId: $accountId) { steamAccount { id isAnonymous avatar } } }"
+
+    val response = basicRequest
+      .get(buildQueryUrl(query))
+      .header("Authorization", authorizationToken)
+      .response(asJson[User])
       .send(backend)
 
     response.body.toTry

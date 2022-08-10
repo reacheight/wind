@@ -8,6 +8,7 @@ import play.api.libs.circe.Circe
 import play.api.libs.openid.OpenIdClient
 import play.api.mvc.{AnyContent, BaseController, ControllerComponents, Request}
 import windota.external.stratz.StratzClient
+import windota.utils.SteamIdConverter
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,7 +33,7 @@ class AccountController @Inject()(val openIdClient: OpenIdClient, val controller
     request.session.get("id") match {
       case None => Unauthorized
       case Some(id) =>
-        val accountId = id.toLong - 76561197960265728L
+        val accountId = SteamIdConverter.steam64toSteam3(id.toLong)
         StratzClient.getUser(accountId) match {
           case Failure(exception) => InternalServerError(exception.getMessage)
           case Success(user) => Ok(user.asJson)

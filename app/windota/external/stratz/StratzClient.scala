@@ -41,7 +41,7 @@ object StratzClient {
   def getUser(accountId: Long): Try[User] = {
     logger.info(s"Getting user from Stratz for account $accountId.")
 
-    val query = s"{ player(steamAccountId: $accountId) { steamAccount { id isAnonymous avatar } } }"
+    val query = s"{ player(steamAccountId: $accountId) { steamAccount { id name isAnonymous avatar } } }"
 
     val response = basicRequest
       .get(buildQueryUrl(query))

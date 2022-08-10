@@ -8,10 +8,11 @@ package object decoders {
     val steamAccount = c.downField("data").downField("player").downField("steamAccount")
     for {
       id <- steamAccount.downField("id").as[Long]
+      name <- steamAccount.downField("name").as[String]
       isAnon <- steamAccount.downField("isAnonymous").as[Boolean]
       url <- steamAccount.downField("avatar").as[String]
     } yield {
-      User(id, isAnon, url)
+      User(id, name, isAnon, url)
     }
   }
 }

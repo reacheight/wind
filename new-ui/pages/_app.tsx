@@ -3,13 +3,16 @@ import '../styles/globals.css'
 import Layout from "../components/Layout";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "../theme";
+import UserContextWrapper from "../components/UserContextWrapper";
 
 function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <UserContextWrapper>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </UserContextWrapper>
     </ChakraProvider>);
 }
 

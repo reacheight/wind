@@ -1,6 +1,6 @@
-import styles from '../styles/Home.module.css'
 import { getUserContext } from "../components/UserContextWrapper";
-import LoginButton from "../components/LoginButton";
+import Profile from "../components/Profile";
+import Landing from "../components/Landing";
 
 const Home = () => {
   let userContext = getUserContext()
@@ -10,16 +10,8 @@ const Home = () => {
 
   return (
     <div>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Dota 2 post match analysis
-        </h1>
-        {userContext.user === null &&
-          <div className={styles.loginButton}>
-            <LoginButton />
-          </div>
-        }
-      </main>
+      {userContext.user === null && <Landing />}
+      {userContext.user !== null && <Profile />}
     </div>
   )
 }

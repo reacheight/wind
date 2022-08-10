@@ -1,3 +1,7 @@
 .container {
-    padding: 2rem 10rem;
+  padding: 2rem 10rem;
+}
+
+.body {
+  padding: 0 12rem;
 }

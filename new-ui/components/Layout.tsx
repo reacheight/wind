@@ -4,7 +4,9 @@ import Header from "./Header";
 const Layout = ({ children }) =>
   <div className={styles.container}>
     <Header />
-    {children}
+    <div className={styles.body}>
+      {children}
+    </div>
   </div>
 
 export default Layout

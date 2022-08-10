@@ -1,0 +1,13 @@
+.name {
+  letter-spacing: 0em;
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 600;
+  padding-left: 16px;
+}
+
+.profile {
+  align-items: center;
+  display: flex;
+  margin-top: 2rem;
+}

@@ -6,7 +6,7 @@ import sttp.client3.circe.asJson
 import sttp.client3.quick.backend
 import sttp.client3.{UriContext, basicRequest}
 import windota.external.stratz.decoders._
-import windota.external.stratz.models.User
+import windota.external.stratz.models._
 import windota.models.ReplayLocation
 
 import scala.util.Try
@@ -50,6 +50,20 @@ object StratzClient {
       .send(backend)
 
     response.body.toTry
+  }
+
+  def getMatches(accountId: Long, take: Int = 15, skip: Int = 0): Try[List[Match]] = {
+    logger.info(s"Getting matches for user $accountId.")
+
+    val query = s"{ player(steamAccountId: $accountId) { matches(request: { take: $take, skip: $skip }) { id durationSeconds didRadiantWin players { steamAccountId heroId isRadiant } } } }"
+
+    val response = basicRequest
+      .get(buildQueryUrl(query))
+      .header("Authorization", authorizationToken)
+      .response(asJson[GetMatchesResult])
+      .send(backend)
+
+    response.body.toTry.map(result => result.matches)
   }
 
   private def buildQueryUrl(query: String) = uri"https://api.stratz.com/graphql?query=$query"

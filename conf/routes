@@ -10,8 +10,10 @@ GET     /icons/:heroId              controllers.IconsController.getIcon(heroId: 
 
 GET     /login                      controllers.AccountController.login
 
-GET    /logout                      controllers.AccountController.logout
+GET     /logout                      controllers.AccountController.logout
 
 GET     /login-callback             controllers.AccountController.loginCallback
 
 GET     /user                       controllers.AccountController.getUser
+
+GET     /user/matches               controllers.AccountController.getMatches

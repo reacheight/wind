@@ -1,6 +1,7 @@
 package windota.external.stratz
 
 import io.circe.{Decoder, HCursor}
+import io.circe.generic.auto._
 import windota.external.stratz.models._
 
 package object decoders {
@@ -15,4 +16,11 @@ package object decoders {
       User(id, name, isAnon, url)
     }
   }
+
+  implicit val decodeMatches: Decoder[GetMatchesResult] = (c: HCursor) =>
+    for {
+      matches <- c.downField("data").downField("player").downField("matches").as[List[Match]]
+    } yield {
+      GetMatchesResult(matches)
+    }
 }

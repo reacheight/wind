@@ -67,7 +67,7 @@ class ItemUsageProcessor extends EntitiesProcessor {
 
     addUnusedOnAllyItem("CDOTA_Item_Mekansm", "Mekansm", 1200)
     addUnusedOnAllyItem("CDOTA_Item_Guardian_Greaves", "Guardian Greaves", 1200)
-    addUnusedOnAllyItem("CDOTA_Item_GlimmerCape", "Glimmer Cape", 550)
+    addUnusedOnAllyItem("CDOTA_Item_GlimmerCape", "Glimmer Cape", 600)
     addUnusedOnAllyItem("CDOTA_Item_Holy_Locket", "Holy Locket", 500)
     addUnusedOnAllyItem("item_lotus_orb", "Lotus Orb", 900)
     addUnusedOnAllyItem("CDOTA_Item_Wind_Waker", "Wind Waker", 1100)

@@ -102,6 +102,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
     addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_DeathCoil", "Mist Coil", _ => 575)
     addUnusedOnAllyAbility("Legion_Commander", "CDOTA_Ability_Legion_Commander_PressTheAttack", "Press the Attack", _ => 700)
     addUnusedOnAllyAbility("ArcWarden", "CDOTA_Ability_ArcWarden_MagneticField", "Magnetic Field", _ => 1050)
+    addUnusedOnAllyAbility("Undying", "CDOTA_Ability_Undying_SoulRip", "Soul Rip", _ => 750)
     addUnusedOnAllyAbility("Weaver", "CDOTA_Ability_Weaver_TimeLapse", "Time Lapse", _ => 500, requireScepter = true, checkBlink = true)
     addUnusedOnAllyAbility("Pudge", "CDOTA_Ability_Pudge_Dismember", "Dismember", _ => 300, requireShard = true, checkBlink = true)
     addUnusedOnAllyAbility("Snapfire", "CDOTA_Ability_Snapfire_GobbleUp", "Gobble Up", _ => 150, requireScepter = true, checkBlink = true)

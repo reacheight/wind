@@ -96,6 +96,13 @@ class AbilityUsageProcessor extends EntitiesProcessor {
       case 3 => 1000
     }, checkBlink = true)
 
+    addUnusedOnAllyAbility("Rubick", "CDOTA_Ability_Rubick_Telekinesis", "Telekinesis", {
+      case 1 => 550
+      case 2 => 575
+      case 3 => 600
+      case 4 => 625
+    }, requireShard = true, checkBlink = true)
+
     addUnusedOnAllyAbility("Winter_Wyvern", "CDOTA_Ability_Winter_Wyvern_Cold_Embrace", "Cold Embrace", _ => 1000)
     addUnusedOnAllyAbility("Omniknight", "CDOTA_Ability_Omniknight_Purification", "Purification", _ => 550)
     addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_AphoticShield", "Aphotic Shield", _ => 550)

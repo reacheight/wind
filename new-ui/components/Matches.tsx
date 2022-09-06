@@ -1,7 +1,7 @@
 import { getUserContext } from "./UserContextWrapper";
 import { useEffect, useState } from "react";
 import Match from "../models/Match";
-import AccountRoutes from "../api/account";
+import Routes from "../api/routs";
 import { List, ListItem } from "@chakra-ui/layout";
 import MatchPreview from "./MatchPreview";
 import styles from '../styles/Matches.module.css'
@@ -15,7 +15,7 @@ const Matches = () => {
   let [matches, setMatches] = useState<ReadonlyArray<Match>>(new Array<Match>())
 
   useEffect(() => {
-    fetch(AccountRoutes.matches, { credentials: 'include'})
+    fetch(Routes.Account.matches, { credentials: 'include'})
       .then(response => response.json())
       .then(json => setMatches(json))
   }, [])

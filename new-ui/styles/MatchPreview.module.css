@@ -1,21 +1,31 @@
-.main {
+.win,
+.lose {
   margin-top: 8px;
   margin-bottom: 8px;
-  border: 1px solid grey;
   border-radius: 6px;
-  min-height: 80px;
+  min-height: 50px;
   width: 100%;
   display: flex;
   align-items: center;
   padding-inline: 16px;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
-.main:hover {
-  background-color: #141414;
+.win {
+  color: rgba(0, 255, 0, 0.4);
 }
 
-.hero,
-.outcome {
+.lose {
+  color: rgba(255, 0, 0, 0.6);
+}
+
+.win:hover,
+.lose:hover {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+.hero {
   font-size: 18px;
   margin: 4px;
 }

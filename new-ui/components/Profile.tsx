@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { getUserContext } from "./UserContextWrapper";
 import styles from '../styles/Profile.module.css'
-import MatchesList from "./MatchesList";
+import Matches from "./Matches";
 import { Box } from "@chakra-ui/layout";
 
 const Profile = () => {
@@ -17,7 +17,7 @@ const Profile = () => {
         <span className={styles.name}>{userContext.user.name}</span>
       </div>
 
-      <Box padding={"4rem 0"}><MatchesList /></Box>
+      <Box padding={"4rem 0"}><Matches /></Box>
     </div>
   )
 }

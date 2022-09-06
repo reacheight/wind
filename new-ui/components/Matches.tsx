@@ -4,9 +4,9 @@ import Match from "../models/Match";
 import AccountRoutes from "../api/account";
 import { List, ListItem } from "@chakra-ui/layout";
 import MatchPreview from "./MatchPreview";
-import styles from '../styles/MatchesList.module.css'
+import styles from '../styles/Matches.module.css'
 
-const MatchesList = () => {
+const Matches = () => {
   let userContext = getUserContext()
 
   if (userContext.loading || userContext.user === null)
@@ -33,4 +33,4 @@ const MatchesList = () => {
   )
 }
 
-export default MatchesList
+export default Matches

@@ -13,14 +13,12 @@ const MatchPreview = ({ match }: MatchPreviewProps) => {
     return null
 
   let userPlayer = match.players.find(p => p.steamAccountId === userContext.user.id)
-  let isVictory = userPlayer.isRadiant && match.didRadiantWin
-  let outcome = isVictory ? "W" : "L"
+  let isVictory = userPlayer.isRadiant && match.didRadiantWin || !userPlayer.isRadiant && !match.didRadiantWin
 
   return (
     <a href={'/matches/' + match.id}>
-      <div className={styles.main}>
+      <div className={isVictory ? styles.win : styles.lose}>
         <div className={styles.hero}>{Heroes[userPlayer.heroId]}</div>
-        <div className={styles.outcome}>{outcome}</div>
       </div>
     </a>
   )

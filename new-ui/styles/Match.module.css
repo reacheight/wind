@@ -1,0 +1,17 @@
+.title {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.outcome {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.radiant {
+  color: rgba(0, 255, 0, 0.6);
+}
+
+.dire {
+  color: rgba(255, 0, 0, 0.8);
+}

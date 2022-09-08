@@ -55,7 +55,7 @@ object StratzClient {
   def getMatches(accountId: Long, take: Int = 15, skip: Int = 0): Try[List[Match]] = {
     logger.info(s"Getting matches for user $accountId.")
 
-    val query = s"{ player(steamAccountId: $accountId) { matches(request: { take: $take, skip: $skip }) { id durationSeconds didRadiantWin players { steamAccountId heroId isRadiant } } } }"
+    val query = s"{ player(steamAccountId: $accountId) { matches(request: { take: $take, skip: $skip }) { id durationSeconds didRadiantWin players { steamAccountId heroId isRadiant kills deaths assists } } } }"
 
     val response = basicRequest
       .get(buildQueryUrl(query))
@@ -69,7 +69,7 @@ object StratzClient {
   def getMatch(matchId: Long): Try[Match] = {
     logger.info(s"Getting match $matchId.")
 
-    val query = s"{ match(id: $matchId) { id durationSeconds didRadiantWin players { steamAccountId heroId isRadiant } } }"
+    val query = s"{ match(id: $matchId) { id durationSeconds didRadiantWin players { steamAccountId heroId isRadiant kills deaths assists } } }"
 
     val response = basicRequest
       .get(buildQueryUrl(query))

@@ -2,6 +2,7 @@ import Match from "../models/Match";
 import styles from '../styles/MatchPreview.module.css'
 import { getUserContext } from "./UserContextWrapper";
 import { Heroes } from "../constants/heroes";
+import Link from "next/link";
 
 interface MatchPreviewProps {
   match: Match
@@ -16,11 +17,13 @@ const MatchPreview = ({ match }: MatchPreviewProps) => {
   let isVictory = userPlayer.isRadiant && match.didRadiantWin || !userPlayer.isRadiant && !match.didRadiantWin
 
   return (
-    <a href={'/matches/' + match.id}>
-      <div className={isVictory ? styles.win : styles.lose}>
-        <div className={styles.hero}>{Heroes[userPlayer.heroId]}</div>
-      </div>
-    </a>
+    <Link href={'/matches/' + match.id}>
+      <a>
+        <div className={isVictory ? styles.win : styles.lose}>
+          <div className={styles.hero}>{Heroes[userPlayer.heroId]}</div>
+        </div>
+      </a>
+    </Link>
   )
 }
 

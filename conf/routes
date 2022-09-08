@@ -8,6 +8,8 @@ GET     /analysis/:matchId          controllers.AnalysisController.getAnalysis(m
 
 GET     /icons/:heroId              controllers.IconsController.getIcon(heroId: Int)
 
+GET     /miniportraits/:heroId         controllers.IconsController.getMiniPortrait(heroId: Int)
+
 GET     /login                      controllers.AccountController.login
 
 GET     /logout                      controllers.AccountController.logout

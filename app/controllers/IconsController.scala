@@ -13,4 +13,11 @@ class IconsController @Inject()(val controllerComponents: ControllerComponents) 
     val image = Files.readAllBytes(imagePath)
     Ok(image).as("image/png")
   }
+
+  def getMiniPortrait(heroId: Int) = Action {
+    val heroTag = Heroes.getTag(heroId)
+    val imagePath = Paths.get(s"conf/miniportraits/$heroTag.png")
+    val image = Files.readAllBytes(imagePath)
+    Ok(image).as("image/png")
+  }
 }

@@ -23,4 +23,11 @@ package object decoders {
     } yield {
       GetMatchesResult(matches)
     }
+
+  implicit val decodeMatch: Decoder[GetMatchResult] = (c: HCursor) =>
+    for {
+      dotaMatch <- c.downField("data").downField("match").as[Match]
+    } yield {
+      GetMatchResult(dotaMatch)
+    }
 }

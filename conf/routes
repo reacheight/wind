@@ -16,4 +16,6 @@ GET     /login-callback             controllers.AccountController.loginCallback
 
 GET     /user                       controllers.AccountController.getUser
 
-GET     /user/matches               controllers.AccountController.getMatches
+GET     /matches/:matchId           controllers.MatchesController.getMatch(matchId: Long)
+
+GET     /players/:accountId/matches  controllers.MatchesController.getMatches(accountId: Long)

@@ -15,7 +15,7 @@ const Matches = () => {
   let [matches, setMatches] = useState<ReadonlyArray<Match>>(new Array<Match>())
 
   useEffect(() => {
-    fetch(Routes.Account.matches, { credentials: 'include'})
+    fetch(Routes.Players.getMatches(userContext.user.id))
       .then(response => response.json())
       .then(json => setMatches(json))
   }, [])

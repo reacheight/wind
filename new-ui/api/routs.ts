@@ -4,7 +4,6 @@ class Account {
   login = `${HOST}/login`
   logout = `${HOST}/logout`
   user = `${HOST}/user`
-  matches = `${HOST}/user/matches`
 }
 
 class Analysis {
@@ -13,7 +12,17 @@ class Analysis {
   state = (matchId: string) => `${HOST}/analysis/${matchId}/state`
 }
 
+class Matches {
+  get = (matchId: number) => `${HOST}/matches/${matchId}`
+}
+
+class Players {
+  getMatches = (accountId: number) => `${HOST}/players/${accountId}/matches`
+}
+
 export default class Routes {
   public static Account = new Account()
   public static Analysis = new Analysis()
+  public static Matches = new Matches()
+  public static Players = new Players()
 }

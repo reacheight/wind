@@ -44,16 +44,4 @@ class AccountController @Inject()(val openIdClient: OpenIdClient, val controller
         }
     }
   }
-
-  def getMatches = Action { request =>
-    request.session.get("id") match {
-      case None => Unauthorized
-      case Some(id) =>
-        val accountId = SteamIdConverter.steam64toSteam3(id.toLong)
-        StratzClient.getMatches(accountId) match {
-          case Failure(exception) => InternalServerError(exception.getMessage)
-          case Success(user) => Ok(user.asJson)
-        }
-    }
-  }
 }

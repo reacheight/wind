@@ -66,6 +66,20 @@ object StratzClient {
     response.body.toTry.map(result => result.matches)
   }
 
+  def getMatch(matchId: Long): Try[Match] = {
+    logger.info(s"Getting match $matchId.")
+
+    val query = s"{ match(id: $matchId) { id durationSeconds didRadiantWin players { steamAccountId heroId isRadiant } } }"
+
+    val response = basicRequest
+      .get(buildQueryUrl(query))
+      .header("Authorization", authorizationToken)
+      .response(asJson[GetMatchResult])
+      .send(backend)
+
+    response.body.toTry.map(result => result.`match`)
+  }
+
   private def buildQueryUrl(query: String) = uri"https://api.stratz.com/graphql?query=$query"
   private val authorizationToken = s"Bearer ${sys.env("STRATZ_TOKEN")}"
 }

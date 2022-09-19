@@ -1,5 +1,4 @@
-.win,
-.lose {
+.preview {
   margin-top: 8px;
   margin-bottom: 8px;
   border-radius: 6px;
@@ -12,22 +11,22 @@
   background-color: rgba(255, 255, 255, 0.08);
 }
 
-.win {
-  color: rgba(0, 255, 0, 0.4);
-}
-
-.lose {
-  color: rgba(255, 0, 0, 0.6);
-}
-
-.win:hover,
-.lose:hover {
+.preview:hover {
   background-color: rgba(255, 255, 255, 0.16);
 }
 
-.hero {
+.heroWin,
+.heroLose {
   font-size: 18px;
   margin: 4px;
+}
+
+.heroWin {
+  color: rgba(0, 255, 0, 0.4);
+}
+
+.heroLose {
+  color: rgba(255, 0, 0, 0.6);
 }
 
 .portrait {
@@ -37,4 +36,12 @@
   border-radius: 5px;
   overflow: hidden;
   margin-right: 10px;
+}
+
+.kda {
+  position: absolute;
+  margin-left: 270px;
+  text-align: center;
+  font-weight: 500;
+  color: lightgrey;
 }

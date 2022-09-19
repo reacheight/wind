@@ -22,11 +22,12 @@ const MatchPreview = ({ match }: MatchPreviewProps) => {
   return (
     <Link href={'/matches/' + match.id}>
       <a>
-        <div className={isVictory ? styles.win : styles.lose}>
+        <div className={styles.preview}>
           <div className={styles.portrait}>
             <Image src={Routes.Images.getHorizontalPortrait(userHero)} layout={'fill'} objectFit={'contain'}/>
           </div>
-          <div className={styles.hero}>{Heroes[userPlayer.heroId]}</div>
+          <div className={isVictory ? styles.heroWin : styles.heroLose}>{Heroes[userPlayer.heroId]}</div>
+          <div className={styles.kda}>{userPlayer.kills} / {userPlayer.deaths} / {userPlayer.assists}</div>
         </div>
       </a>
     </Link>

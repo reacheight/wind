@@ -20,9 +20,15 @@ class Players {
   getMatches = (accountId: number) => `${HOST}/players/${accountId}/matches`
 }
 
+class Images {
+  getHorizontalPortrait = (heroId: number) => `${HOST}/miniportraits/${heroId}`
+  getIcon = (heroId: number) => `${HOST}/icons/${heroId}`
+}
+
 export default class Routes {
   public static Account = new Account()
   public static Analysis = new Analysis()
   public static Matches = new Matches()
   public static Players = new Players()
+  public static Images = new Images()
 }

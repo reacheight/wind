@@ -3,6 +3,8 @@ import styles from '../styles/MatchPreview.module.css'
 import { getUserContext } from "./UserContextWrapper";
 import { Heroes } from "../constants/heroes";
 import Link from "next/link";
+import Image from "next/image";
+import Routes from "../api/routs";
 
 interface MatchPreviewProps {
   match: Match
@@ -14,12 +16,16 @@ const MatchPreview = ({ match }: MatchPreviewProps) => {
     return null
 
   let userPlayer = match.players.find(p => p.steamAccountId === userContext.user.id)
+  let userHero = userPlayer.heroId
   let isVictory = userPlayer.isRadiant && match.didRadiantWin || !userPlayer.isRadiant && !match.didRadiantWin
 
   return (
     <Link href={'/matches/' + match.id}>
       <a>
         <div className={isVictory ? styles.win : styles.lose}>
+          <div className={styles.portrait}>
+            <Image src={Routes.Images.getHorizontalPortrait(userHero)} layout={'fill'} objectFit={'contain'}/>
+          </div>
           <div className={styles.hero}>{Heroes[userPlayer.heroId]}</div>
         </div>
       </a>

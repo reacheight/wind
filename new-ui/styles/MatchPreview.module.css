@@ -29,3 +29,12 @@
   font-size: 18px;
   margin: 4px;
 }
+
+.portrait {
+  position: relative;
+  width: 68px;
+  height: 40px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-right: 10px;
+}

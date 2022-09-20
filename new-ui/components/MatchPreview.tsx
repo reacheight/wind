@@ -5,6 +5,7 @@ import { Heroes } from "../constants/heroes";
 import Link from "next/link";
 import Image from "next/image";
 import Routes from "../api/routs";
+import Kda from "./Kda";
 
 interface MatchPreviewProps {
   match: Match
@@ -27,7 +28,9 @@ const MatchPreview = ({ match }: MatchPreviewProps) => {
             <Image src={Routes.Images.getHorizontalPortrait(userHero)} layout={'fill'} objectFit={'contain'}/>
           </div>
           <div className={isVictory ? styles.heroWin : styles.heroLose}>{Heroes[userPlayer.heroId]}</div>
-          <div className={styles.kda}>{userPlayer.kills} / {userPlayer.deaths} / {userPlayer.assists}</div>
+          <div className={styles.kda}>
+            <Kda player={userPlayer}/>
+          </div>
         </div>
       </a>
     </Link>

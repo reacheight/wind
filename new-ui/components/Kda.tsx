@@ -10,7 +10,7 @@ const Kda = ({ player }: KdaProps) => {
 
   return (
     <div className={styles.kda}>
-      {player.kills} {slash} {player.deaths} {slash} {player.deaths}
+      {player.kills} {slash} {player.deaths} {slash} {player.assists}
     </div>
   )
 }

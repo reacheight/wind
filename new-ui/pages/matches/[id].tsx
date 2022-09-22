@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import Routes from "../../api/routs";
 import Match from "../../models/Match";
 import styles from "../../styles/Match.module.css"
+import Matchup from "../../components/Matchup";
+import { AnalysisResult } from "../../models/AnalysisResult";
+import AnalysisTable from "../../components/AnalysisTable";
 
 const Match = () => {
   let userContext = getUserContext()
@@ -14,11 +17,19 @@ const Match = () => {
   const { id: matchId } = router.query
 
   const [match, setMatch] = useState<Match>(null)
+  const [analysis, setAnalysis] = useState<AnalysisResult>(null)
 
   useEffect(() => {
     fetch(Routes.Matches.get(matchId))
       .then(response => response.json())
       .then(json => setMatch(json))
+  }, [])
+
+  useEffect(() => {
+    fetch(Routes.Analysis.get(matchId))
+      .then(response => response.json())
+      .then(json => setAnalysis(json))
+      .catch(() => null)
   }, [])
 
   if (match == null)
@@ -27,9 +38,8 @@ const Match = () => {
   return (
     <div>
       <div className={styles.title}>{matchId}</div>
-      <div className={styles.outcome}>
-        <span className={match.didRadiantWin ? styles.radiant : styles.dire}>{match.didRadiantWin ? 'Radiant' : 'Dire'}</span> won
-      </div>
+      <Matchup match={match}/>
+      {analysis && <AnalysisTable analysis={analysis.analysis}/>}
     </div>
   )
 }

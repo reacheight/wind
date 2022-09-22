@@ -37,7 +37,6 @@ const Match = () => {
 
   return (
     <div>
-      <div className={styles.title}>{matchId}</div>
       <Matchup match={match}/>
       {analysis && <AnalysisTable analysis={analysis.analysis}/>}
     </div>

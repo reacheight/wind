@@ -1,0 +1,38 @@
+.container {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.entries {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.time {
+  text-shadow: 0 0 4px #ffffff;
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+}
+
+.heroIcon {
+  margin-inline: 5px;
+  display: flex;
+}
+
+.item {
+  font-weight: bold;
+  margin-inline: 5px;
+}

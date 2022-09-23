@@ -24,7 +24,7 @@ const Matches = () => {
     return null
 
   return (
-    <div>
+    <div className={styles.container}>
       <span className={styles.title}>Matches</span>
       <List>
         {matches.map(match => <ListItem id={match.id}><MatchPreview match={match} /></ListItem>)}

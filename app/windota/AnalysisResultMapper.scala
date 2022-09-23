@@ -7,13 +7,13 @@ object AnalysisResultMapper {
   def toJsonModel(analysisResult: AnalysisResultInternal): AnalysisResult = {
     def heroId(playerId: PlayerId) = analysisResult.heroId(playerId)
 
-    val unusedItems = analysisResult.unusedItems.map { case (time, id, item) => UnusedItem(heroId(id), heroId(id), item, time) } ++
-      analysisResult.unusedOnAllyItems.map { case (time, target, user, item) => UnusedItem(heroId(user), heroId(target), item, time) }
+    val unusedItems = (analysisResult.unusedItems.map { case (time, id, item) => UnusedItem(heroId(id), heroId(id), item, time) } ++
+      analysisResult.unusedOnAllyItems.map { case (time, target, user, item) => UnusedItem(heroId(user), heroId(target), item, time) })
         .sortBy(e => e.time.gameTime)
 
-    val unusedAbilities = analysisResult.unusedAbilities.map { case (time, id, ability) => UnusedAbility(heroId(id), heroId(id), ability, time) } ++
+    val unusedAbilities = (analysisResult.unusedAbilities.map { case (time, id, ability) => UnusedAbility(heroId(id), heroId(id), ability, time) } ++
       analysisResult.unusedOnAllyAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), ability, time) } ++
-      analysisResult.unusedOnAllyWithBlinkAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), ability, time, withBlink = true) }
+      analysisResult.unusedOnAllyWithBlinkAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), ability, time, withBlink = true) })
         .sortBy(e => e.time.gameTime)
 
     val overlappedStuns = analysisResult.overlappedStuns.map { case (time, target, user) => OverlappedStun(heroId(user), heroId(target), time) }

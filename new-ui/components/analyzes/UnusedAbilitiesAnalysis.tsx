@@ -2,12 +2,15 @@ import { UnusedAbility } from "../../models/UnusedAbility";
 import styles from "../../styles/CommonAnalysis.module.css";
 import { Stack } from "@chakra-ui/layout";
 import MiniIcon from "../MiniIcon";
+import { Collapse, useDisclosure } from "@chakra-ui/react";
 
 interface UnusedAbilitiesAnalysisProps {
   unusedAbilities: ReadonlyArray<UnusedAbility>
 }
 
 const UnusedAbilitiesAnalysis = ({ unusedAbilities }: UnusedAbilitiesAnalysisProps) => {
+  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true})
+
   const entries = unusedAbilities
     .map(entry => {
       let time = <span className={styles.time}>{entry.time}</span>
@@ -22,12 +25,14 @@ const UnusedAbilitiesAnalysis = ({ unusedAbilities }: UnusedAbilitiesAnalysisPro
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>Unused abilities</div>
-      <div className={styles.entries}>
-        <Stack>
-          {entries}
-        </Stack>
-      </div>
+      <button className={styles.title} onClick={onToggle}>Unused abilities</button>
+      <Collapse in={isOpen}>
+        <div className={styles.entries}>
+          <Stack>
+            {entries}
+          </Stack>
+        </div>
+      </Collapse>
     </div>
   )
 }

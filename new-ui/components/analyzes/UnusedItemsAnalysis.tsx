@@ -2,12 +2,15 @@ import { UnusedItem } from "../../models/UnusedItem";
 import styles from "../../styles/CommonAnalysis.module.css"
 import { Stack } from "@chakra-ui/layout";
 import MiniIcon from "../MiniIcon";
+import { Collapse, useDisclosure } from "@chakra-ui/react";
 
 interface UnusedItemsAnalysisProps {
   unusedItems: ReadonlyArray<UnusedItem>;
 }
 
 const UnusedItemsAnalysis = ({ unusedItems }: UnusedItemsAnalysisProps) => {
+  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true})
+
   const entries = unusedItems
     .map(entry => {
       let time = <span className={styles.time}>{entry.time}</span>
@@ -22,12 +25,14 @@ const UnusedItemsAnalysis = ({ unusedItems }: UnusedItemsAnalysisProps) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>Unused items</div>
-      <div className={styles.entries}>
-        <Stack>
-          {entries}
-        </Stack>
-      </div>
+      <button className={styles.title} onClick={onToggle}>Unused items</button>
+      <Collapse in={isOpen}>
+        <div className={styles.entries}>
+          <Stack>
+            {entries}
+          </Stack>
+        </div>
+      </Collapse>
     </div>
   )
 }

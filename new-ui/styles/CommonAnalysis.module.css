@@ -27,11 +27,6 @@
   align-items: center;
 }
 
-.heroIcon {
-  margin-inline: 5px;
-  display: flex;
-}
-
 .item {
   font-weight: bold;
   margin-inline: 5px;

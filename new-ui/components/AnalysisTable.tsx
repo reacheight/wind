@@ -4,6 +4,7 @@ import UnusedItemsAnalysis from "./analyzes/UnusedItemsAnalysis";
 import UnusedAbilitiesAnalysis from "./analyzes/UnusedAbilitiesAnalysis";
 import OverlappedStunsAnalysis from "./analyzes/OverlappedStunsAnalysis";
 import NotTankedCreepwavesAnalysis from "./analyzes/NotTankedCreepwavesAnalysis";
+import MouseClicksAnalysis from "./analyzes/MouseClicksAnalysis";
 
 interface AnalysisTableProps {
   analysis: Analysis
@@ -18,6 +19,7 @@ const AnalysisTable = ({ analysis }: AnalysisTableProps) => {
         {analysis.unusedAbilities.length > 0 && <UnusedAbilitiesAnalysis unusedAbilities={analysis.unusedAbilities} />}
         {analysis.overlappedStuns.length > 0 && <OverlappedStunsAnalysis overlappedStuns={analysis.overlappedStuns} />}
         {analysis.notTankedCreepwaves.length > 0 && <NotTankedCreepwavesAnalysis notTankedCreepwaves={analysis.notTankedCreepwaves} />}
+        {(analysis.mouseClickItemDeliveries.length > 0 || analysis.mouseClickQuickBuys.length > 0) && <MouseClicksAnalysis mouseClickItemDeliveries={analysis.mouseClickItemDeliveries} mouseClickQuickBuys={analysis.mouseClickQuickBuys} />}
       </div>
     </div>
   )

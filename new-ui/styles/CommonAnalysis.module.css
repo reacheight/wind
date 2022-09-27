@@ -31,3 +31,13 @@
   font-weight: bold;
   margin-inline: 5px;
 }
+
+.dire {
+  color: red;
+  font-weight: bold;
+}
+
+.radiant {
+  color: green;
+  font-weight: bold;
+}

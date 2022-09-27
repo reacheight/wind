@@ -6,6 +6,7 @@ import OverlappedStunsAnalysis from "./analyzes/OverlappedStunsAnalysis";
 import NotTankedCreepwavesAnalysis from "./analyzes/NotTankedCreepwavesAnalysis";
 import MouseClicksAnalysis from "./analyzes/MouseClicksAnalysis";
 import ObserversOnVisionAnalysis from "./analyzes/ObserversOnVisionAnalysis";
+import SmokesOnVisionAnalysis from "./analyzes/SmokesOnVisionAnalysis";
 
 interface AnalysisTableProps {
   analysis: Analysis
@@ -22,6 +23,7 @@ const AnalysisTable = ({ analysis }: AnalysisTableProps) => {
         {analysis.notTankedCreepwaves.length > 0 && <NotTankedCreepwavesAnalysis notTankedCreepwaves={analysis.notTankedCreepwaves} />}
         {(analysis.mouseClickItemDeliveries.length > 0 || analysis.mouseClickQuickBuys.length > 0) && <MouseClicksAnalysis mouseClickItemDeliveries={analysis.mouseClickItemDeliveries} mouseClickQuickBuys={analysis.mouseClickQuickBuys} />}
         {analysis.observersOnVision.length > 0 && <ObserversOnVisionAnalysis observersOnVision={analysis.observersOnVision} />}
+        {analysis.smokesOnVision.length > 0 && <SmokesOnVisionAnalysis smokesOnVision={analysis.smokesOnVision} />}
       </div>
     </div>
   )

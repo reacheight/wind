@@ -14,7 +14,7 @@ const FightsUnderTheWardAnalysis = ({ fightsUnderTheWard }: FightsUnderTheWardPr
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true})
 
   const entries = fightsUnderTheWard.map(entry => {
-    let team = <span className={entry.loser == Team.Dire ? styles.dire : styles.radiant}>Team[entry.loser]</span>
+    let team = <span className={entry.loser == Team.Dire ? styles.dire : styles.radiant}>{Team[entry.loser]}</span>
     let times = <span className={styles.time}>{entry.fights.join(", ")}</span>
     let warderIcon = <MiniIcon heroId={entry.wardOwner} />
 

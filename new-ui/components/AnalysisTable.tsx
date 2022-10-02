@@ -9,6 +9,7 @@ import ObserversOnVisionAnalysis from "./analyzes/ObserversOnVisionAnalysis";
 import SmokesOnVisionAnalysis from "./analyzes/SmokesOnVisionAnalysis";
 import FightsUnderTheWardAnalysis from "./analyzes/FightsUnderTheWardAnalysis";
 import BadMapSplitAnalysis from "./analyzes/BadMapSplitAnalysis";
+import NotUnblockedCampsAnalysis from "./analyzes/NotUnblockedCampsAnalysis";
 
 interface AnalysisTableProps {
   analysis: Analysis
@@ -24,6 +25,7 @@ const AnalysisTable = ({ analysis }: AnalysisTableProps) => {
           {analysis.notTankedCreepwaves.length > 0 && <NotTankedCreepwavesAnalysis notTankedCreepwaves={analysis.notTankedCreepwaves} />}
           {analysis.observersOnVision.length > 0 && <ObserversOnVisionAnalysis observersOnVision={analysis.observersOnVision} />}
           {analysis.lostFightsUnderTheSameWard.length > 0 && <FightsUnderTheWardAnalysis fightsUnderTheWard={analysis.lostFightsUnderTheSameWard} />}
+          {analysis.notUnblockedCamps.length > 0 && <NotUnblockedCampsAnalysis notUnblockedCamps={analysis.notUnblockedCamps} />}
         </div>
         <div className={styles.column}>
           {analysis.unusedAbilities.length > 0 && <UnusedAbilitiesAnalysis unusedAbilities={analysis.unusedAbilities} />}

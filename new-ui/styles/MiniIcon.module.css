@@ -1,4 +1,6 @@
 .icon {
   margin-inline: 5px;
   display: flex;
+  min-width: 30px;
+  min-height: 30px;
 }

@@ -1,7 +1,7 @@
 import { NotTankedCreepwave } from "../../models/NotTankedCreepwave";
 import styles from "../../styles/CommonAnalysis.module.css"
 import MiniIcon from "../MiniIcon";
-import { HStack, Stack } from "@chakra-ui/layout";
+import { Stack } from "@chakra-ui/layout";
 import { Collapse, useDisclosure } from "@chakra-ui/react";
 
 interface NotTankedCreepwavesProps {
@@ -13,7 +13,7 @@ const NotTankedCreepwavesAnalysis = ({ notTankedCreepwaves }: NotTankedCreepwave
 
   const entries = notTankedCreepwaves.map(entry => {
     let time = <span className={styles.time}>{entry.time}</span>
-    let icons = <HStack>{entry.heroes.map(hero => <MiniIcon heroId={hero} />)}</HStack>
+    let icons = entry.heroes.map(hero => <MiniIcon heroId={hero} />)
 
     return <div className={styles.entry}>{time} {icons} didn't tank creepwave</div>
   })

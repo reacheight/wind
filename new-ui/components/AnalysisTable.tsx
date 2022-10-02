@@ -8,6 +8,7 @@ import MouseClicksAnalysis from "./analyzes/MouseClicksAnalysis";
 import ObserversOnVisionAnalysis from "./analyzes/ObserversOnVisionAnalysis";
 import SmokesOnVisionAnalysis from "./analyzes/SmokesOnVisionAnalysis";
 import FightsUnderTheWardAnalysis from "./analyzes/FightsUnderTheWardAnalysis";
+import BadMapSplitAnalysis from "./analyzes/BadMapSplitAnalysis";
 
 interface AnalysisTableProps {
   analysis: Analysis
@@ -26,6 +27,7 @@ const AnalysisTable = ({ analysis }: AnalysisTableProps) => {
         {analysis.observersOnVision.length > 0 && <ObserversOnVisionAnalysis observersOnVision={analysis.observersOnVision} />}
         {analysis.smokesOnVision.length > 0 && <SmokesOnVisionAnalysis smokesOnVision={analysis.smokesOnVision} />}
         {analysis.lostFightsUnderTheSameWard.length > 0 && <FightsUnderTheWardAnalysis fightsUnderTheWard={analysis.lostFightsUnderTheSameWard} />}
+        {analysis.badFights.length > 0 && <BadMapSplitAnalysis badFights={analysis.badFights} />}
       </div>
     </div>
   )

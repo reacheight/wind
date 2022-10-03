@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
 import { getUserContext } from "../../components/UserContextWrapper";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import Routes from "../../api/routs";
 import Match from "../../models/Match";
 import styles from "../../styles/Match.module.css"
 import Matchup from "../../components/Matchup";
 import { AnalysisResult } from "../../models/AnalysisResult";
 import AnalysisTable from "../../components/AnalysisTable";
+import {Button} from "@chakra-ui/button";
+import {Spinner} from "@chakra-ui/spinner";
 
 const Match = () => {
   let userContext = getUserContext()
@@ -18,6 +20,40 @@ const Match = () => {
 
   const [match, setMatch] = useState<Match>(null)
   const [analysis, setAnalysis] = useState<AnalysisResult>(null)
+  const [analysisLoading, setAnalysisLoading] = useState<boolean>(true)
+  const [isError, setIsError] = useState<boolean>(false)
+
+  const startAnalysis = async () => {
+    setAnalysisLoading(true)
+
+    let requestResponse = await fetch(Routes.Analysis.start(matchId), { method: 'POST' })
+    if (!requestResponse.ok) {
+      setIsError(true)
+      setAnalysisLoading(false)
+      return
+    }
+
+    let timer = setInterval(async () => {
+      let stateResponse = await fetch(Routes.Analysis.state(matchId))
+      if (!stateResponse.ok) {
+        setIsError(true)
+        setAnalysisLoading(false)
+        return
+      }
+
+      let state = await stateResponse.json()
+      if (state === 1) {
+        let analysisResponse = await fetch(Routes.Analysis.get(matchId))
+        setAnalysis(await analysisResponse.json())
+        setAnalysisLoading(false)
+        clearInterval(timer)
+      } else if (state === 2) {
+        setAnalysisLoading(false)
+        setIsError(true)
+        clearInterval()
+      }
+    }, 5000)
+  }
 
   useEffect(() => {
     fetch(Routes.Matches.get(matchId))
@@ -30,6 +66,7 @@ const Match = () => {
       .then(response => response.json())
       .then(json => setAnalysis(json))
       .catch(() => null)
+      .finally(() => setAnalysisLoading(false))
   }, [])
 
   if (match == null)
@@ -39,6 +76,13 @@ const Match = () => {
     <div>
       <Matchup match={match}/>
       {analysis && <AnalysisTable analysis={analysis.analysis}/>}
+      <div className={styles.centered}>
+        {analysisLoading && <Spinner />}
+        {(!analysisLoading && !analysis) &&
+            <Button fontSize={'18px'} onClick={() => startAnalysis()}>Analyze</Button>
+        }
+        {isError && <span>Something's went wrong.</span>}
+      </div>
     </div>
   )
 }

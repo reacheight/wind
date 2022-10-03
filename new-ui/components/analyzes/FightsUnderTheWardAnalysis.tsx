@@ -18,7 +18,7 @@ const FightsUnderTheWardAnalysis = ({ fightsUnderTheWard }: FightsUnderTheWardPr
     let times = <span className={styles.time}>{entry.fights.join(", ")}</span>
     let warderIcon = <MiniIcon heroId={entry.wardOwner} />
 
-    return <div className={styles.entry}>{times} {team} lost {entry.fights} fights under the same ward by {warderIcon}</div>
+    return <div className={styles.entry}>{times} <span>{team} lost {entry.fights.length} fights under the same ward by</span>{warderIcon}</div>
   })
 
   return (

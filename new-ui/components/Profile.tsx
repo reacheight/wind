@@ -12,12 +12,13 @@ const Profile = () => {
 
   return (
     <div>
+      {userContext.user.isAnonymous && <span>Enable "Expose Public Match Data" setting in the Dota 2 game client.</span>}
       <div className={styles.profile}>
         <Image src={userContext.user.avatarUrl} width={100} height={100}></Image>
         <span className={styles.name}>{userContext.user.name}</span>
       </div>
 
-      <Box padding={"4rem 0"}><Matches /></Box>
+      {!userContext.user.isAnonymous && <Box padding={"4rem 0"}><Matches /></Box>}
     </div>
   )
 }

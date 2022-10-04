@@ -10,6 +10,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ['avatars.akamai.steamstatic.com', 'localhost', 'api.windota.xyz', 'win-dota.herokuapp.com'],
+    minimumCacheTTL: 691200,
   },
 }
 

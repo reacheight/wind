@@ -14,3 +14,9 @@
 .loginButton {
   text-align: center;
 }
+
+.example {
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 5px 40px 13px rgba(140, 152, 164, 0.175) !important;
+}

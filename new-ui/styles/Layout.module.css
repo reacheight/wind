@@ -4,4 +4,5 @@
 
 .body {
   padding: 0 12rem;
+  min-height: calc(85vh)
 }

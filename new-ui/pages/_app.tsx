@@ -10,7 +10,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>WINDOTA</title>
+        <title>WINDOTA - Dota 2 Analysis</title>
       </Head>
 
       <ChakraProvider theme={theme}>

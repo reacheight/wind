@@ -10,6 +10,7 @@ import SmokesOnVisionAnalysis from "./analyzes/SmokesOnVisionAnalysis";
 import FightsUnderTheWardAnalysis from "./analyzes/FightsUnderTheWardAnalysis";
 import BadMapSplitAnalysis from "./analyzes/BadMapSplitAnalysis";
 import NotUnblockedCampsAnalysis from "./analyzes/NotUnblockedCampsAnalysis";
+import ItemBuildsAnalysis from "./analyzes/ItemBuildsAnalysis";
 
 interface AnalysisTableProps {
   analysis: Analysis
@@ -33,6 +34,7 @@ const AnalysisTable = ({ analysis }: AnalysisTableProps) => {
           {analysis.smokesOnVision.length > 0 && <SmokesOnVisionAnalysis smokesOnVision={analysis.smokesOnVision} />}
           {(analysis.mouseClickItemDeliveries.length > 0 || analysis.mouseClickQuickBuys.length > 0) && <MouseClicksAnalysis mouseClickItemDeliveries={analysis.mouseClickItemDeliveries} mouseClickQuickBuys={analysis.mouseClickQuickBuys} />}
           {analysis.badFights.length > 0 && <BadMapSplitAnalysis badFights={analysis.badFights} />}
+          {analysis.notPurchasedSticks.length > 0 && <ItemBuildsAnalysis notPurchasedSticks={analysis.notPurchasedSticks} />}
         </div>
       </div>
     </div>

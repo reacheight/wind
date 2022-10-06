@@ -18,6 +18,7 @@ import { FightLostUnderEnemyVision } from "./FightLostUnderEnemyVision";
 import { MouseClickItemDelivery } from "./MouseClickItemDelivery";
 import { MouseClickQuickBuy } from "./MouseClickQuickBuy";
 import { NotUnblockedCamp } from "./NotUnblockedCamp";
+import {NotPurchasedStick} from "./NotPurchasedStick";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -38,4 +39,5 @@ export interface Analysis {
   mouseClickItemDeliveries: ReadonlyArray<MouseClickItemDelivery>;
   mouseClickQuickBuys: ReadonlyArray<MouseClickQuickBuy>;
   notUnblockedCamps: ReadonlyArray<NotUnblockedCamp>;
+  notPurchasedSticks: ReadonlyArray<NotPurchasedStick>;
 }

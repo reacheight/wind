@@ -38,6 +38,8 @@ object AnalysisResultMapper {
     val notUnblockedCamps = analysisResult.notUnblockedCamps.flatMap { case (team, camps) => camps.map { case (lane, wards) => NotUnblockedCamp(team, lane, wards.map(w => w.created))} }.toSeq
       .filter(c => c.blocks.nonEmpty)
 
+    val notPurchasedSticks = analysisResult.notPurchasedSticks.map { case(playerId, stickPlayerId) => NotPurchasedStick(heroId(playerId), heroId(stickPlayerId)) }
+
     val analysis = Analysis(
       unusedItems,
       unusedAbilities,
@@ -57,6 +59,7 @@ object AnalysisResultMapper {
       mouseClickItemDeliveries,
       mouseClickQuickBuys,
       notUnblockedCamps,
+      notPurchasedSticks,
     )
 
     val radiant = analysisResult.heroId.filter(_._1.id < 10).values.toSeq

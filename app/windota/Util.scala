@@ -4,7 +4,8 @@ import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.Entities
 import windota.extensions.EntitiesExtension
 import windota.models.Lane.Lane
-import windota.models.{GameTimeState, Location, PlayerId, Team, Lane}
+import windota.models.Role.{MidLane, OffLane, Role, SafeLane}
+import windota.models.{GameTimeState, Lane, Location, PlayerId, Team}
 import windota.models.Team._
 
 object Util {
@@ -148,4 +149,11 @@ object Util {
     case Dire => Radiant
   }
 
+  def isCoreRole(role: Role): Boolean = role == SafeLane || role == MidLane || role == OffLane
+
+  def getOppositeCoreRole(role: Role): Role = role match {
+    case MidLane => MidLane
+    case SafeLane => OffLane
+    case OffLane => SafeLane
+  }
 }

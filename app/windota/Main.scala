@@ -256,6 +256,11 @@ object Main {
     result.notUnblockedCamps(Dire)(Top).foreach(ward =>
       println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
     )
+
+    if (result.notPurchasedSticks.nonEmpty) println("\nNot purchased Sticks:")
+    result.notPurchasedSticks.foreach { case (heroId, stickHeroId) =>
+      println(s"${result.heroName(heroId)} didn't purchase Stick VS ${result.heroName(stickHeroId)}")
+    }
   }
 
   def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {

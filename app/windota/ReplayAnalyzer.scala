@@ -30,7 +30,7 @@ object ReplayAnalyzer {
     val itemStockProcessor = new ItemStockProcessor
     val glyphProcessor = new GlyphProcessor
     val visionProcessor = new VisionProcessor
-    val itemUsageProcessor = new ItemUsageProcessor
+    val itemUsageProcessor = new ItemUsageProcessor(true)
     val rolesProcessor = new RolesProcessor
     val abilityUsageProcessor = new AbilityUsageProcessor
     val purchasesProcessor = new PurchasesProcessor
@@ -51,17 +51,19 @@ object ReplayAnalyzer {
       runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
         glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
         purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
-        blockedCampsProcessor
+        blockedCampsProcessor, laneProcessor, rolesProcessor
       )
     }
 
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
     val smokeFightProcessor = new SmokeFightProcessor(fightProcessor.fights)
     val unreasonableDivesProcessor = new UnreasonableDivesProcessor(fightProcessor.fights)
+    val itemBuildProcessor = new ItemBuildProcessor(rolesProcessor.roles)
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor, unreasonableDivesProcessor)
+      runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor,
+        unreasonableDivesProcessor, itemBuildProcessor, new ItemUsageProcessor(false))
     }
 
     logger.info(s"Analysis finished for ${game.getMatchId}. Time: ${System.currentTimeMillis() - start} ms.")
@@ -133,6 +135,7 @@ object ReplayAnalyzer {
       cursorProcessor.mouseClicksItemDelivery,
       cursorProcessor.mouseClicksQuickBuy,
       blockedCampsProcessor.notUnblockedCamps,
+      itemBuildProcessor.notPurchasedSticks,
     )
   }
 }
@@ -180,4 +183,5 @@ case class AnalysisResultInternal(
   mouseItemDelivery: Seq[(PlayerId, Int)],
   mouseQuickBuy: Seq[(PlayerId, Int)],
   notUnblockedCamps: Map[Team, Map[Lane, Seq[Ward]]],
+  notPurchasedSticks: Seq[(PlayerId, PlayerId)],
 )

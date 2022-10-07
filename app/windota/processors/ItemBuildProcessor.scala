@@ -15,7 +15,7 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends EntitiesProcessor {
   private var STICKS_CHECKED = false
   private val STICKS_CHECK_MINUTE = 3
 
-  private val stickHeroes: List[String] = List("CDOTA_Unit_Hero_Batrider")
+  private val stickHeroes: List[String] = List("CDOTA_Unit_Hero_Batrider", "CDOTA_Unit_Hero_Bristleback")
   private val stickItemNames = List("item_magic_stick", "item_magic_wand")
 
   private val _notPurchasedSticks: ListBuffer[(PlayerId, PlayerId)] = ListBuffer.empty //  (hero, stick hero)

@@ -48,11 +48,15 @@ object ReplayAnalyzer {
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
-        glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
-        purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
-        blockedCampsProcessor, laneProcessor, rolesProcessor
-      )
+      try {
+        runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
+          glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
+          purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
+          blockedCampsProcessor, laneProcessor, rolesProcessor
+        )
+      } catch {
+        case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
+      }
     }
 
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
@@ -62,8 +66,15 @@ object ReplayAnalyzer {
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
-      runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor,
-        unreasonableDivesProcessor, itemBuildProcessor, new ItemUsageProcessor(false))
+
+      try {
+        runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor,
+          unreasonableDivesProcessor, itemBuildProcessor, new ItemUsageProcessor(false)
+        )
+      } catch {
+        case e =>
+          logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
+      }
     }
 
     logger.info(s"Analysis finished for ${game.getMatchId}. Time: ${System.currentTimeMillis() - start} ms.")

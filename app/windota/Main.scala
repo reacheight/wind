@@ -43,6 +43,9 @@ object Main {
         if (args(0) == "analyze") analyze(Paths.get(`match`)) else printCurrentState(Paths.get(`match`))
       }
     }
+    else if (args(0) == "items") {
+      runItemsAgainstHero(args(1))
+    }
   }
 
   def printCurrentState(replay: Path): Unit = {
@@ -261,6 +264,12 @@ object Main {
     result.notPurchasedSticks.foreach { case (heroId, stickHeroId) =>
       println(s"${result.heroName(heroId)} didn't purchase Stick VS ${result.heroName(stickHeroId)}")
     }
+  }
+
+  def runItemsAgainstHero(pathToMatches: String): Unit = {
+    val source = scala.io.Source.fromFile(pathToMatches)
+    val matches = try source.getLines().map(_.toLong).toSeq finally source.close()
+    ItemAgainstHeroRunner.run(matches)
   }
 
   def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {

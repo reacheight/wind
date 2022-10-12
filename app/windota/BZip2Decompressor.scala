@@ -19,7 +19,7 @@ object BZip2Decompressor {
 
       val fileOutput = use(Files.newOutputStream(decompressed))
 
-      fileOutput.write(bzipInput.readAllBytes())
+      bzipInput.transferTo(fileOutput)
     }
   }
 }

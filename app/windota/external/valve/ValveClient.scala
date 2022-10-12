@@ -5,9 +5,9 @@ import sttp.client3.UriContext
 import sttp.client3.quick.{asFile, backend, quickRequest}
 import windota.models.ReplayLocation
 
-import java.io.{File, FileInputStream}
-import java.nio.file.{Files, Path}
-import scala.util.{Failure, Success, Try}
+import java.io.{BufferedInputStream, File, FileInputStream}
+import java.nio.file.{Files, Path, Paths}
+import scala.util.{Failure, Success, Try, Using}
 
 object ValveClient {
   private val logger = Logger[ValveClient.type]
@@ -15,23 +15,26 @@ object ValveClient {
   def downloadReplay(location: ReplayLocation, filePath: Path): Try[Unit] = {
     logger.info(s"Downloading replay for ${location.matchId}.")
 
+    val tmpFile = Paths.get(s"${filePath.toString}.tmp").toFile
     val response = quickRequest
       .get(getReplayUri(location))
-      .response(asFile(filePath.toFile))
+      .response(asFile(tmpFile))
       .send(backend)
 
     response.body match {
-      case Right(file) =>
-        saveFile(file)
+      case Right(tmpFile) =>
+        saveFile(tmpFile, filePath)
         Success()
       case Left(string) => Failure(new Exception(string))
     }
   }
 
-  private def saveFile(file: File) = {
-    file.createNewFile()
-    val inputStream = new FileInputStream(file)
-    Files.write(file.toPath, inputStream.readAllBytes())
+  private def saveFile(file: File, path: Path) = {
+    Using.Manager { use =>
+      val inputStream = use(new BufferedInputStream(new FileInputStream(file)))
+      val outputStream = use(Files.newOutputStream(path))
+      inputStream.transferTo(outputStream)
+    }
   }
 
   private def getReplayUri(location: ReplayLocation) = uri"http://replay${location.cluster}.valve.net/570/${location.matchId}_${location.salt}.dem.bz2"

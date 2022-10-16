@@ -30,4 +30,36 @@ package object decoders {
     } yield {
       GetMatchResult(dotaMatch)
     }
+
+  implicit val decodeMatchItemsResult: Decoder[GetMatchItemsResult] = (c: HCursor) =>
+    for {
+      matches <- c.downField("data").downField("matches").as[List[MatchItems]]
+    } yield {
+      GetMatchItemsResult(matches)
+    }
+
+  implicit val decodeMatchItems: Decoder[MatchItems] = (c: HCursor) => {
+    for {
+      didRadiantWin <- c.downField("didRadiantWin").as[Boolean]
+      players <- c.downField("players").as[List[PlayerItems]]
+    } yield {
+      MatchItems(didRadiantWin, players)
+    }
+  }
+
+  implicit val decodePlayerItems: Decoder[PlayerItems] = (c: HCursor) => {
+    for {
+      heroId <- c.downField("heroId").as[Int]
+      isRadiant <- c.downField("isRadiant").as[Boolean]
+      networth <- c.downField("networth").as[Int]
+      item0 <- c.downField("item0Id").as[Option[Int]]
+      item1 <- c.downField("item1Id").as[Option[Int]]
+      item2 <- c.downField("item2Id").as[Option[Int]]
+      item3 <- c.downField("item3Id").as[Option[Int]]
+      item4 <- c.downField("item4Id").as[Option[Int]]
+      item5 <- c.downField("item5Id").as[Option[Int]]
+    } yield {
+      PlayerItems(heroId, isRadiant, networth, List(item0, item1, item2, item3, item4, item5).flatten)
+    }
+  }
 }

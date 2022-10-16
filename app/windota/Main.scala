@@ -269,7 +269,7 @@ object Main {
   def runItemsAgainstHero(pathToMatches: String): Unit = {
     val source = scala.io.Source.fromFile(pathToMatches)
     val matches = try source.getLines().map(_.toLong).toSeq finally source.close()
-    ItemAgainstHeroRunner.run(matches)
+    ItemAgainstHeroRunner.runWithStratz(matches)
   }
 
   def downloadReplay(location: ReplayLocation, compressedPath: Path, replayPath: Path): Boolean = {

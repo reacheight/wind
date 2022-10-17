@@ -40,6 +40,6 @@ class ItemsAgainstHeroProcessor extends EntitiesProcessor {
     val winner = gameRules.getProperty[Integer]("m_pGameRules.m_nGameWinner") // 2 - radiant, 3 - dire
     val radiantWon = winner == 2
 
-    _dataEntry = Some(ItemAgainstHeroDataEntry(isHeroRadiant, radiantHasItem, direHasItem, radiantWon))
+    _dataEntry = Some(ItemAgainstHeroDataEntry(isHeroRadiant, radiantHasItem, direHasItem, 0, 0, radiantWon))
   }
 }

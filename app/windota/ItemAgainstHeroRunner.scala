@@ -14,7 +14,7 @@ import scala.util.{Failure, Success, Using}
 
 object ItemAgainstHeroRunner {
   private val logger = Logger[ItemAgainstHeroRunner.type]
-  private val resultFile = Paths.get("items_against_hero_stats", "necrophos.txt").toFile
+  private val resultFile = Paths.get("items_against_hero_stats", "necr_vessel_nw.txt").toFile
 
   def runWithProcessor(matches: Seq[Long]): Unit = {
     val itemUsageProcessor = new ItemUsageProcessor(false)
@@ -76,7 +76,9 @@ object ItemAgainstHeroRunner {
               val hero = matchItems.players.find(p => p.heroId == HERO_ID).get
               val radiantHasItem = matchItems.radiant.exists(p => p.items.contains(ITEM_ID))
               val direHasItem = matchItems.dire.exists(p => p.items.contains(ITEM_ID))
-              val dataEntry = ItemAgainstHeroDataEntry(hero.isRadiant, radiantHasItem, direHasItem, matchItems.didRadiantWin)
+              val radiantNetworth = matchItems.radiant.map(p => p.networth).sum
+              val direNetworth = matchItems.dire.map(p => p.networth).sum
+              val dataEntry = ItemAgainstHeroDataEntry(hero.isRadiant, radiantHasItem, direHasItem, radiantNetworth, direNetworth, matchItems.didRadiantWin)
 
               fw.write(dataEntry.toString + "\n")
               fw.flush()

@@ -83,6 +83,7 @@ object ItemAgainstHeroRunner {
             })
 
             logger.info(s"Success for match group number #$groupNumber (firstMatch is ${group.head}).")
+            Thread.sleep(1000)
         }
       } catch {
         case e => logger.error(s"Error for match group number #$groupNumber (firstMatch is ${group.head}): ${e.getMessage}\n${e.getStackTrace.mkString("\n")}")

@@ -11,6 +11,7 @@ import FightsUnderTheWardAnalysis from "./analyzes/FightsUnderTheWardAnalysis";
 import BadMapSplitAnalysis from "./analyzes/BadMapSplitAnalysis";
 import NotUnblockedCampsAnalysis from "./analyzes/NotUnblockedCampsAnalysis";
 import ItemBuildsAnalysis from "./analyzes/ItemBuildsAnalysis";
+import PoorMapAwarenessAnalysis from "./analyzes/PoorMapAwarenessAnalysis";
 
 interface AnalysisTableProps {
   analysis: Analysis
@@ -27,6 +28,7 @@ const AnalysisTable = ({ analysis }: AnalysisTableProps) => {
           {analysis.observersOnVision.length > 0 && <ObserversOnVisionAnalysis observersOnVision={analysis.observersOnVision} />}
           {analysis.lostFightsUnderTheSameWard.length > 0 && <FightsUnderTheWardAnalysis fightsUnderTheWard={analysis.lostFightsUnderTheSameWard} />}
           {analysis.notUnblockedCamps.length > 0 && <NotUnblockedCampsAnalysis notUnblockedCamps={analysis.notUnblockedCamps} />}
+          {analysis.badSmokeFights.length >0 && <PoorMapAwarenessAnalysis badSmokeFights={analysis.badSmokeFights} />}
         </div>
         <div className={styles.column}>
           {analysis.unusedAbilities.length > 0 && <UnusedAbilitiesAnalysis unusedAbilities={analysis.unusedAbilities} />}

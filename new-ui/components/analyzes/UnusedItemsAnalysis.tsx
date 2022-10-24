@@ -14,7 +14,7 @@ const UnusedItemsAnalysis = ({ unusedItems }: UnusedItemsAnalysisProps) => {
   const entries = unusedItems
     .map(entry => {
       let time = <span className={styles.time}>{entry.time}</span>
-      let item = <span className={styles.item}>{entry.item}</span>
+      let item = <span className={styles.name}>{entry.item}</span>
       let userIcon = <MiniIcon heroId={entry.user} />
       let targetIcon = <MiniIcon heroId={entry.target} />
       let isOnAlly = entry.user != entry.target

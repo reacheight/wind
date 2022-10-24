@@ -16,7 +16,7 @@ const ItemBuildsAnalysis = ({ notPurchasedSticks }: ItemBuildsProps) => {
     let hero = <MiniIcon heroId={entry.heroId} />
     let stickHero = <MiniIcon heroId={entry.stickHeroId} />
 
-    return <div className={styles.entry}>{hero} didn't purchase <span className={styles.item}>Stick</span> versus {stickHero}</div>
+    return <div className={styles.entry}>{hero} didn't purchase <span className={styles.name}>Stick</span> versus {stickHero}</div>
   })
 
   return (

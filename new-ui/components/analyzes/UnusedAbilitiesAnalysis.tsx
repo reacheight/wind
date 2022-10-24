@@ -14,13 +14,14 @@ const UnusedAbilitiesAnalysis = ({ unusedAbilities }: UnusedAbilitiesAnalysisPro
   const entries = unusedAbilities
     .map(entry => {
       let time = <span className={styles.time}>{entry.time}</span>
-      let ability = <span className={styles.item}>{entry.ability}</span>
+      let ability = <span className={styles.name}>{entry.ability}</span>
       let userIcon = <MiniIcon heroId={entry.user} />
       let targetIcon = <MiniIcon heroId={entry.target} />
       let isOnAlly = entry.user != entry.target
+      let withBlinkPart = <><span className={styles.name}>Blink Dagger</span> and</>
       let onTargetPart = <>on {targetIcon}</>
 
-      return <div className={styles.entry}>{time} {userIcon} didn't use {ability} {isOnAlly && onTargetPart}</div>
+      return <div className={styles.entry}>{time} {userIcon} didn't use {entry.withBlink && withBlinkPart} {ability} {isOnAlly && onTargetPart}</div>
     })
 
   return (

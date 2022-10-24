@@ -2,7 +2,7 @@ import requests as r
 import sys
 
 HERO_ID = sys.argv[1]
-starting_date = '1666024560'
+starting_date = '1666543106'
 
 def build_request_url(hero_id, start_time, limit = 1000):
     return f'https://api.opendota.com/api/explorer?sql=select m.match_id, m.start_time from public_player_matches p join public_matches m on p.match_id = m.match_id where p.hero_id = {hero_id} and m.avg_rank_tier > 60 and m.start_time < {start_time} limit {limit}'

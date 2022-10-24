@@ -41,9 +41,10 @@ package object decoders {
   implicit val decodeMatchItems: Decoder[MatchItems] = (c: HCursor) => {
     for {
       didRadiantWin <- c.downField("didRadiantWin").as[Boolean]
+      analysisOutcome <- c.downField("analysisOutcome").as[String]
       players <- c.downField("players").as[List[PlayerItems]]
     } yield {
-      MatchItems(didRadiantWin, players)
+      MatchItems(didRadiantWin, analysisOutcome, players)
     }
   }
 

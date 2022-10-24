@@ -14,7 +14,7 @@ import scala.util.{Failure, Success, Using}
 
 object ItemAgainstHeroRunner {
   private val logger = Logger[ItemAgainstHeroRunner.type]
-  private val resultFile = Paths.get("items_against_hero_stats", "necr_vessel_nw.txt").toFile
+  private val resultFile = Paths.get("items_against_hero_stats", "pa_mkb_nw_stomp.txt").toFile
 
   def runWithProcessor(matches: Seq[Long]): Unit = {
     val itemUsageProcessor = new ItemUsageProcessor(false)
@@ -61,8 +61,8 @@ object ItemAgainstHeroRunner {
   }
 
   def runWithStratz(matches: Seq[Long]): Unit = {
-    val HERO_ID = 36
-    val ITEM_ID = 267
+    val HERO_ID = 44
+    val ITEM_ID = 135
 
     val fw = new FileWriter(resultFile, true)
 
@@ -78,7 +78,8 @@ object ItemAgainstHeroRunner {
               val direHasItem = matchItems.dire.exists(p => p.items.contains(ITEM_ID))
               val radiantNetworth = matchItems.radiant.map(p => p.networth).sum
               val direNetworth = matchItems.dire.map(p => p.networth).sum
-              val dataEntry = ItemAgainstHeroDataEntry(hero.isRadiant, radiantHasItem, direHasItem, radiantNetworth, direNetworth, matchItems.didRadiantWin)
+              val isStomp = matchItems.analysisOutcome == "STOMPED"
+              val dataEntry = ItemAgainstHeroDataEntry(hero.isRadiant, radiantHasItem, direHasItem, radiantNetworth, direNetworth, matchItems.didRadiantWin, isStomp)
 
               fw.write(dataEntry.toString + "\n")
               fw.flush()

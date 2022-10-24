@@ -2,7 +2,7 @@ package windota.external.stratz.models
 
 case class GetMatchItemsResult(matches: List[MatchItems])
 
-case class MatchItems(didRadiantWin: Boolean, players: List[PlayerItems]) {
+case class MatchItems(didRadiantWin: Boolean, analysisOutcome: String, players: List[PlayerItems]) {
   val radiant = players.filter(p => p.isRadiant)
   val dire = players.filterNot(p => p.isRadiant)
 }

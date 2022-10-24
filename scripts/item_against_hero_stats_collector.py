@@ -2,7 +2,7 @@ import sys
 import math
 
 class ItemAgainstHeroDataEntry:
-    def __init__(self, is_hero_radiant, radiant_has_item, dire_has_item, radiant_networth, dire_networth, radiant_won):
+    def __init__(self, is_hero_radiant, radiant_has_item, dire_has_item, radiant_networth, dire_networth, radiant_won, is_stomp):
         self.is_hero_radiant = is_hero_radiant
         self.is_hero_dire = not is_hero_radiant
         self.radiant_has_item = radiant_has_item
@@ -10,6 +10,7 @@ class ItemAgainstHeroDataEntry:
         self.radiant_networth = radiant_networth
         self.dire_networth = dire_networth
         self.radiant_won = radiant_won
+        self.is_stomp = is_stomp
 
     def is_hero_win(self):
         return self.is_hero_radiant and self.radiant_won or self.is_hero_dire and (not self.radiant_won)
@@ -28,7 +29,7 @@ class ItemAgainstHeroDataEntry:
 
 def parse_line(line):
     tokens = line.split()
-    return ItemAgainstHeroDataEntry(tokens[0] == "1", tokens[2] == "1", tokens[3] == "1", int(tokens[4]), int(tokens[5]), tokens[6] == "1")
+    return ItemAgainstHeroDataEntry(tokens[0] == "1", tokens[2] == "1", tokens[3] == "1", int(tokens[4]), int(tokens[5]), tokens[6] == "1", tokens[7] == "1")
 
 def percentile(data, perc: int):
     if perc == 0:
@@ -108,3 +109,23 @@ for i in range(10):
     print(f'        Match count            = {no_item_against_hero_match_count[i]}')
     print(f'        Win against hero count = {no_item_against_hero_wins_count[i]}')
     print(f'        Winrate                = {no_item_against_hero_wins_count[i] / no_item_against_hero_match_count[i]}')
+
+no_stomp_matches = [entry for entry in data if not entry.is_stomp]
+stomp_count = len(data) - len(no_stomp_matches)
+
+no_stomp_item_matches = [entry for entry in no_stomp_matches if entry.is_item_against_hero()]
+no_stomp_item_win_count = len([entry for entry in no_stomp_item_matches if not entry.is_hero_win()])
+
+no_stomp_no_item_matches = [entry for entry in no_stomp_matches if not entry.is_item_against_hero()]
+no_stomp_no_item_win_count = len([entry for entry in no_stomp_no_item_matches if not entry.is_hero_win()])
+
+print()
+print(f'Total matches: {len(data)}. Stomp matches: {stomp_count}.')
+print()
+print(f'No stomp Item against hero matches count = {len(no_stomp_item_matches)}')
+print(f'No stomp Item against hero win count     = {no_stomp_item_win_count}')
+print(f'Winrate:                                 = {no_stomp_item_win_count / len(no_stomp_item_matches)}')
+print()
+print(f'No stomp No Item against hero matches count = {len(no_stomp_no_item_matches)}')
+print(f'No stomp No Item against hero win count     = {no_stomp_no_item_win_count}')
+print(f'Winrate:                                    = {no_stomp_no_item_win_count / len(no_stomp_no_item_matches)}')

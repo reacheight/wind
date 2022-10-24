@@ -83,7 +83,7 @@ object StratzClient {
   def getMatchItems(matches: Seq[Long]): Try[List[MatchItems]] = {
     logger.info(s"Getting match items for ${matches.mkString(", ")}.")
 
-    val query = s"{ matches(ids: [${matches.mkString(", ")}]) { didRadiantWin, players { heroId, isRadiant, networth, item0Id, item1Id, item2Id, item3Id, item4Id, item5Id } } }"
+    val query = s"{ matches(ids: [${matches.mkString(", ")}]) { didRadiantWin, analysisOutcome, players { heroId, isRadiant, networth, item0Id, item1Id, item2Id, item3Id, item4Id, item5Id } } }"
 
     val response = basicRequest
       .get(buildQueryUrl(query))

@@ -25,7 +25,7 @@ const UnusedItemsAnalysis = ({ unusedItems }: UnusedItemsAnalysisProps) => {
 
   return (
     <div className={styles.container}>
-      <button className={styles.title} onClick={onToggle}>Unused items</button>
+      <button className={styles.title} onClick={onToggle}>Unused items before death</button>
       <Collapse in={isOpen}>
         <div className={styles.entries}>
           <Stack>

@@ -26,7 +26,7 @@ const UnusedAbilitiesAnalysis = ({ unusedAbilities }: UnusedAbilitiesAnalysisPro
 
   return (
     <div className={styles.container}>
-      <button className={styles.title} onClick={onToggle}>Unused abilities</button>
+      <button className={styles.title} onClick={onToggle}>Unused abilities before death</button>
       <Collapse in={isOpen}>
         <div className={styles.entries}>
           <Stack>

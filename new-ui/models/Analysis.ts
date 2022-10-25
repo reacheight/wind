@@ -19,6 +19,7 @@ import { MouseClickItemDelivery } from "./MouseClickItemDelivery";
 import { MouseClickQuickBuy } from "./MouseClickQuickBuy";
 import { NotUnblockedCamp } from "./NotUnblockedCamp";
 import {NotPurchasedStick} from "./NotPurchasedStick";
+import NotPurchasedItemAgainstHero from "./NotPurchasedItemAgainstHero";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -40,4 +41,5 @@ export interface Analysis {
   mouseClickQuickBuys: ReadonlyArray<MouseClickQuickBuy>;
   notUnblockedCamps: ReadonlyArray<NotUnblockedCamp>;
   notPurchasedSticks: ReadonlyArray<NotPurchasedStick>;
+  notPurchasedItemAgainstHero: ReadonlyArray<NotPurchasedItemAgainstHero>;
 }

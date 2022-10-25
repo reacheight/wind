@@ -33,10 +33,10 @@ const AnalysisTable = ({ analysis }: AnalysisTableProps) => {
         <div className={styles.column}>
           {analysis.unusedAbilities.length > 0 && <UnusedAbilitiesAnalysis unusedAbilities={analysis.unusedAbilities} />}
           {analysis.overlappedStuns.length > 0 && <OverlappedStunsAnalysis overlappedStuns={analysis.overlappedStuns} />}
+          {analysis.notPurchasedSticks.length > 0 || analysis.notPurchasedItemAgainstHero.length > 0 && <ItemBuildsAnalysis notPurchasedSticks={analysis.notPurchasedSticks} notPurchasedItemAgainstHero={analysis.notPurchasedItemAgainstHero} />}
           {analysis.smokesOnVision.length > 0 && <SmokesOnVisionAnalysis smokesOnVision={analysis.smokesOnVision} />}
           {(analysis.mouseClickItemDeliveries.length > 0 || analysis.mouseClickQuickBuys.length > 0) && <MouseClicksAnalysis mouseClickItemDeliveries={analysis.mouseClickItemDeliveries} mouseClickQuickBuys={analysis.mouseClickQuickBuys} />}
           {analysis.badFights.length > 0 && <BadMapSplitAnalysis badFights={analysis.badFights} />}
-          {analysis.notPurchasedSticks.length > 0 && <ItemBuildsAnalysis notPurchasedSticks={analysis.notPurchasedSticks} />}
         </div>
       </div>
     </div>

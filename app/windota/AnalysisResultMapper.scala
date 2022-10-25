@@ -39,6 +39,9 @@ object AnalysisResultMapper {
       .filter(c => c.blocks.nonEmpty)
 
     val notPurchasedSticks = analysisResult.notPurchasedSticks.map { case(playerId, stickPlayerId) => NotPurchasedStick(heroId(playerId), heroId(stickPlayerId)) }
+    val notPurchasedItemAgainstHero = analysisResult.notPurchasedItemAgainstHero.map { case (hero, itemName, noItemWinrate, itemWinrate, candidates) =>
+      NotPurchasedItemAgainstHero(hero, itemName, noItemWinrate, itemWinrate, candidates.map(heroId))
+    }
 
     val analysis = Analysis(
       unusedItems,
@@ -60,6 +63,7 @@ object AnalysisResultMapper {
       mouseClickQuickBuys,
       notUnblockedCamps,
       notPurchasedSticks,
+      notPurchasedItemAgainstHero
     )
 
     val radiant = analysisResult.heroId.filter(_._1.id < 10).values.toSeq

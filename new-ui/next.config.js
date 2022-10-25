@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const withRI = require('next-transpile-modules')(["react-icons"]);
+
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -14,4 +16,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = withRI(nextConfig)

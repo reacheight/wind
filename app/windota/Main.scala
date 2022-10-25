@@ -3,6 +3,7 @@ package windota
 import io.circe.syntax.EncoderOps
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
+import windota.constants.Heroes
 import windota.models.ReplayLocation
 import windota.models.Team._
 import windota.models.Lane._
@@ -261,8 +262,13 @@ object Main {
     )
 
     if (result.notPurchasedSticks.nonEmpty) println("\nNot purchased Sticks:")
-    result.notPurchasedSticks.foreach { case (heroId, stickHeroId) =>
-      println(s"${result.heroName(heroId)} didn't purchase Stick VS ${result.heroName(stickHeroId)}")
+    result.notPurchasedSticks.foreach { case (playerId, stickHeroId) =>
+      println(s"${result.heroName(playerId)} didn't purchase Stick VS ${result.heroName(stickHeroId)}")
+    }
+
+    if (result.notPurchasedItemAgainstHero.nonEmpty) println("\nNot purchased items against heroes:")
+    result.notPurchasedItemAgainstHero.foreach { case (heroId, itemName, noItemWinrate, itemWinrate, playerIds) =>
+      println(s"${playerIds.map(id => result.heroName(id)).mkString(", ")} didn't buy $itemName VS ${Heroes.getName(heroId.id)} (no item winrate = $noItemWinrate%, item winrate = $itemWinrate%)")
     }
   }
 

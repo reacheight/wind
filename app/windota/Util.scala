@@ -3,6 +3,7 @@ package windota
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.Entities
 import windota.extensions.EntitiesExtension
+import windota.models.Attribute.{Agility, Attribute, Intelligence, Strength}
 import windota.models.Lane.Lane
 import windota.models.Role.{MidLane, OffLane, Role, SafeLane}
 import windota.models.{GameTimeState, Lane, Location, PlayerId, Team}
@@ -155,5 +156,16 @@ object Util {
     case MidLane => MidLane
     case SafeLane => OffLane
     case OffLane => SafeLane
+  }
+
+  implicit class EntityExtension2(val entity: Entity) extends AnyVal {
+    def primaryAttribute: Attribute = {
+      val attribute = entity.getProperty[Int]("m_iPrimaryAttribute")
+      attribute match {
+        case 0 => Strength
+        case 1 => Agility
+        case 2 => Intelligence
+      }
+    }
   }
 }

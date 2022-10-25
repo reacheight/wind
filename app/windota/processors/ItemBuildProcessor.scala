@@ -4,10 +4,12 @@ import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.runner.Context
 import windota.Util
+import windota.Util.EntityExtension2
 import windota.extensions.FieldPath
 import windota.extensions._
-import windota.models.PlayerId
-import windota.models.Role.Role
+import windota.models.{HeroId, PlayerId}
+import windota.models.Role.{OffLane, Role}
+import windota.models.Attribute._
 
 import scala.collection.mutable.ListBuffer
 
@@ -18,11 +20,18 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends EntitiesProcessor {
   private val stickHeroes: List[String] = List("CDOTA_Unit_Hero_Batrider", "CDOTA_Unit_Hero_Bristleback")
   private val stickItemNames = List("item_magic_stick", "item_magic_wand")
 
+  private val heroItemData: List[(HeroId, String, String, String, Int, Int, Entity => Boolean)] = List(
+    (HeroId(44), "CDOTA_Unit_Hero_PhantomAssassin", "item_monkey_king_bar", "Monkey King Bar", 48, 60, e => Util.isCoreRole(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != OffLane && e.primaryAttribute != Intelligence),
+  )
+
   private val _notPurchasedSticks: ListBuffer[(PlayerId, PlayerId)] = ListBuffer.empty //  (hero, stick hero)
+  private val _notPurchasedItemAgainstHero: ListBuffer[(HeroId, String, Int, Int, Seq[PlayerId])] = ListBuffer.empty
+
   def notPurchasedSticks: Seq[(PlayerId, PlayerId)] = _notPurchasedSticks.toSeq
+  def notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])] = _notPurchasedItemAgainstHero.toSeq
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameStartTimeChanged(ctx: Context, e: Entity, fp: FieldPath): Unit = {
+  def onGameTimeChanged(ctx: Context, e: Entity, fp: FieldPath): Unit = {
     if (STICKS_CHECKED) return
 
     val gameTimeState = Util.getGameTimeState(e)
@@ -50,6 +59,30 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends EntitiesProcessor {
             })
           }
         })
+      })
+    }
+  }
+
+  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
+  def onGameEnded(ctx: Context, gameRules: Entity, fp: FieldPath): Unit = {
+    val gameState = gameRules.getPropertyForFieldPath[Int](fp)
+    if (gameState != 6) return
+
+    val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
+
+    heroItemData.foreach { case (heroId, heroName, itemName, itemRealName, noItemWinrate, itemWinrate, candidatePredicate) =>
+      val heroOpt = Entities.findByName(heroName)
+      heroOpt.foreach(hero => {
+        val heroTeam = Util.getTeam(hero)
+        val candidatesForItem = Entities.filter(e => Util.isHero(e) && Util.getTeam(e) != heroTeam && candidatePredicate(e))
+        val enemiesHasItem = candidatesForItem.exists(e => {
+          val items = itemUsageProcessor.getItems(e)
+          val hasItem = itemUsageProcessor.findItem(items, itemName).isDefined
+          hasItem
+        })
+
+        if (!enemiesHasItem)
+          _notPurchasedItemAgainstHero.addOne((heroId, itemRealName, noItemWinrate, itemWinrate, candidatesForItem.map(e => Util.getPlayerId(e))))
       })
     }
   }

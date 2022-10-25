@@ -147,6 +147,7 @@ object ReplayAnalyzer {
       cursorProcessor.mouseClicksQuickBuy,
       blockedCampsProcessor.notUnblockedCamps,
       itemBuildProcessor.notPurchasedSticks,
+      itemBuildProcessor.notPurchasedItemAgainstHero,
     )
   }
 }
@@ -195,4 +196,5 @@ case class AnalysisResultInternal(
   mouseQuickBuy: Seq[(PlayerId, Int)],
   notUnblockedCamps: Map[Team, Map[Lane, Seq[Ward]]],
   notPurchasedSticks: Seq[(PlayerId, PlayerId)],
+  notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])],
 )

@@ -23,6 +23,7 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends EntitiesProcessor {
   private val heroItemData: List[(HeroId, String, String, String, Int, Int, Entity => Boolean)] = List(
     (HeroId(44), "CDOTA_Unit_Hero_PhantomAssassin", "item_monkey_king_bar", "Monkey King Bar", 48, 60, e => Util.isCoreRole(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != OffLane && e.primaryAttribute != Intelligence),
     (HeroId(10), "CDOTA_Unit_Hero_Morphling", "item_skadi", "Eye of Skadi", 45, 65, e => Util.isCoreRole(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != OffLane && e.primaryAttribute != Intelligence),
+    (HeroId(99), "CDOTA_Unit_Hero_Bristleback", "item_silver_edge", "Silver Edge", 47, 57, e => Util.isCoreRole(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != OffLane && e.primaryAttribute != Intelligence),
   )
 
   private val _notPurchasedSticks: ListBuffer[(PlayerId, PlayerId)] = ListBuffer.empty //  (hero, stick hero)

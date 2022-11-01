@@ -1,21 +1,31 @@
 .main {
+  padding-top: 3rem;
   min-height: 100vh;
 }
 
 .title {
   font-size: 4rem;
+  max-width: 500px;
+}
+
+.description {
+  font-size: 26px;
+  max-width: 700px;
 }
 
 .loginButton {
-  margin: 4rem 0;
+  padding-top: 3rem;
 }
 
 .title,
+.description,
 .loginButton {
   text-align: center;
+  margin: auto auto 1rem;
 }
 
 .example {
+  margin-top: 3rem;
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 5px 40px 13px rgba(140, 152, 164, 0.175) !important;

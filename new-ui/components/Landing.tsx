@@ -6,8 +6,11 @@ const Landing = () =>
   <div>
     <main className={styles.main}>
       <h1 className={styles.title}>
-        Dota 2 post match analysis
+        Analyze your Dota 2 matches
       </h1>
+      <div className={styles.description}>
+        Get insights about what could be done better in your games with our AI replay analysis
+      </div>
       <div className={styles.loginButton}>
         <LoginButton/>
       </div>

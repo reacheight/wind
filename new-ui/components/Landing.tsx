@@ -15,7 +15,7 @@ const Landing = () =>
         <LoginButton/>
       </div>
       <div className={styles.example}>
-        <Image src={"/example.png"} width={1601} height={925} />
+        <Image src={"/example.png"} width={1548} height={1143} />
       </div>
     </main>
   </div>

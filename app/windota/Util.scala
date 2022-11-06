@@ -167,5 +167,12 @@ object Util {
         case 2 => Intelligence
       }
     }
+
+    def team: Team = Util.getTeam(entity)
+    def location: Location = Util.getLocation(entity)
+    def isTower: Boolean = Util.isTower(entity)
+    def isHero: Boolean = Util.isHero(entity)
+    def isAlive: Boolean = Util.isAlive(entity)
+    def playerId: PlayerId = Util.getPlayerId(entity)
   }
 }

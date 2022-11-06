@@ -32,7 +32,7 @@ object AnalysisResultMapper {
     val fightsLostUnderEnemyVision = analysisResult.fightsUnderVision.filter(f => f.fight.winner.exists(winner => f.getTeamWards(Util.getOppositeTeam(winner)).isEmpty))
       .map(f => FightLostUnderEnemyVision(Util.getOppositeTeam(f.fight.winner.get), f.fight.start))
 
-    val unreasonableDives = analysisResult.unreasonableDives.map(fight => UnreasonableDive(Util.getOppositeTeam(fight.winner.get), fight.start))
+    val unreasonableDives = analysisResult.unreasonableTeamDives.map(fight => UnreasonableDive(Util.getOppositeTeam(fight.winner.get), fight.start))
     val mouseClickItemDeliveries = analysisResult.mouseItemDelivery.map { case (playerId, count) => MouseClickItemDelivery(heroId(playerId), count) }
     val mouseClickQuickBuys = analysisResult.mouseQuickBuy.map { case (playerId, count) => MouseClickQuickBuy(heroId(playerId), count) }
     val notUnblockedCamps = analysisResult.notUnblockedCamps.flatMap { case (team, camps) => camps.map { case (lane, wards) => NotUnblockedCamp(team, lane, wards.map(w => w.created))} }.toSeq

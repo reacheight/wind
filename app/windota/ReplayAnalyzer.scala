@@ -138,7 +138,8 @@ object ReplayAnalyzer {
       fightsUnderVision,
       multipleLostFightsUnderOneWard(Radiant),
       multipleLostFightsUnderOneWard(Dire),
-      unreasonableDivesProcessor.unreasonableDives,
+      unreasonableDivesProcessor.unreasonableTeamDives,
+      unreasonableDivesProcessor.unreasonableHeroDives,
       smokeFightProcessor.smokeFights,
       smokeOnVisionButWonFight,
       modifierProcessor.overlappedStuns,
@@ -187,7 +188,8 @@ case class AnalysisResultInternal(
   fightsUnderVision: Seq[FightUnderVision],
   multipleRadiantLostFightsUnderWard: Seq[(Ward, Seq[FightUnderVision])],
   multipleDireLostFightsUnderWard: Seq[(Ward, Seq[FightUnderVision])],
-  unreasonableDives: Seq[Fight],
+  unreasonableTeamDives: Seq[Fight],
+  unreasonableHeroDives: Seq[(GameTimeState, PlayerId, Int)],
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
   overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)], // (stun time, stunned player, attacker)

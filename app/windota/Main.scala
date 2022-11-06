@@ -221,10 +221,15 @@ object Main {
       println(s"${fights.map(_.fight.start).mkString(", ")} - ward at ${ward.location} by ${result.heroName(ward.owner)}")
     }
 
-    if (result.unreasonableDives.nonEmpty) println(s"\nUnreasonable dives:")
-    result.unreasonableDives.foreach(fight =>
+    if (result.unreasonableTeamDives.nonEmpty) println(s"\nUnreasonable team dives:")
+    result.unreasonableTeamDives.foreach(fight =>
       println(s"${Util.getOppositeTeam(fight.winner.get)} dived at ${fight.start}")
     )
+
+    if (result.unreasonableHeroDives.nonEmpty) println(s"\nUnreasonable hero dives:")
+    result.unreasonableHeroDives.foreach { case (time, playerId, towerTier) =>
+      println(s"${result.heroName(playerId)} dived at $time under enemy T$towerTier")
+    }
 
     if (result.overlappedStuns.nonEmpty) println("\nOverlapped stuns:")
     result.overlappedStuns.foreach { case (time, stunnedId, attackerId) =>

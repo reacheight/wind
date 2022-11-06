@@ -5,7 +5,7 @@ import theme from "../theme";
 const Document = () =>
   <Html>
     <Head>
-      <meta name="description" content="Dota 2 post match replay analysis" />
+      <meta name="description" content="Analyze your Dota 2 matches with our AI replay analysis" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
     <body>

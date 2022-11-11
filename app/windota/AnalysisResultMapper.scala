@@ -16,7 +16,7 @@ object AnalysisResultMapper {
       analysisResult.unusedOnAllyWithBlinkAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), ability, time, withBlink = true) })
         .sortBy(e => e.time.gameTime)
 
-    val overlappedStuns = analysisResult.overlappedStuns.map { case (time, target, user) => OverlappedStun(heroId(user), heroId(target), time) }
+    val overlappedStuns = analysisResult.overlappedStuns.map { case (time, target, user, overlappedTime) => OverlappedStun(heroId(user), heroId(target), time, overlappedTime) }
     val courierStates = analysisResult.couriers.map { case (playerId, (isOut, isVersusMK)) => CourierState(heroId(playerId), isOut, isVersusMK) }.toSeq
     val notTankedCreepwave = analysisResult.notTankedCreepwaves.map { case (time, _, lane, players) => NotTankedCreepwave(players.map(heroId), lane, time) }
     val summonGoldFed = analysisResult.goldFedWithSummons.map { case (playerId, gold) => SummonGoldFed(heroId(playerId), gold) }.toSeq

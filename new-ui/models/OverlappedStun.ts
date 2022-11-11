@@ -6,4 +6,5 @@ export interface OverlappedStun {
   user: HeroId;
   target: HeroId;
   time: string;
+  overlappedTime: number;
 }

@@ -7,7 +7,7 @@ case class HeroId(id: Int)
 
 case class UnusedItem(user: HeroId, target: HeroId, item: String, time: GameTimeState, withBlink: Boolean = false)
 case class UnusedAbility(user: HeroId, target: HeroId, ability: String, time: GameTimeState, withBlink: Boolean = false)
-case class OverlappedStun(user: HeroId, target: HeroId, time: GameTimeState)
+case class OverlappedStun(user: HeroId, target: HeroId, time: GameTimeState, overlappedTime: Float)
 case class CourierState(owner: HeroId, isOut: Boolean, isVersusMK: Boolean)
 case class NotTankedCreepwave(heroes: Seq[HeroId], lane: Lane, time: GameTimeState)
 case class SummonGoldFed(owner: HeroId, gold: Int)

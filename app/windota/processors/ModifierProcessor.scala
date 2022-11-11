@@ -18,14 +18,14 @@ import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("ModifierNames")
 class ModifierProcessor extends EntitiesProcessor {
-  def overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId)] = _overlappedStuns.toSeq
+  def overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId, Float)] = _overlappedStuns.toSeq
 
   def smokedHeroes: Map[PlayerId, GameTimeState] = _smoked.toMap
   def scepter: Set[PlayerId] = _scepter.toSet
   def shard: Set[PlayerId] = _shard.toSet
   def stunned: Map[PlayerId, Stun] = _stun.toMap
 
-  private val _overlappedStuns = ListBuffer.empty[(GameTimeState, PlayerId, PlayerId)]
+  private val _overlappedStuns = ListBuffer.empty[(GameTimeState, PlayerId, PlayerId, Float)] // when, stun target, attacker, overlapped time
 
   private val _smoked = mutable.Map.empty[PlayerId, GameTimeState]
   private val _scepter = mutable.Set.empty[PlayerId]
@@ -63,8 +63,9 @@ class ModifierProcessor extends EntitiesProcessor {
               if (newStun.end.gameTime > stun.end.gameTime)
                 _stun(stunnedId) = newStun
 
-              if ((stun.end.gameTime - time.gameTime) >= 1.5 && newStun.duration > 0.5)
-                _overlappedStuns.addOne((time, stunnedId, attackerId))
+              val overlappedTime = stun.end.gameTime - time.gameTime
+              if (overlappedTime >= 1.5 && newStun.duration > 0.5)
+                _overlappedStuns.addOne((time, stunnedId, attackerId, overlappedTime))
           }
         }
 

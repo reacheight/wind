@@ -15,8 +15,9 @@ const OverlappedStunsAnalysis = ({ overlappedStuns }: OverlappedStunsProps) => {
     let time = <span className={styles.time}>{entry.time}</span>
     let userIcon = <MiniIcon heroId={entry.user} />
     let targetIcon = <MiniIcon heroId={entry.target} />
+    let overlap = <span className={styles.name}>{entry.overlappedTime.toFixed(1)}</span>
 
-    return <div className={styles.entry}>{time} {userIcon} stunned {targetIcon} too early</div>
+    return <div className={styles.entry}>{time} {userIcon} stunned {targetIcon} with {overlap} second overlap</div>
   })
 
   return (

@@ -20,12 +20,12 @@ const ItemBuildsAnalysis = ({ notPurchasedSticks, notPurchasedItemAgainstHero }:
     let hero = <MiniIcon heroId={entry.heroId} />
     let stickHero = <MiniIcon heroId={entry.stickHeroId} />
 
-    return <div className={styles.entry}>{hero} didn't purchase <span className={styles.name}>Stick</span> versus {stickHero}</div>
+    return <div className={styles.entry}>{hero} didn't purchase <span className={styles.bold}>Stick</span> versus {stickHero}</div>
   })
 
   const notPurchasedItemAgainstHeroEntries = notPurchasedItemAgainstHero.map(entry => {
     let hero = <MiniIcon heroId={entry.heroId} />
-    let item = <span className={styles.name}>{entry.itemName}</span>
+    let item = <span className={styles.bold}>{entry.itemName}</span>
     let candidates = entry.candidates.map(id => <MiniIcon heroId={id} />)
     let hint = <Tooltip placement='top' bg={"rgba(255, 255, 255)"} label={"Winrate difference with item is +" + (entry.itemWinrate - entry.noItemWinrate) + "%"}>
       <span><BsQuestionSquareFill /></span>

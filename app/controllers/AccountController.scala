@@ -7,6 +7,7 @@ import play.api.Mode.Dev
 import play.api.libs.circe.Circe
 import play.api.libs.openid.OpenIdClient
 import play.api.mvc.{AnyContent, BaseController, ControllerComponents, Request}
+import windota.MongoClient
 import windota.external.stratz.StratzClient
 import windota.utils.SteamIdConverter
 
@@ -30,7 +31,12 @@ class AccountController @Inject()(val openIdClient: OpenIdClient, val controller
   def loginCallback = Action.async { implicit request: Request[AnyContent] =>
     openIdClient
       .verifiedId(request)
-      .map(info => Redirect(mainPageUrl).withSession("id" -> info.id.split('/').last))
+      .map(info => {
+        val steam64Id = info.id.split('/').last
+        val steam3Id = SteamIdConverter.steam64toSteam3(steam64Id.toLong)
+        MongoClient.addUser(steam3Id)
+        Redirect(mainPageUrl).withSession("id" -> steam64Id)
+      })
   }
 
   def getUser = Action { request =>

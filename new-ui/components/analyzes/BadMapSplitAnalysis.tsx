@@ -16,10 +16,10 @@ const BadMapSplitAnalysis = ({ badFights }: BadMapSplitProps) => {
     let time = <span className={styles.time}>{fight.time}</span>
     let seenHeroesIcons = fight.seenHeroes.map(h => <MiniIcon heroId={h} />)
 
-    return <div className={styles.entry}>
+    return <span className={styles.entry}>
       {time}
       {seenHeroesIcons} showed up on enemy vision far from their teammates who got outnumbered in the fight
-    </div>
+    </span>
   })
 
   return (

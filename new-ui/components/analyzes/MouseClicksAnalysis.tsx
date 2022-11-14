@@ -34,10 +34,10 @@ const MouseClicksAnalysis = ({ mouseClickItemDeliveries, mouseClickQuickBuys }: 
 
     let itemDeliveries = itemDeliveriesDict[hero]
     let quickBuyPurchases = quickBuyPurchasesDict[hero]
-    let itemDeliveriesPart = <div><span className={mouseClicksStyles.count}>{itemDeliveries}</span> item deliveries&nbsp;&nbsp;&nbsp;&nbsp; {itemDeliveries < 10 && <>&nbsp;</>}</div>
-    let quickBuyPart = <div><span className={mouseClicksStyles.count}>{quickBuyPurchases}</span> quickbuys</div>
+    let itemDeliveriesPart = <><span className={mouseClicksStyles.count}>{itemDeliveries}</span> item deliveries&nbsp;&nbsp;&nbsp;&nbsp; {itemDeliveries < 10 && <>&nbsp;</>}</>
+    let quickBuyPart = <><span className={mouseClicksStyles.count}>{quickBuyPurchases}</span> quickbuys</>
 
-    return <div className={styles.entry}>{icon} {itemDeliveries > 0 && itemDeliveriesPart} {quickBuyPurchases > 0 && quickBuyPart}</div>
+    return <span className={styles.entry}>{icon} {itemDeliveries > 0 && itemDeliveriesPart} {quickBuyPurchases > 0 && quickBuyPart}</span>
   })
 
   return (

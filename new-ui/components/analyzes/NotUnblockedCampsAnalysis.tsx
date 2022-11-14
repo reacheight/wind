@@ -18,7 +18,7 @@ const NotUnblockedCampsAnalysis = ({ notUnblockedCamps }: NotUnblockedCampsProps
     let team = <span className={entry.team == Team.Dire ? styles.dire : styles.radiant}>{Team[entry.team]}</span>
     let lane = <span className={styles.lane}>{getLaneName(entry.lane)}</span>
 
-    return <div className={styles.entry}>{time} <span>{team} in {lane} lane</span></div>
+    return <div className={styles.entry}>{time} {team} in {lane} lane</div>
   })
 
   return (

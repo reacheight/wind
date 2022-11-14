@@ -19,7 +19,7 @@ const PoorMapAwarenessAnalysis = ({ badSmokeFights }: PoorMapAwarenessProps) => 
 
     return <div className={styles.entry}>
       {smokeTime}
-      <span>{badFightTeamName} saw {smokedTeamName} use smoke, but didn't react and lost fight anyway</span>
+      {badFightTeamName} saw {smokedTeamName} use smoke, but didn't react and lost fight anyway
     </div>
   })
 

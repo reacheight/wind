@@ -174,5 +174,8 @@ object Util {
     def isHero: Boolean = Util.isHero(entity)
     def isAlive: Boolean = Util.isAlive(entity)
     def playerId: PlayerId = Util.getPlayerId(entity)
+    def maxMana: Float = entity.getProperty[Float]("m_flMaxMana")
+    def currentMana: Float = entity.getProperty[Float]("m_flMana")
+    def manaCost: Float = entity.getProperty[Int]("m_iManaCost")
   }
 }

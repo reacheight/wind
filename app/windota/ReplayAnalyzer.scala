@@ -32,7 +32,7 @@ object ReplayAnalyzer {
     val visionProcessor = new VisionProcessor
     val itemUsageProcessor = new ItemUsageProcessor(true)
     val rolesProcessor = new RolesProcessor
-    val abilityUsageProcessor = new AbilityUsageProcessor
+    val abilityUsageProcessor = new AbilityUsageProcessor(true)
     val purchasesProcessor = new PurchasesProcessor
     val midasProcessor = new MidasEfficiencyProcessor
     val scanProcessor = new ScanProcessor
@@ -52,7 +52,7 @@ object ReplayAnalyzer {
         runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
           glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
           purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
-          blockedCampsProcessor, laneProcessor, rolesProcessor
+          blockedCampsProcessor, laneProcessor, rolesProcessor, powerTreadsProcessor
         )
       } catch {
         case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
@@ -111,7 +111,7 @@ object ReplayAnalyzer {
       laneProcessor.playerLane.map { case (id, lane) => PlayerId(id) -> lane },
       rolesProcessor.roles,
       laneProcessor.laneWinner,
-      powerTreadsProcessor.abilityUsageCount.map { case (id, total) => PlayerId(id) -> (total, powerTreadsProcessor.ptOnIntAbilityUsageCount(id)) },
+      powerTreadsProcessor.abilityUsageCount.map { case (id, total) => PlayerId(id) -> (total, powerTreadsProcessor.ptOnIntAbilityUsageCount(id), powerTreadsProcessor.manaLostNoToggling(id)) },
       powerTreadsProcessor.resourceItemUsages.map { case (id, total) => PlayerId(id) -> (total, powerTreadsProcessor.ptOnAgilityResourceItemUsages(id)) },
       powerTreadsProcessor.ptNotOnStrength,
       summonsProcessor.summonFeedGold.map { case (id, gold) => PlayerId(id) -> gold },
@@ -161,7 +161,7 @@ case class AnalysisResultInternal(
   lanes: Map[PlayerId, (Lane, Lane)],
   roles: Map[PlayerId, Role],
   laneOutcomes: Map[Lane, Option[Team]],
-  abilityUsagesWithPT: Map[PlayerId, (Int, Int)],
+  abilityUsagesWithPT: Map[PlayerId, (Int, Int, Float)],
   resourceItemsUsagesWithPT: Map[PlayerId, (Int, Int)],
   ptNotOnStrength: Seq[(GameTimeState, PlayerId)],
   goldFedWithSummons: Map[PlayerId, Int],

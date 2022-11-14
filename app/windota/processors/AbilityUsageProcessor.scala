@@ -12,7 +12,7 @@ import windota.models.{GameTimeState, PlayerId}
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
-class AbilityUsageProcessor extends EntitiesProcessor {
+class AbilityUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
   def unusedAbilities: Seq[(GameTimeState, PlayerId, String)] = _unusedAbilities.toSeq
   def unusedOnAllyAbilities: Seq[(GameTimeState, PlayerId, PlayerId, String)] = _unusedOnAllyAbilities.toSeq
   def unusedOnAllyWithBlinkAbilities: Seq[(GameTimeState, PlayerId, PlayerId, String)] = _unusedOnAllyWithBlinkAbilities.toSeq
@@ -26,7 +26,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
-    if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+    if (!checkUsage || !Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
@@ -67,7 +67,7 @@ class AbilityUsageProcessor extends EntitiesProcessor {
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDiedForAllies(hero: Entity, fp: FieldPath): Unit = {
-    if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+    if (!checkUsage || !Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
@@ -136,19 +136,23 @@ class AbilityUsageProcessor extends EntitiesProcessor {
     }
   }
 
-  private def getAbilities(hero: Entity): Seq[Entity] = {
+  def getAbilities(hero: Entity): Seq[Entity] = {
     (0 to 31)
       .map(i => hero.getProperty[Int](s"m_hAbilities.000$i"))
       .filter(_ != Util.NullValue)
       .flatMap(Entities.get)
   }
 
-  private def findUnusedAbility(hero: Entity, abilities: Seq[Entity], name: String): Option[Entity] = {
+  def findAbility(abilities: Seq[Entity], name: String): Option[Entity] = {
     val stringTable = ctx.getProcessor(classOf[StringTables]).forName("EntityNames")
     abilities
       .find(ability => ability.getDtClass.getDtName == name ||
         stringTable.getNameByIndex(ability.getProperty[Int]("m_pEntity.m_nameStringableIndex")) == name)
       .filter(ability => ability.getProperty[Int]("m_iLevel") > 0)
+  }
+
+  private def findUnusedAbility(hero: Entity, abilities: Seq[Entity], name: String): Option[Entity] = {
+    findAbility(abilities, name)
       .filter(ability => Util.hasEnoughMana(hero, ability))
       .filterNot(Util.isOnCooldown)
   }

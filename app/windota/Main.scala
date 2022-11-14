@@ -81,8 +81,8 @@ object Main {
     }
 
     if (result.abilityUsagesWithPT.nonEmpty) println("\nChanging Power Treads' main attribute to Int before ability usage:")
-    result.abilityUsagesWithPT foreach { case (playerId, (total, onInt)) =>
-      println(s"${result.heroName(playerId)} power treads ability usage: total $total, on Int: $onInt")
+    result.abilityUsagesWithPT foreach { case (playerId, (total, onInt, manaLost)) =>
+      println(s"${result.heroName(playerId)} ability usage with PT while farming: total $total, on Int: $onInt, mana lost: $manaLost (${manaLost / 150} clarities)")
     }
 
     if (result.resourceItemsUsagesWithPT.nonEmpty) println("\nChanging Power Treads' main attribute to Agility before resource refill:")

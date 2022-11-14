@@ -12,6 +12,7 @@ import BadMapSplitAnalysis from "./analyzes/BadMapSplitAnalysis";
 import NotUnblockedCampsAnalysis from "./analyzes/NotUnblockedCampsAnalysis";
 import ItemBuildsAnalysis from "./analyzes/ItemBuildsAnalysis";
 import PoorMapAwarenessAnalysis from "./analyzes/PoorMapAwarenessAnalysis";
+import PowerTreadsAnalysis from "./analyzes/PowerTreadsAnalysis";
 
 interface AnalysisTableProps {
   analysis: Analysis
@@ -25,10 +26,11 @@ const AnalysisTable = ({ analysis }: AnalysisTableProps) => {
         <div className={styles.column}>
           {analysis.unusedItems.length > 0 && <UnusedItemsAnalysis unusedItems={analysis.unusedItems} />}
           {analysis.notTankedCreepwaves.length > 0 && <NotTankedCreepwavesAnalysis notTankedCreepwaves={analysis.notTankedCreepwaves} />}
-          {analysis.observersOnVision.length > 0 && <ObserversOnVisionAnalysis observersOnVision={analysis.observersOnVision} />}
           {analysis.lostFightsUnderTheSameWard.length > 0 && <FightsUnderTheWardAnalysis fightsUnderTheWard={analysis.lostFightsUnderTheSameWard} />}
+          {analysis.badSmokeFights.length > 0 && <PoorMapAwarenessAnalysis badSmokeFights={analysis.badSmokeFights} />}
+          {analysis.powerTreadsAbilityUsages.length > 0 && <PowerTreadsAnalysis powerTreadsAbilityUsages={analysis.powerTreadsAbilityUsages} />}
           {analysis.notUnblockedCamps.length > 0 && <NotUnblockedCampsAnalysis notUnblockedCamps={analysis.notUnblockedCamps} />}
-          {analysis.badSmokeFights.length >0 && <PoorMapAwarenessAnalysis badSmokeFights={analysis.badSmokeFights} />}
+          {analysis.observersOnVision.length > 0 && <ObserversOnVisionAnalysis observersOnVision={analysis.observersOnVision} />}
         </div>
         <div className={styles.column}>
           {analysis.unusedAbilities.length > 0 && <UnusedAbilitiesAnalysis unusedAbilities={analysis.unusedAbilities} />}

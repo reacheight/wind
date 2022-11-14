@@ -26,13 +26,11 @@
 }
 
 .entry {
-  display: flex;
   align-items: center;
 }
 
 .bold {
   font-weight: bold;
-  margin-inline: 5px;
 }
 
 .dire {

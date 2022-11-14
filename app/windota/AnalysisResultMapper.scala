@@ -43,6 +43,8 @@ object AnalysisResultMapper {
       NotPurchasedItemAgainstHero(hero, itemName, noItemWinrate, itemWinrate, candidates.map(heroId))
     }
 
+    val powerTreadsAbilityUsages = analysisResult.abilityUsagesWithPT.map { case (playerId, (total, onInt, manaLost)) => PowerTreadsAbilityUsages(heroId(playerId), total, onInt, manaLost)}.toSeq
+
     val analysis = Analysis(
       unusedItems,
       unusedAbilities,
@@ -63,7 +65,8 @@ object AnalysisResultMapper {
       mouseClickQuickBuys,
       notUnblockedCamps,
       notPurchasedSticks,
-      notPurchasedItemAgainstHero
+      notPurchasedItemAgainstHero,
+      powerTreadsAbilityUsages,
     )
 
     val radiant = analysisResult.heroId.filter(_._1.id < 10).values.toSeq

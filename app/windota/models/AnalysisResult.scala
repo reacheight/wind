@@ -25,6 +25,7 @@ case class MouseClickQuickBuy(heroId: HeroId, count: Int)
 case class NotUnblockedCamp(team: Team, lane: Lane, blocks: Seq[GameTimeState])
 case class NotPurchasedStick(heroId: HeroId, stickHeroId: HeroId)
 case class NotPurchasedItemAgainstHero(heroId: HeroId, itemName: String, noItemWinrate: Int, itemWinrate: Int, candidates: Seq[HeroId])
+case class PowerTreadsAbilityUsages(heroId: HeroId, total: Int, onInt: Int, manaLost: Float)
 
 case class Analysis(
   unusedItems: Seq[UnusedItem],
@@ -47,6 +48,7 @@ case class Analysis(
   notUnblockedCamps: Seq[NotUnblockedCamp],
   notPurchasedSticks: Seq[NotPurchasedStick],
   notPurchasedItemAgainstHero: Seq[NotPurchasedItemAgainstHero],
+  powerTreadsAbilityUsages: Seq[PowerTreadsAbilityUsages],
 )
 
 

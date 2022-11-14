@@ -20,6 +20,7 @@ import { MouseClickQuickBuy } from "./MouseClickQuickBuy";
 import { NotUnblockedCamp } from "./NotUnblockedCamp";
 import {NotPurchasedStick} from "./NotPurchasedStick";
 import NotPurchasedItemAgainstHero from "./NotPurchasedItemAgainstHero";
+import {PowerTreadsAbilityUsages} from "./PowerTreadsAbilityUsages";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -42,4 +43,5 @@ export interface Analysis {
   notUnblockedCamps: ReadonlyArray<NotUnblockedCamp>;
   notPurchasedSticks: ReadonlyArray<NotPurchasedStick>;
   notPurchasedItemAgainstHero: ReadonlyArray<NotPurchasedItemAgainstHero>;
+  powerTreadsAbilityUsages: ReadonlyArray<PowerTreadsAbilityUsages>;
 }

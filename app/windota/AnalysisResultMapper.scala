@@ -43,7 +43,7 @@ object AnalysisResultMapper {
       NotPurchasedItemAgainstHero(hero, itemName, noItemWinrate, itemWinrate, candidates.map(heroId))
     }
 
-    val powerTreadsAbilityUsages = analysisResult.abilityUsagesWithPT.map { case (playerId, (total, onInt, manaLost)) => PowerTreadsAbilityUsages(heroId(playerId), total, onInt, manaLost)}.toSeq
+    val powerTreadsAbilityUsages = analysisResult.abilityUsagesWithPT.filter(_._2._3 > 150).map { case (playerId, (total, onInt, manaLost)) => PowerTreadsAbilityUsages(heroId(playerId), total, onInt, manaLost)}.toSeq
 
     val analysis = Analysis(
       unusedItems,

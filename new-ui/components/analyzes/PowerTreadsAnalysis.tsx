@@ -12,7 +12,7 @@ interface PowerTreadsProps {
 const PowerTreadsAnalysis = ({ powerTreadsAbilityUsages }: PowerTreadsProps) => {
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true })
 
-  const entries = powerTreadsAbilityUsages.filter(entry => entry.manaLost > 150).map(entry => {
+  const entries = powerTreadsAbilityUsages.map(entry => {
     let hero = <MiniIcon heroId={entry.heroId} />
     let total = <span className={styles.bold}>{entry.total}</span>
     let onInt = <span className={styles.bold}>{entry.onInt}</span>

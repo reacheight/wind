@@ -17,8 +17,9 @@ const PowerTreadsAnalysis = ({ powerTreadsAbilityUsages }: PowerTreadsProps) => 
     let total = <span className={styles.bold}>{entry.total}</span>
     let onInt = <span className={styles.bold}>{entry.onInt}</span>
     let manaLost = <span className={styles.bold}>{Math.floor(entry.manaLost)}</span>
+    let claritiesCount = <span className={styles.bold}>{(entry.manaLost / 150).toFixed(1)}</span>
 
-    return <span className={styles.entry}>{hero} used {total} abilities while farming, only {onInt} with PT on Intelligence ({manaLost} mana lost)</span>
+    return <span className={styles.entry}>{hero} used {total} abilities while farming, only {onInt} with PT on Intelligence ({manaLost} mana lost = {claritiesCount} clarities)</span>
   })
 
   return (

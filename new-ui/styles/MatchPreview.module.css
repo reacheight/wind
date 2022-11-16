@@ -1,18 +1,18 @@
 .preview {
+  display: flex;
+  font-weight: 600;
   margin-top: 8px;
   margin-bottom: 8px;
-  border-radius: 6px;
   min-height: 50px;
   width: 100%;
-  display: flex;
   align-items: center;
   padding-inline: 16px;
-  font-weight: 600;
-  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .preview:hover {
-  background-color: rgba(255, 255, 255, 0.14);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .heroWin,

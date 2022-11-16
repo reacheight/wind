@@ -110,7 +110,7 @@ class PowerTreadsProcessor extends EntitiesProcessor {
     val abilities = abilityUsageProcessor.getAbilities(hero)
     val abilityOpt = abilityUsageProcessor.findAbility(abilities, abilityName)
 
-    abilityOpt.foreach(ability => {
+    abilityOpt.filter(_.manaCost > 50).foreach(ability => {
       if (ptStat == 1) {
         _ptOnIntAbilityUsageCount += (userPlayerId -> (_ptOnIntAbilityUsageCount(userPlayerId) + 1))
       } else {

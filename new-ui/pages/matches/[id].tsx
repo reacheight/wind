@@ -25,6 +25,7 @@ const Match = () => {
 
   const startAnalysis = async () => {
     setAnalysisLoading(true)
+    setIsError(false)
 
     let requestResponse = await fetch(Routes.Analysis.start(matchId), { method: 'POST' })
     if (!requestResponse.ok) {
@@ -81,7 +82,7 @@ const Match = () => {
         {(!analysisLoading && !analysis) &&
             <Button fontSize={'18px'} onClick={() => startAnalysis()}>Analyze</Button>
         }
-        {isError && <span>Something's went wrong.</span>}
+        {isError && <div>Something's went wrong.</div>}
       </div>
     </div>
   )

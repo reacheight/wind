@@ -4,6 +4,7 @@ import { useDisclosure } from "@chakra-ui/hooks";
 import { Collapse } from "@chakra-ui/transition";
 import { Stack } from "@chakra-ui/layout";
 import MiniIcon from "../MiniIcon";
+import ItemIcon from "../ItemIcon";
 
 interface PowerTreadsProps {
   powerTreadsAbilityUsages: ReadonlyArray<PowerTreadsAbilityUsages>
@@ -18,8 +19,9 @@ const PowerTreadsAnalysis = ({ powerTreadsAbilityUsages }: PowerTreadsProps) => 
     let onInt = <span className={styles.bold}>{entry.onInt}</span>
     let manaLost = <span className={styles.bold}>{Math.floor(entry.manaLost)}</span>
     let claritiesCount = <span className={styles.bold}>{(entry.manaLost / 150).toFixed(1)}</span>
+    let clarityIcon = <ItemIcon itemId={38} />
 
-    return <span className={styles.entry}>{hero} used {total} abilities while farming, only {onInt} with PT on Intelligence ({manaLost} mana lost = {claritiesCount} clarities)</span>
+    return <span className={styles.entry}>{hero} used {total} abilities while farming, only {onInt} with PT on Intelligence ({manaLost} mana lost = {claritiesCount} {clarityIcon})</span>
   })
 
   return (

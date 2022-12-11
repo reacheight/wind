@@ -7,8 +7,8 @@ object AnalysisResultMapper {
   def toJsonModel(analysisResult: AnalysisResultInternal): AnalysisResult = {
     def heroId(playerId: PlayerId) = analysisResult.heroId(playerId)
 
-    val unusedItems = (analysisResult.unusedItems.map { case (time, id, item) => UnusedItem(heroId(id), heroId(id), item, time) } ++
-      analysisResult.unusedOnAllyItems.map { case (time, target, user, item) => UnusedItem(heroId(user), heroId(target), item, time) })
+    val unusedItems = (analysisResult.unusedItems.map { case (time, id, item) => UnusedItem(heroId(id), heroId(id), ItemId(item), time) } ++
+      analysisResult.unusedOnAllyItems.map { case (time, target, user, item) => UnusedItem(heroId(user), heroId(target), ItemId(item), time) })
         .sortBy(e => e.time.gameTime)
 
     val unusedAbilities = (analysisResult.unusedAbilities.map { case (time, id, ability) => UnusedAbility(heroId(id), heroId(id), ability, time) } ++

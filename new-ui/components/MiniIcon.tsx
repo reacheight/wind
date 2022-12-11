@@ -6,6 +6,7 @@ interface MiniIconProps {
   heroId: number
 }
 
-const MiniIcon = ({ heroId }: MiniIconProps) => <span className={styles.icon}><Image src={Routes.Images.getIcon(heroId)} width={30} height={30} /></span>
+const MiniIcon = ({ heroId }: MiniIconProps) =>
+  <span className={styles.icon}><Image src={Routes.Images.getIcon(heroId)} width={30} height={30} /></span>
 
 export default MiniIcon

@@ -3,7 +3,7 @@ package windota
 import io.circe.syntax.EncoderOps
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
-import windota.constants.Heroes
+import windota.constants.{Heroes, Items}
 import windota.models.ReplayLocation
 import windota.models.Team._
 import windota.models.Lane._
@@ -142,13 +142,13 @@ object Main {
     }
 
     if (result.unusedItems.nonEmpty) println("\nItems not used before death:")
-    result.unusedItems.foreach { case (time, id, name) =>
-      println(s"${time.toString} ${result.heroName(id)} didn't use $name")
+    result.unusedItems.foreach { case (time, id, itemId) =>
+      println(s"${time.toString} ${result.heroName(id)} didn't use ${Items.getTag(itemId)}")
     }
 
     if (result.unusedOnAllyItems.nonEmpty) println("\nItems not used on ally:")
-    result.unusedOnAllyItems foreach { case (time, deadPlayerId, allyId, item) =>
-      println(s"${time.toString} ${result.heroName(allyId)} didn't use $item for ${result.heroName(deadPlayerId)}")
+    result.unusedOnAllyItems foreach { case (time, deadPlayerId, allyId, itemId) =>
+      println(s"${time.toString} ${result.heroName(allyId)} didn't use ${Items.getTag(itemId)} for ${result.heroName(deadPlayerId)}")
     }
 
     if (result.ptNotOnStrength.nonEmpty) println("\nPower Treads not on strength:")

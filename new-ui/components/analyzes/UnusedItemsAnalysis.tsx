@@ -3,6 +3,7 @@ import styles from "../../styles/CommonAnalysis.module.css"
 import { Stack } from "@chakra-ui/layout";
 import MiniIcon from "../MiniIcon";
 import { Collapse, useDisclosure } from "@chakra-ui/react";
+import ItemIcon from "../ItemIcon";
 
 interface UnusedItemsAnalysisProps {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -14,7 +15,7 @@ const UnusedItemsAnalysis = ({ unusedItems }: UnusedItemsAnalysisProps) => {
   const entries = unusedItems
     .map(entry => {
       let time = <span className={styles.time}>{entry.time}</span>
-      let item = <span className={styles.bold}>{entry.item}</span>
+      let item = <ItemIcon itemId={entry.item} />
       let userIcon = <MiniIcon heroId={entry.user} />
       let targetIcon = <MiniIcon heroId={entry.target} />
       let isOnAlly = entry.user != entry.target

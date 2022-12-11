@@ -23,6 +23,8 @@ class Players {
 class Images {
   getHorizontalPortrait = (heroId: number) => `${HOST}/miniportraits/${heroId}`
   getIcon = (heroId: number) => `${HOST}/icons/${heroId}`
+
+  getItemIcon = (itemId: number) => `${HOST}/items/${itemId}`
 }
 
 export default class Routes {

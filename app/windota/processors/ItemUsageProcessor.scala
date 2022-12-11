@@ -13,16 +13,16 @@ import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
 class ItemUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
-  def unusedItems: Seq[(GameTimeState, PlayerId, String)] = _unusedItems.toSeq
-  def unusedOnAllyItems: Seq[(GameTimeState, PlayerId, PlayerId, String)] = _unusedOnAllyItems.toSeq
+  def unusedItems: Seq[(GameTimeState, PlayerId, Int)] = _unusedItems.toSeq
+  def unusedOnAllyItems: Seq[(GameTimeState, PlayerId, PlayerId, Int)] = _unusedOnAllyItems.toSeq
 
   @Insert
   private val ctx: Context = null
 
   private val GeneralItemName = "CDOTA_Item"
 
-  private val _unusedItems: ListBuffer[(GameTimeState, PlayerId, String)] = ListBuffer.empty
-  private val _unusedOnAllyItems: ListBuffer[(GameTimeState, PlayerId, PlayerId, String)] = ListBuffer.empty
+  private val _unusedItems: ListBuffer[(GameTimeState, PlayerId, Int)] = ListBuffer.empty
+  private val _unusedOnAllyItems: ListBuffer[(GameTimeState, PlayerId, PlayerId, Int)] = ListBuffer.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
@@ -35,29 +35,29 @@ class ItemUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
     val items = getItems(hero)
 
-    addUnusedItem("item_black_king_bar", "BKB")
-    addUnusedItem("CDOTA_Item_Essence_Ring", "Essence Ring")
-    addUnusedItem("CDOTA_Item_Mekansm", "Mekansm")
-    addUnusedItem("CDOTA_Item_Guardian_Greaves", "Guardian Greaves")
-    addUnusedItem("CDOTA_Item_GlimmerCape", "Glimmer Cape")
-    addUnusedItem("item_lotus_orb", "Lotus Orb")
-    addUnusedItem("CDOTA_Item_Cyclone", "Eul's Scepter")
-    addUnusedItem("CDOTA_Item_Wind_Waker", "Wind Waker")
-    addUnusedItem("CDOTA_Item_ForceStaff", "Force Staff")
-    addUnusedItem("CDOTA_Item_Hurricane_Pike", "Hurricane Pike")
-    addUnusedItem("CDOTA_Item_MantaStyle", "Manta Style")
-    addUnusedItem("item_satanic", "Satanic")
-    addUnusedItem("CDOTA_Item_Bloodstone", "Bloodstone")
-    addUnusedItem("item_eternal_shroud", "Eternal Shroud")
-    addUnusedItem("item_blade_mail", "Blade Mail")
-    addUnusedItem("CDOTA_Item_Crimson_Guard", "Crimson Guard")
-    addUnusedItem("item_hood_of_defiance", "Hood of Defiance")
-    addUnusedItem("CDOTA_Item_Trickster_Cloak", "Trickster Cloak")
-    addUnusedItem("CDOTA_Item_Pipe", "Pipe of Insight")
+    addUnusedItem("item_black_king_bar", 116)
+    addUnusedItem("CDOTA_Item_Essence_Ring", 359)
+    addUnusedItem("CDOTA_Item_Mekansm", 79)
+    addUnusedItem("CDOTA_Item_Guardian_Greaves", 231)
+    addUnusedItem("CDOTA_Item_GlimmerCape", 254)
+    addUnusedItem("item_lotus_orb", 226)
+    addUnusedItem("CDOTA_Item_Cyclone", 100)
+    addUnusedItem("CDOTA_Item_Wind_Waker", 610)
+    addUnusedItem("CDOTA_Item_ForceStaff", 102)
+    addUnusedItem("CDOTA_Item_Hurricane_Pike", 263)
+    addUnusedItem("CDOTA_Item_MantaStyle", 147)
+    addUnusedItem("item_satanic", 156)
+    addUnusedItem("CDOTA_Item_Bloodstone", 121)
+    addUnusedItem("item_eternal_shroud", 692)
+    addUnusedItem("item_blade_mail", 127)
+    addUnusedItem("CDOTA_Item_Crimson_Guard", 242)
+    addUnusedItem("item_hood_of_defiance", 131)
+    addUnusedItem("CDOTA_Item_Trickster_Cloak", 571)
+    addUnusedItem("CDOTA_Item_Pipe", 90)
 
-    def addUnusedItem(entityName: String, realName: String): Unit =
+    def addUnusedItem(entityName: String, itemId: Int): Unit =
       findUnusedItem(hero, items, entityName)
-        .foreach(_ => _unusedItems.addOne((time, playerId, realName)))
+        .foreach(_ => _unusedItems.addOne((time, playerId, itemId)))
 
 
     val allies = Entities.filter(Util.isHero)
@@ -65,18 +65,18 @@ class ItemUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
       .filter(Util.isAlive)
       .filter(h => h.getHandle != hero.getHandle)
 
-    addUnusedOnAllyItem("CDOTA_Item_Mekansm", "Mekansm", 1200)
-    addUnusedOnAllyItem("CDOTA_Item_Guardian_Greaves", "Guardian Greaves", 1200)
-    addUnusedOnAllyItem("CDOTA_Item_GlimmerCape", "Glimmer Cape", 600)
-    addUnusedOnAllyItem("CDOTA_Item_Holy_Locket", "Holy Locket", 500)
-    addUnusedOnAllyItem("item_lotus_orb", "Lotus Orb", 900)
-    addUnusedOnAllyItem("CDOTA_Item_Wind_Waker", "Wind Waker", 1100)
-    addUnusedOnAllyItem("CDOTA_Item_ForceStaff", "Force Staff", 550)
-    addUnusedOnAllyItem("CDOTA_Item_Hurricane_Pike", "Hurricane Pike", 650)
-    addUnusedOnAllyItem("CDOTA_Item_Crimson_Guard", "Crimson Guard", 1200)
-    addUnusedOnAllyItem("CDOTA_Item_Pipe", "Pipe of Insight", 1200)
+    addUnusedOnAllyItem("CDOTA_Item_Mekansm", 79, 1200)
+    addUnusedOnAllyItem("CDOTA_Item_Guardian_Greaves", 231, 1200)
+    addUnusedOnAllyItem("CDOTA_Item_GlimmerCape", 254, 600)
+    addUnusedOnAllyItem("CDOTA_Item_Holy_Locket", 269, 500)
+    addUnusedOnAllyItem("item_lotus_orb", 226, 900)
+    addUnusedOnAllyItem("CDOTA_Item_Wind_Waker", 610, 1100)
+    addUnusedOnAllyItem("CDOTA_Item_ForceStaff", 102, 550)
+    addUnusedOnAllyItem("CDOTA_Item_Hurricane_Pike", 263, 650)
+    addUnusedOnAllyItem("CDOTA_Item_Crimson_Guard", 242, 1200)
+    addUnusedOnAllyItem("CDOTA_Item_Pipe", 90, 1200)
 
-    def addUnusedOnAllyItem(entityName: String, realName: String, castRange: Int): Unit = {
+    def addUnusedOnAllyItem(entityName: String, itemId: Int, castRange: Int): Unit = {
       allies.foreach(ally => {
         val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
         findUnusedItem(ally, getItems(ally), entityName)
@@ -85,7 +85,7 @@ class ItemUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
             val itemCastRange = castRange + getAdditionalCastRange(ally)
             itemCastRange >= distance
           })
-          .foreach(_ => _unusedOnAllyItems.addOne(time, playerId, allyPlayerId, realName))
+          .foreach(_ => _unusedOnAllyItems.addOne(time, playerId, allyPlayerId, itemId))
       })
     }
   }

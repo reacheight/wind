@@ -81,7 +81,7 @@ class FightProcessor extends EntitiesProcessor {
             ranges.addOne(ArrayBuffer(data))
           }
         }
-        .filter(range => range.last.time.gameTime - range.head.time.gameTime >= 5)
+        .filter(range => range.nonEmpty && range.last.time.gameTime - range.head.time.gameTime >= 5)
 
       val firstDamageRange = damageGroupedByTime.find(range => firstDeathTime.gameTime >= range.head.time.gameTime)
       val start = firstDamageRange match {

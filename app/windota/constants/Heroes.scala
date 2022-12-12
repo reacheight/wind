@@ -5,6 +5,7 @@ import io.circe.parser._
 
 import scala.io.Source
 
+// https://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/?key=APIKEY
 object Heroes {
   private val rawJson = Source.fromResource("heroes.json").mkString
   private val json = parse(rawJson)

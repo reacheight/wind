@@ -1,8 +1,11 @@
 import Image from "next/image";
 import { getUserContext } from "./UserContextWrapper";
 import LoginButton from "./LoginButton";
-import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import Routes from "../api/routs";
+import Link from "next/link";
+import { CiLogout } from "react-icons/all";
+
+import styles from '../styles/Miniprofile.module.css'
 
 const Miniprofile = () => {
   let userContext = getUserContext()
@@ -14,14 +17,10 @@ const Miniprofile = () => {
     return <LoginButton />
 
   return (
-    <Menu autoSelect={false}>
-      <MenuButton>
-        <Image src={userContext.user.avatarUrl} width={50} height={50}></Image>
-      </MenuButton>
-      <MenuList border={'none'} bg={"whiteAlpha.200"}>
-        <a href={Routes.Account.logout}><MenuItem fontWeight={'600'}>Log Out</MenuItem></a>
-      </MenuList>
-    </Menu>
+    <div className={styles.miniprofile}>
+      <Link href={"/"}><a><Image src={userContext.user.avatarUrl} width={50} height={50}></Image></a></Link>
+      <a className={styles.logout} href={Routes.Account.logout}><CiLogout size={'30px'} /></a>
+    </div>
   )
 }
 

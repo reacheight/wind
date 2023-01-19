@@ -1,0 +1,13 @@
+.miniprofile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logout {
+  padding-left: 10px;
+}
+
+.logout:hover {
+  color: rgba(255, 255, 255, 0.75);
+}

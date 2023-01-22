@@ -59,7 +59,7 @@ object Util {
   def isHero(entity: Entity): Boolean =
     entity.getDtClass.getDtName.startsWith("CDOTA_Unit_Hero") &&
       entity.hasProperty(replicatingPropertyName) &&
-      entity.getProperty[Int](replicatingPropertyName) == NullValue
+      (entity.getProperty[Int](replicatingPropertyName) == NullValue || entity.getDtClass.getDtName.contains("Morphling")) // looks like for morph illusions returns true
 
   def isTower(entity: Entity): Boolean =
     entity.getDtClass.getDtName == "CDOTA_BaseNPC_Tower"

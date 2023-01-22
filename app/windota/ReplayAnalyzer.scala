@@ -63,13 +63,14 @@ object ReplayAnalyzer {
     val smokeFightProcessor = new SmokeFightProcessor(fightProcessor.fights)
     val unreasonableDivesProcessor = new UnreasonableDivesProcessor(fightProcessor.fights)
     val itemBuildProcessor = new ItemBuildProcessor(rolesProcessor.roles)
+    val unreactedLaneGanksProcessor = new UnreactedLaneGanksProcessor(fightProcessor.fights, laneProcessor.playerLane.map(pair => (PlayerId(pair._1), pair._2._1)))
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
 
       try {
         runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor,
-          unreasonableDivesProcessor, itemBuildProcessor, new ItemUsageProcessor(false)
+          unreasonableDivesProcessor, itemBuildProcessor, new ItemUsageProcessor(false), unreactedLaneGanksProcessor
         )
       } catch {
         case e =>
@@ -149,6 +150,7 @@ object ReplayAnalyzer {
       blockedCampsProcessor.notUnblockedCamps,
       itemBuildProcessor.notPurchasedSticks,
       itemBuildProcessor.notPurchasedItemAgainstHero,
+      unreactedLaneGanksProcessor.unreactedLaneGanks
     )
   }
 }
@@ -199,4 +201,5 @@ case class AnalysisResultInternal(
   notUnblockedCamps: Map[Team, Map[Lane, Seq[Ward]]],
   notPurchasedSticks: Seq[(PlayerId, PlayerId)],
   notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])],
+  unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)]
 )

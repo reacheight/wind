@@ -5,8 +5,8 @@ import windota.models.Team.{Dire, Radiant, Team}
 case class Fight(start: GameTimeState, end: GameTimeState, location: Location, participants: Set[PlayerId], dead: Set[PlayerId]) {
   val radiantParticipants: Set[PlayerId] = participants.filter(_.id <= 8)
   val direParticipants: Set[PlayerId] = participants.filter(_.id > 8)
-  val deadRadiant = dead.filter(_.id <= 8)
-  val deadDire = dead.filter(_.id <= 8)
+  val deadRadiant = dead.filter(_.id < 10)
+  val deadDire = dead.filter(_.id >= 10)
   val isOutnumbered: Boolean = radiantParticipants.size != direParticipants.size
 
   val winner: Option[Team] = {

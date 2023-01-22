@@ -95,11 +95,11 @@ object Util {
   }
 
   def getLane(l: Location): Lane = l match {
-    case Location(x, y) if y > 10000 && x < 4500 => Lane.Top
+    case Location(x, y) if y > 10000 && x < 6000 => Lane.Top
+    case Location(x, y) if y > 10000 && y < 14000 && x > 6000 && x < 12000 => Lane.DireJungle
     case Location(x, y) if y > 6000 && y < 10000 && x > 6000 && x < 10000 => Lane.Middle
-    case Location(x, y) if y > 2000 && y < 6000 && x > 4000 && x < 11800 => Lane.RadiantJungle
-    case Location(x, y) if y > 10000 && y < 14000 && x > 4500 && x < 12000 => Lane.DireJungle
-    case Location(x, y) if y < 6000 && x > 11800 => Lane.Bot
+    case Location(x, y) if y > 2000 && y < 6000 && x > 4000 && x < 10000 => Lane.RadiantJungle
+    case Location(x, y) if y < 6000 && x > 10000 => Lane.Bot
     case _ => Lane.Roaming
   }
 

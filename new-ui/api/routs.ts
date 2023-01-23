@@ -25,6 +25,8 @@ class Images {
   getIcon = (heroId: number) => `${HOST}/icons/${heroId}`
 
   getItemIcon = (itemId: number) => `${HOST}/items/${itemId}`
+
+  getAbilityIcon = (abilityId: number) => `${HOST}/images/abilities/${abilityId}`
 }
 
 export default class Routes {

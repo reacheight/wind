@@ -8,7 +8,7 @@ import reactivemongo.api.bson._
 import windota.models.AnalysisStatus._
 import windota.models.Lane.Lane
 import windota.models.Team.Team
-import windota.models.{AnalysisStatus, Fight, GameTimeState, HeroId, ItemId, PlayerId}
+import windota.models.{AbilityId, AnalysisStatus, Fight, GameTimeState, HeroId, ItemId, PlayerId}
 
 import scala.util.{Failure, Success}
 
@@ -20,6 +20,7 @@ package object converters {
   implicit val fromPlayerId: Encoder[PlayerId] = (id: PlayerId) => id.id.asJson
   implicit val fromHeroId: Encoder[HeroId] = (id: HeroId) => id.id.asJson
   implicit val fromItemId: Encoder[ItemId] = (id: ItemId) => id.id.asJson
+  implicit val fromAbilityId: Encoder[AbilityId] = (id: AbilityId) => id.id.asJson
   implicit val fromTeam: Encoder[Team] = (team: Team) => team.id.asJson
   implicit val fromLane: Encoder[Lane] = (lane: Lane) => lane.id.asJson
 

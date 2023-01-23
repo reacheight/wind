@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc.{BaseController, ControllerComponents}
-import windota.constants.{Heroes, Items}
+import windota.constants.{Abilities, Heroes, Items}
 
 import java.nio.file.{Files, Paths}
 import javax.inject.Inject
@@ -24,6 +24,13 @@ class IconsController @Inject()(val controllerComponents: ControllerComponents) 
   def getItemIcon(itemId: Int) = Action {
     val itemTag = Items.getTag(itemId)
     val imagePath = Paths.get(s"conf/items/$itemTag.png")
+    val image = Files.readAllBytes(imagePath)
+    Ok(image).as("image/png")
+  }
+
+  def getAbilityIcon(abilityId: Int) = Action {
+    val abilityName = Abilities.getName(abilityId)
+    val imagePath = Paths.get(s"conf/abilities/$abilityName.png")
     val image = Files.readAllBytes(imagePath)
     Ok(image).as("image/png")
   }

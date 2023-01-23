@@ -1,25 +1,27 @@
-POST    /analysis/:matchId          controllers.AnalysisController.postAnalysis(matchId: Long)
+POST        /analysis/:matchId                  controllers.AnalysisController.postAnalysis(matchId: Long)
 
-GET     /analysis/:matchId/state    controllers.AnalysisController.getAnalysisState(matchId: Long)
+GET         /analysis/:matchId/state            controllers.AnalysisController.getAnalysisState(matchId: Long)
 
-GET     /analysis/count             controllers.AnalysisController.getAnalysisCount
+GET         /analysis/count                     controllers.AnalysisController.getAnalysisCount
 
-GET     /analysis/:matchId          controllers.AnalysisController.getAnalysis(matchId: Long)
+GET         /analysis/:matchId                  controllers.AnalysisController.getAnalysis(matchId: Long)
 
-GET     /icons/:heroId              controllers.IconsController.getIcon(heroId: Int)
+GET         /icons/:heroId                      controllers.IconsController.getIcon(heroId: Int)
 
-GET     /miniportraits/:heroId         controllers.IconsController.getMiniPortrait(heroId: Int)
+GET         /miniportraits/:heroId              controllers.IconsController.getMiniPortrait(heroId: Int)
 
-GET     /items/:itemId              controllers.IconsController.getItemIcon(itemId: Int)
+GET         /items/:itemId                      controllers.IconsController.getItemIcon(itemId: Int)
 
-GET     /login                      controllers.AccountController.login
+GET         /images/abilities/:abilityId        controllers.IconsController.getAbilityIcon(abilityId: Int)
 
-GET     /logout                      controllers.AccountController.logout
+GET         /login                              controllers.AccountController.login
 
-GET     /login-callback             controllers.AccountController.loginCallback
+GET         /logout                             controllers.AccountController.logout
 
-GET     /user                       controllers.AccountController.getUser
+GET         /login-callback                     controllers.AccountController.loginCallback
 
-GET     /matches/:matchId           controllers.MatchesController.getMatch(matchId: Long)
+GET         /user                               controllers.AccountController.getUser
 
-GET     /players/:accountId/matches  controllers.MatchesController.getMatches(accountId: Long)
+GET         /matches/:matchId                   controllers.MatchesController.getMatch(matchId: Long)
+
+GET         /players/:accountId/matches         controllers.MatchesController.getMatches(accountId: Long)

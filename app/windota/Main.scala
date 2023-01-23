@@ -3,7 +3,7 @@ package windota
 import io.circe.syntax.EncoderOps
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
-import windota.constants.{Heroes, Items}
+import windota.constants.{Abilities, Heroes, Items}
 import windota.models.ReplayLocation
 import windota.models.Team._
 import windota.models.Lane._
@@ -127,18 +127,18 @@ object Main {
     )
 
     if (result.unusedAbilities.nonEmpty) println("\nAbilities not used before death:")
-    result.unusedAbilities.foreach { case (time, id, name) =>
-      println(s"${time.toString} ${result.heroName(id)} didn't use $name")
+    result.unusedAbilities.foreach { case (time, id, abilityId) =>
+      println(s"${time.toString} ${result.heroName(id)} didn't use ${Abilities.getName(abilityId)}")
     }
 
     if (result.unusedOnAllyAbilities.nonEmpty) println("\nAbilities not used on ally:")
-    result.unusedOnAllyAbilities foreach { case (time, deadPlayerId, allyId, name) =>
-      println(s"${time.toString} ${result.heroName(allyId)} didn't use $name for ${result.heroName(deadPlayerId)}")
+    result.unusedOnAllyAbilities foreach { case (time, deadPlayerId, allyId, abilityId) =>
+      println(s"${time.toString} ${result.heroName(allyId)} didn't use ${Abilities.getName(abilityId)} for ${result.heroName(deadPlayerId)}")
     }
 
     if (result.unusedOnAllyWithBlinkAbilities.nonEmpty) println("\nAbilities not used with Blink Dagger on ally:")
-    result.unusedOnAllyWithBlinkAbilities foreach { case (time, deadPlayerId, allyId, name) =>
-      println(s"${time.toString} ${result.heroName(allyId)} didn't use Blink Dagger + $name for ${result.heroName(deadPlayerId)}")
+    result.unusedOnAllyWithBlinkAbilities foreach { case (time, deadPlayerId, allyId, abilityId) =>
+      println(s"${time.toString} ${result.heroName(allyId)} didn't use Blink Dagger + ${Abilities.getName(abilityId)} for ${result.heroName(deadPlayerId)}")
     }
 
     if (result.unusedItems.nonEmpty) println("\nItems not used before death:")

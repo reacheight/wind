@@ -11,9 +11,9 @@ object AnalysisResultMapper {
       analysisResult.unusedOnAllyItems.map { case (time, target, user, item) => UnusedItem(heroId(user), heroId(target), ItemId(item), time) })
         .sortBy(e => e.time.gameTime)
 
-    val unusedAbilities = (analysisResult.unusedAbilities.map { case (time, id, ability) => UnusedAbility(heroId(id), heroId(id), ability, time) } ++
-      analysisResult.unusedOnAllyAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), ability, time) } ++
-      analysisResult.unusedOnAllyWithBlinkAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), ability, time, withBlink = true) })
+    val unusedAbilities = (analysisResult.unusedAbilities.map { case (time, id, ability) => UnusedAbility(heroId(id), heroId(id), AbilityId(ability), time) } ++
+      analysisResult.unusedOnAllyAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), AbilityId(ability), time) } ++
+      analysisResult.unusedOnAllyWithBlinkAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), AbilityId(ability), time, withBlink = true) })
         .sortBy(e => e.time.gameTime)
 
     val overlappedStuns = analysisResult.overlappedStuns.map { case (time, target, user, overlappedTime) => OverlappedStun(heroId(user), heroId(target), time, overlappedTime) }

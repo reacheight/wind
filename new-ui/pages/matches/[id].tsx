@@ -13,7 +13,7 @@ import {Spinner} from "@chakra-ui/spinner";
 const Match = () => {
   let userContext = getUserContext()
   if (userContext.loading || userContext.user === null)
-    return null
+    return <div>Log in to view the match.</div>
 
   const router = useRouter()
   const { id: matchId } = router.query

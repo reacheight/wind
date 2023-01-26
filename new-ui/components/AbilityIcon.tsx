@@ -1,6 +1,6 @@
 import Routes from "../api/routs";
 import Image from "next/image";
-import styles from "../styles/ItemIcon.module.css"
+import styles from "../styles/AbilityIcon.module.css"
 
 interface AbilityIconProps {
   abilityId: number

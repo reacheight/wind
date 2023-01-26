@@ -232,8 +232,8 @@ object Main {
     }
 
     if (result.overlappedStuns.nonEmpty) println("\nOverlapped stuns:")
-    result.overlappedStuns.foreach { case (time, stunnedId, attackerId, overlappedTime) =>
-      println(s"${result.heroName(attackerId)} stunned ${result.heroName(stunnedId)} too early at $time (overlapped time is $overlappedTime s.)")
+    result.overlappedStuns.foreach { case (time, stunnedId, attackerId, overlappedTime, abilityId) =>
+      println(s"${result.heroName(attackerId)} stunned ${result.heroName(stunnedId)} too early at $time (ability is ${Abilities.getName(abilityId)}, overlapped time is $overlappedTime s.)")
     }
 
     if (result.mouseItemDelivery.nonEmpty) println("\nMouse click item delivery:")

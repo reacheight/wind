@@ -10,6 +10,7 @@ import skadistats.clarity.wire.common.proto.DotaModifiers
 import skadistats.clarity.wire.common.proto.DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import windota.Util
+import windota.constants.Abilities
 import windota.extensions._
 import windota.models._
 
@@ -18,14 +19,14 @@ import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("ModifierNames")
 class ModifierProcessor extends EntitiesProcessor {
-  def overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId, Float)] = _overlappedStuns.toSeq
+  def overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId, Float, Int)] = _overlappedStuns.toSeq
 
   def smokedHeroes: Map[PlayerId, GameTimeState] = _smoked.toMap
   def scepter: Set[PlayerId] = _scepter.toSet
   def shard: Set[PlayerId] = _shard.toSet
   def stunned: Map[PlayerId, Stun] = _stun.toMap
 
-  private val _overlappedStuns = ListBuffer.empty[(GameTimeState, PlayerId, PlayerId, Float)] // when, stun target, attacker, overlapped time
+  private val _overlappedStuns = ListBuffer.empty[(GameTimeState, PlayerId, PlayerId, Float, Int)] // when, stun target, attacker, overlapped time, ability id
 
   private val _smoked = mutable.Map.empty[PlayerId, GameTimeState]
   private val _scepter = mutable.Set.empty[PlayerId]
@@ -44,7 +45,7 @@ class ModifierProcessor extends EntitiesProcessor {
   }
 
   @OnCombatLogEntry
-  def onCombatLog(cle: CombatLogEntry): Unit = {
+  def onCombatLog(ctx: Context, cle: CombatLogEntry): Unit = {
     if (isStun(cle) && !cle.isTargetIllusion) {
       for {
         time <- Util.getGameTimeState(Entities)
@@ -64,8 +65,13 @@ class ModifierProcessor extends EntitiesProcessor {
                 _stun(stunnedId) = newStun
 
               val overlappedTime = stun.end.gameTime - time.gameTime
-              if (overlappedTime >= 1.5 && newStun.duration > 0.5)
-                _overlappedStuns.addOne((time, stunnedId, attackerId, overlappedTime))
+              if (overlappedTime >= 1.5 && newStun.duration > 0.5) {
+                val stringTable = ctx.getProcessor(classOf[StringTables]).forName("CombatLogNames")
+                val abilityName = stringTable.getNameByIndex(cle.getModifierAbility)
+                val abilityId = Abilities.getId(abilityName)
+
+                _overlappedStuns.addOne((time, stunnedId, attackerId, overlappedTime, abilityId))
+              }
           }
         }
 

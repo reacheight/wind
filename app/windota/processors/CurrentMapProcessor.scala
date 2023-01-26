@@ -1,10 +1,16 @@
 package windota.processors
 
-import skadistats.clarity.model.Entity
+import skadistats.clarity.model.{Entity, StringTable}
 import skadistats.clarity.processor.entities.OnEntityCreated
+import skadistats.clarity.processor.stringtables.OnStringTableCreated
 import windota.Util
 
 class CurrentMapProcessor {
+  @OnStringTableCreated
+  def onStringTableCreated(ind: Int, table: StringTable) = {
+    println(table.getName)
+  }
+
   @OnEntityCreated(classPattern = "CDOTA_Unit_Fountain")
   def onFountainCreated(fountain: Entity) =
     println(s"${Util.getTeam(fountain)} fountain: ${Util.getLocation(fountain)}")
@@ -37,7 +43,7 @@ class CurrentMapProcessor {
   def onNeutralSpawnerCreated(neutralSpawner: Entity) =
     println(s"Type ${neutralSpawner.getProperty[Int]("m_Type")} Neutral spawner: ${Util.getLocation(neutralSpawner)}")
 
-  @OnEntityCreated(classPattern = "CDOTA_NPC_Observer_Ward_TrueSight")
-  def onSentryPlaced(sentry: Entity) =
-    println(s"Sentry: ${Util.getLocation(sentry)}")
+//  @OnEntityCreated(classPattern = "CDOTA_NPC_Observer_Ward_TrueSight")
+//  def onSentryPlaced(sentry: Entity) =
+//    println(s"Sentry: ${Util.getLocation(sentry)}")
 }

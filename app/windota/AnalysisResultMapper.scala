@@ -45,6 +45,8 @@ object AnalysisResultMapper {
 
     val powerTreadsAbilityUsages = analysisResult.abilityUsagesWithPT.filter(_._2._3 > 150).map { case (playerId, (total, onInt, manaLost)) => PowerTreadsAbilityUsages(heroId(playerId), total, onInt, manaLost)}.toSeq
 
+    val unreactedLaneGanks = analysisResult.unreactedLaneGanks.map { case(target, gankers, time, lane) => UnreactedLaneGank(heroId(target), gankers.map(heroId), time, lane) }
+
     val analysis = Analysis(
       unusedItems,
       unusedAbilities,
@@ -67,6 +69,7 @@ object AnalysisResultMapper {
       notPurchasedSticks,
       notPurchasedItemAgainstHero,
       powerTreadsAbilityUsages,
+      unreactedLaneGanks,
     )
 
     val radiant = analysisResult.heroId.filter(_._1.id < 10).values.toSeq

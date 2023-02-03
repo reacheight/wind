@@ -47,6 +47,8 @@ class CreepwaveProcessor extends EntitiesProcessor {
     })
   }
 
+// todo: Добавить проверку на то, что герой был рядом с тавером, а врагов не было рядом
+
 //  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
 //  def onGameEnded(gameRules: Entity, fp: FieldPath): Unit = {
 //    val gameState = gameRules.getPropertyForFieldPath[Int](fp)

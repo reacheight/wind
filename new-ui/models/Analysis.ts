@@ -13,7 +13,6 @@ import { UnusedAbility } from './UnusedAbility';
 import { UnusedItem } from './UnusedItem';
 import { WorthlessGlyph } from './WorthlessGlyph';
 import { LostFightsUnderTheSameWard } from "./LostFightsUnderTheSameWard";
-import { UnreasonableDive } from "./UnreasonableDive";
 import { FightLostUnderEnemyVision } from "./FightLostUnderEnemyVision";
 import { MouseClickItemDelivery } from "./MouseClickItemDelivery";
 import { MouseClickQuickBuy } from "./MouseClickQuickBuy";
@@ -21,6 +20,8 @@ import { NotUnblockedCamp } from "./NotUnblockedCamp";
 import {NotPurchasedStick} from "./NotPurchasedStick";
 import NotPurchasedItemAgainstHero from "./NotPurchasedItemAgainstHero";
 import {PowerTreadsAbilityUsages} from "./PowerTreadsAbilityUsages";
+import { UnreasonableHeroDive } from "./UnreasonableHeroDive";
+import { UnreasonableTeamDive } from "./UnreasonableTeamDive";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -37,11 +38,12 @@ export interface Analysis {
   worthlessGlyphs: ReadonlyArray<WorthlessGlyph>;
   lostFightsUnderTheSameWard: ReadonlyArray<LostFightsUnderTheSameWard>;
   fightsLostUnderEnemyVision: ReadonlyArray<FightLostUnderEnemyVision>;
-  unreasonableDives: ReadonlyArray<UnreasonableDive>;
+  unreasonableTeamDives: ReadonlyArray<UnreasonableTeamDive>;
   mouseClickItemDeliveries: ReadonlyArray<MouseClickItemDelivery>;
   mouseClickQuickBuys: ReadonlyArray<MouseClickQuickBuy>;
   notUnblockedCamps: ReadonlyArray<NotUnblockedCamp>;
   notPurchasedSticks: ReadonlyArray<NotPurchasedStick>;
   notPurchasedItemAgainstHero: ReadonlyArray<NotPurchasedItemAgainstHero>;
   powerTreadsAbilityUsages: ReadonlyArray<PowerTreadsAbilityUsages>;
+  unreasonableHeroDives: ReadonlyArray<UnreasonableHeroDive>;
 }

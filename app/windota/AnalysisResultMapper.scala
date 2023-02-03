@@ -32,11 +32,13 @@ object AnalysisResultMapper {
     val fightsLostUnderEnemyVision = analysisResult.fightsUnderVision.filter(f => f.fight.winner.exists(winner => f.getTeamWards(Util.getOppositeTeam(winner)).isEmpty))
       .map(f => FightLostUnderEnemyVision(Util.getOppositeTeam(f.fight.winner.get), f.fight.start))
 
-    val unreasonableDives = analysisResult.unreasonableTeamDives.map(fight => UnreasonableDive(Util.getOppositeTeam(fight.winner.get), fight.start))
+    val unreasonableTeamDives = analysisResult.unreasonableTeamDives.map(fight => UnreasonableTeamDive(Util.getOppositeTeam(fight.winner.get), fight.start))
     val mouseClickItemDeliveries = analysisResult.mouseItemDelivery.map { case (playerId, count) => MouseClickItemDelivery(heroId(playerId), count) }
     val mouseClickQuickBuys = analysisResult.mouseQuickBuy.map { case (playerId, count) => MouseClickQuickBuy(heroId(playerId), count) }
     val notUnblockedCamps = analysisResult.notUnblockedCamps.flatMap { case (team, camps) => camps.map { case (lane, wards) => NotUnblockedCamp(team, lane, wards.map(w => w.created))} }.toSeq
       .filter(c => c.blocks.nonEmpty)
+
+    val unreasonableHeroDives = analysisResult.unreasonableHeroDives.map { case (time, player, towerTier) => UnreasonableHeroDive(heroId(player), time, towerTier) }
 
     val notPurchasedSticks = analysisResult.notPurchasedSticks.map { case(playerId, stickPlayerId) => NotPurchasedStick(heroId(playerId), heroId(stickPlayerId)) }
     val notPurchasedItemAgainstHero = analysisResult.notPurchasedItemAgainstHero.map { case (hero, itemName, noItemWinrate, itemWinrate, candidates) =>
@@ -51,25 +53,27 @@ object AnalysisResultMapper {
       unusedItems,
       unusedAbilities,
       overlappedStuns,
+      midasEfficiency,
       courierStates,
       notTankedCreepwave,
-      summonGoldFed,
-      midasEfficiency,
+      notUnblockedCamps,
       observersOnVision,
       smokesOnVision,
       badFights,
       badSmokeFights,
-      worthlessGlyphs,
       lostFightsUnderTheSameWard,
+      unreasonableTeamDives,
+      unreactedLaneGanks,
+      unreasonableHeroDives,
+      summonGoldFed,
+      worthlessGlyphs,
       fightsLostUnderEnemyVision,
-      unreasonableDives,
       mouseClickItemDeliveries,
       mouseClickQuickBuys,
-      notUnblockedCamps,
       notPurchasedSticks,
       notPurchasedItemAgainstHero,
       powerTreadsAbilityUsages,
-      unreactedLaneGanks,
+      unreasonableHeroDives,
     )
 
     val radiant = analysisResult.heroId.filter(_._1.id < 10).values.toSeq

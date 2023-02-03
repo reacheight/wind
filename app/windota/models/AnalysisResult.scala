@@ -21,7 +21,8 @@ case class BadFightJsonModel(outnumberedTeam: Team, seenHeroes: Seq[HeroId], tim
 case class BadSmokeFight(smokedTeam: Team, smokeTime: GameTimeState, fightTime: GameTimeState)
 case class LostFightsUnderTheSameWard(loser: Team, fights: Seq[GameTimeState], wardOwner: HeroId)
 case class FightLostUnderEnemyVision(loser: Team, time: GameTimeState)
-case class UnreasonableDive(loser: Team, time: GameTimeState)
+case class UnreasonableTeamDive(loser: Team, time: GameTimeState)
+case class UnreasonableHeroDive(hero: HeroId, time: GameTimeState, towerTier: Int)
 case class WorthlessGlyph(team: Team, times: Seq[GameTimeState])
 case class MouseClickItemDelivery(heroId: HeroId, count: Int)
 case class MouseClickQuickBuy(heroId: HeroId, count: Int)
@@ -32,28 +33,31 @@ case class PowerTreadsAbilityUsages(heroId: HeroId, total: Int, onInt: Int, mana
 case class UnreactedLaneGank(target: HeroId, gankers: Seq[HeroId], time: GameTimeState, lane: Lane)
 
 case class Analysis(
-  unusedItems: Seq[UnusedItem],
-  unusedAbilities: Seq[UnusedAbility],
-  overlappedStuns: Seq[OverlappedStun],
-  couriersState: Seq[CourierState],
-  notTankedCreepwaves: Seq[NotTankedCreepwave],
+  unusedItems: Seq[UnusedItem],                        // HUD
+  unusedAbilities: Seq[UnusedAbility],                 // HUD
+  overlappedStuns: Seq[OverlappedStun],                // HUD
+  midasEfficiency: Seq[MidasEfficiency],               // HUD
+  couriersState: Seq[CourierState],                             // lane
+  notTankedCreepwaves: Seq[NotTankedCreepwave],                 // lane
+  notUnblockedCamps: Seq[NotUnblockedCamp],                     // lane
+  observersOnVision: Seq[ObserverOnVision],              // vision (надо сделать типа ты видел что враги поставили вард, но не сломал)
+  smokesOnVision: Seq[SmokeOnVision],                    // vision (не чекнул перед проюзом смока вражеский вижен)
+  badFights: Seq[BadFightJsonModel],                                   // bad fights panel
+  badSmokeFights: Seq[BadSmokeFight],                                  // bad fights panel
+  lostFightsUnderTheSameWard: Seq[LostFightsUnderTheSameWard],         // bad fights panel
+  unreasonableTeamDives: Seq[UnreasonableTeamDive],                    // bad fights panel
+  unreactedLaneGanks: Seq[UnreactedLaneGank],                          // ? bad fights panel ?
+  unreasonableHeroDive: Seq[UnreasonableHeroDive],
   summonGoldFed: Seq[SummonGoldFed],
-  midasEfficiency: Seq[MidasEfficiency],
-  observersOnVision: Seq[ObserverOnVision],
-  smokesOnVision: Seq[SmokeOnVision],
-  badFights: Seq[BadFightJsonModel],
-  badSmokeFights: Seq[BadSmokeFight],
   worthlessGlyphs: Seq[WorthlessGlyph],
-  lostFightsUnderTheSameWard: Seq[LostFightsUnderTheSameWard],
   fightsLostUnderEnemyVision: Seq[FightLostUnderEnemyVision],
-  unreasonableDives: Seq[UnreasonableDive],
-  mouseClickItemDeliveries: Seq[MouseClickItemDelivery],
-  mouseClickQuickBuys: Seq[MouseClickQuickBuy],
-  notUnblockedCamps: Seq[NotUnblockedCamp],
-  notPurchasedSticks: Seq[NotPurchasedStick],
-  notPurchasedItemAgainstHero: Seq[NotPurchasedItemAgainstHero],
-  powerTreadsAbilityUsages: Seq[PowerTreadsAbilityUsages],
-  unreactedLaneGanks: Seq[UnreactedLaneGank],
+  mouseClickItemDeliveries: Seq[MouseClickItemDelivery],         // mouse instead of hotkeys
+  mouseClickQuickBuys: Seq[MouseClickQuickBuy],                  // mouse instead of hotkeys
+  notPurchasedSticks: Seq[NotPurchasedStick],                          // build
+  notPurchasedItemAgainstHero: Seq[NotPurchasedItemAgainstHero],       // build
+  powerTreadsAbilityUsages: Seq[PowerTreadsAbilityUsages],                   // HUD
+  unreasonableHeroDives: Seq[UnreasonableHeroDive],                         // self category
+  // todo: пачки крипов, которые умерли об тавер         //self category
 )
 
 

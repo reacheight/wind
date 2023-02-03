@@ -42,11 +42,12 @@ class UnreasonableDivesProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+    if (!hero.getDtClass.getDtName.contains("Furion")) return
 
     val heroTeam = hero.team
     val enemyTower = Entities.find(e => e.isTower && e.isAlive && e.team != heroTeam && Util.getDistance(e, hero) <= TOWER_ATTACK_RANGE)
     enemyTower.foreach { tower =>
-      val alliesAround = Entities.filter(e => e.isHero && e.team == heroTeam && Util.getDistance(e, hero) <= 2000)
+      val alliesAround = Entities.filter(e => e.isHero && e.playerId != hero.playerId && e.team == heroTeam && Util.getDistance(e, hero) <= 2000)
       if (alliesAround.isEmpty)
         _unreasonableHeroDives.addOne((Util.getGameTimeState(Entities).get, hero.playerId, tower.getProperty[Int]("m_iCurrentLevel")))
     }

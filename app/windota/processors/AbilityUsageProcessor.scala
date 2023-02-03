@@ -59,6 +59,7 @@ class AbilityUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
     addUnusedAbility("CDOTA_Ability_ArcWarden_MagneticField", 5678)
     addUnusedAbility("alchemist_chemical_rage", 5369)
     addUnusedAbility("CDOTA_Ability_Zuus_Heavenly_Jump", 641)
+    addUnusedAbility("sniper_concussive_grenade", 694)
 
     def addUnusedAbility(entityName: String, abilityId: Int): Unit =
       findUnusedAbility(hero, abilities, entityName)

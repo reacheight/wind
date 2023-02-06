@@ -1,14 +1,16 @@
 import { useRouter } from "next/router";
 import { getUserContext } from "../../components/UserContextWrapper";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Routes from "../../api/routs";
 import Match from "../../models/Match";
 import styles from "../../styles/Match.module.css"
 import Matchup from "../../components/Matchup";
 import { AnalysisResult } from "../../models/AnalysisResult";
 import AnalysisTable from "../../components/AnalysisTable";
-import {Button} from "@chakra-ui/button";
-import {Spinner} from "@chakra-ui/spinner";
+import { Button } from "@chakra-ui/button";
+import { Spinner } from "@chakra-ui/spinner";
+import { Team } from "../../models/Team";
+import AnalysisComponent from "../../components/AnalysisComponent";
 
 const Match = () => {
   let userContext = getUserContext()
@@ -16,7 +18,7 @@ const Match = () => {
     return <div>Log in to view the match.</div>
 
   const router = useRouter()
-  const { id: matchId } = router.query
+  const { id: matchId, fromHeroView } = router.query
 
   const [match, setMatch] = useState<Match>(null)
   const [analysis, setAnalysis] = useState<AnalysisResult>(null)
@@ -73,10 +75,16 @@ const Match = () => {
   if (match == null)
     return null
 
+  const userPlayer = match.players.find(p => p.steamAccountId === userContext.user.id)
+  const userHeroId = userPlayer.heroId
+
+  const targetHero = fromHeroView === undefined ? userHeroId : +fromHeroView
+  const targetTeam = match.players.find(p => p.heroId === targetHero).isRadiant ? Team.Radiant : Team.Dire
+
   return (
     <div>
       <Matchup match={match}/>
-      {analysis && <AnalysisTable analysis={analysis.analysis}/>}
+      {analysis && <AnalysisComponent targetHero={targetHero} targetTeam={targetTeam} analysis={analysis.analysis} />}
       <div className={styles.centered}>
         {analysisLoading && <Spinner />}
         {(!analysisLoading && !analysis) &&

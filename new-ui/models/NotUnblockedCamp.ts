@@ -6,6 +6,6 @@ export interface  CampBlock {
 }
 
 export interface NotUnblockedCamp {
-  responsible: HeroId;
+  heroId: HeroId;
   blocks: ReadonlyArray<CampBlock>;
 }

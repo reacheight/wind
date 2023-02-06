@@ -7,6 +7,7 @@ import { NotUnblockedCamp } from "../../../models/NotUnblockedCamp";
 import Courier from "./Courier";
 
 import styles from './Laning.module.css'
+import NotUnblockedCamps from "./NotUnblockedCamps";
 
 interface LaningProps {
   target: HeroId
@@ -15,21 +16,17 @@ interface LaningProps {
   notUnblockedCamps: ReadonlyArray<NotUnblockedCamp>
 }
 
-const Laning = ({ target, couriersState, notTankedCreepwaves }: LaningProps) => {
+const Laning = ({ target, couriersState, notTankedCreepwaves, notUnblockedCamps }: LaningProps) => {
   const heroCourierState = couriersState.find(state => state.owner === target)
   const showCourierState = !heroCourierState.isOut && !heroCourierState.isVersusMK
 
-  const courierMessage = <span>Courier was not moved out of fountain.</span>
-
-  const heroCreepwaves = notTankedCreepwaves.filter(entry => entry.heroes.includes(target))
-  const showCreepwaves = heroCreepwaves.length > 0
-  const creepwavesTimings = heroCreepwaves.map(entry => entry.time).join(", ")
-  const creepwavesMessage = <span>Didn't tank {heroCreepwaves.length} creepwaves at {creepwavesTimings}.</span>
+  const targetNotUnblockedCamp = notUnblockedCamps.find(entry => entry.heroId === target)
 
   return (
     <div>
       <span className={styles.title}>Laning</span>
       {showCourierState && <Courier />}
+      {targetNotUnblockedCamp && <NotUnblockedCamps notUnblockedCamp={targetNotUnblockedCamp} />}
     </div>
   )
 }

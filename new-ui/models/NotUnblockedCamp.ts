@@ -1,8 +1,11 @@
-import { Lane } from './Lane';
-import { Team } from './Team';
+import { HeroId } from "./HeroId";
+
+export interface  CampBlock {
+  blocker: HeroId;
+  time: string;
+}
 
 export interface NotUnblockedCamp {
-  team: Team;
-  lane: Lane;
-  blocks: ReadonlyArray<string>;
+  responsible: HeroId;
+  blocks: ReadonlyArray<CampBlock>;
 }

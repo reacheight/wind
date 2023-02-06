@@ -35,7 +35,7 @@ object AnalysisResultMapper {
     val unreasonableTeamDives = analysisResult.unreasonableTeamDives.map(fight => UnreasonableTeamDive(Util.getOppositeTeam(fight.winner.get), fight.start))
     val mouseClickItemDeliveries = analysisResult.mouseItemDelivery.map { case (playerId, count) => MouseClickItemDelivery(heroId(playerId), count) }
     val mouseClickQuickBuys = analysisResult.mouseQuickBuy.map { case (playerId, count) => MouseClickQuickBuy(heroId(playerId), count) }
-    val notUnblockedCamps = analysisResult.notUnblockedCamps.map { case (responsible, wards) => NotUnblockedCamp(heroId(responsible), wards.map(w => heroId(w.owner) -> w.created)) }.toSeq
+    val notUnblockedCamps = analysisResult.notUnblockedCamps.map { case (responsible, wards) => NotUnblockedCamp(heroId(responsible), wards.map(w => CampBlock(heroId(w.owner), w.created))) }.toSeq
       .filter(c => c.blocks.nonEmpty)
 
     val unreasonableHeroDives = analysisResult.unreasonableHeroDives.map { case (time, player, towerTier) => UnreasonableHeroDive(heroId(player), time, towerTier) }

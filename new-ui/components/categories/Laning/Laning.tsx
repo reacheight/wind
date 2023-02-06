@@ -36,7 +36,7 @@ const Laning = ({ target, couriersState, notTankedCreepwaves, notUnblockedCamps 
       <div className={styles.grid}>
         {showCourierState && <Courier />}
         {targetNotUnblockedCamp && <NotUnblockedCamps notUnblockedCamp={targetNotUnblockedCamp} />}
-        {notTankedCreepwaves && <NotTankedCreepwaves notTankedCreepwaves={targetNotTankedCreepwaves} />}
+        {showNotTankedCreepwaves && <NotTankedCreepwaves notTankedCreepwaves={targetNotTankedCreepwaves} />}
       </div>
     </div>
   )

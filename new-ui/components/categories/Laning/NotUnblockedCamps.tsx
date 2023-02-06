@@ -12,7 +12,7 @@ const NotUnblockedCamps = ({ notUnblockedCamp }: NotUnblockedCampsProps) => {
   const blocksText = notUnblockedCamp.blocks.map(block => {
     let blockerIcon = <MiniIcon heroId={block.blocker} />
     return <span>at <span className={styles.time}>{block.time}</span> by {blockerIcon}</span>
-  })
+  }).reduce((prev, curr) => [prev, ', ', curr])
 
   return (
     <div className={styles.container}>

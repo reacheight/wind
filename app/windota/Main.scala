@@ -247,25 +247,10 @@ object Main {
       println(s"${result.heroName(playerId)} $count times")
     }
 
-    if (result.notUnblockedCamps(Radiant)(Bot).nonEmpty) println("\nNot unblocked radiant bot easy camp:")
-    result.notUnblockedCamps(Radiant)(Bot).foreach(ward =>
-      println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
-    )
-
-    if (result.notUnblockedCamps(Radiant)(Top).nonEmpty) println("\nNot unblocked radiant top hard camp:")
-    result.notUnblockedCamps(Radiant)(Top).foreach(ward =>
-      println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
-    )
-
-    if (result.notUnblockedCamps(Dire)(Bot).nonEmpty) println("\nNot unblocked dire bottom hard camp:")
-    result.notUnblockedCamps(Dire)(Bot).foreach(ward =>
-      println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
-    )
-
-    if (result.notUnblockedCamps(Dire)(Top).nonEmpty) println("\nNot unblocked dire top easy camp:")
-    result.notUnblockedCamps(Dire)(Top).foreach(ward =>
-      println(s"at ${ward.created} by ${result.heroName(ward.owner)}")
-    )
+    if (result.notUnblockedCamps.nonEmpty) println("\nNot unblocked camps:")
+    result.notUnblockedCamps.foreach { case (playerId, wards) =>
+      println(s"${result.heroName(playerId)} didn't unblock lane neutral camps, blocked ${wards.map(w => s"at ${w.created} by ${result.heroName(w.owner)}").mkString(", ")}")
+    }
 
     if (result.notPurchasedSticks.nonEmpty) println("\nNot purchased Sticks:")
     result.notPurchasedSticks.foreach { case (playerId, stickHeroId) =>

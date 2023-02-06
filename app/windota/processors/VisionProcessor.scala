@@ -50,6 +50,8 @@ class VisionProcessor {
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_NPC_Observer_Ward.*", propertyPattern = "m_lifeState")
   private def onWardEnded(ctx: Context, ward: Entity, fp: FieldPath): Unit = {
+    if (ward.getPropertyForFieldPath[Int](fp) != 1) return
+
     val time = Util.getGameTimeState(ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy"))
     val isSentry = ward.getDtClass.getDtName.contains("TrueSight")
     if (isSentry) {

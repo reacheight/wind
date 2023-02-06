@@ -40,7 +40,6 @@ object ReplayAnalyzer {
     val fightProcessor = new FightProcessor
     val modifierProcessor = new ModifierProcessor
     val cursorProcessor = new CursorProcessor
-    val blockedCampsProcessor = new BlockedCampsProcessor
 
     logger.info(s"Starting analysis for ${game.getMatchId}.")
     val start = System.currentTimeMillis()
@@ -52,7 +51,7 @@ object ReplayAnalyzer {
         runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
           glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
           purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
-          blockedCampsProcessor, laneProcessor, rolesProcessor, powerTreadsProcessor
+          laneProcessor, rolesProcessor, powerTreadsProcessor
         )
       } catch {
         case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
@@ -79,6 +78,9 @@ object ReplayAnalyzer {
     }
 
     logger.info(s"Analysis finished for ${game.getMatchId}. Time: ${System.currentTimeMillis() - start} ms.")
+
+    val notUnblockedCamps = new BlockedCampsProcessor()
+      .getUnblockedCamps(visionProcessor.observers.appendedAll(visionProcessor.sentries), rolesProcessor.roles)
 
     val smokeOnVisionButWonFight = visionProcessor.smokeUsedOnVision.flatMap { case (smokeTime, playerId) =>
       val smokeTeam = if (Util.RadiantPlayerIds.contains(playerId)) Radiant else Dire
@@ -147,7 +149,7 @@ object ReplayAnalyzer {
       visionProcessor.observerPlacedOnVision.filter(obs => obs.isFullDuration),
       cursorProcessor.mouseClicksItemDelivery,
       cursorProcessor.mouseClicksQuickBuy,
-      blockedCampsProcessor.notUnblockedCamps,
+      notUnblockedCamps,
       itemBuildProcessor.notPurchasedSticks,
       itemBuildProcessor.notPurchasedItemAgainstHero,
       unreactedLaneGanksProcessor.unreactedLaneGanks
@@ -198,7 +200,7 @@ case class AnalysisResultInternal(
   obsesPlacedOnVisionButNotDestroyed: Seq[Ward],
   mouseItemDelivery: Seq[(PlayerId, Int)],
   mouseQuickBuy: Seq[(PlayerId, Int)],
-  notUnblockedCamps: Map[Team, Map[Lane, Seq[Ward]]],
+  notUnblockedCamps: Map[PlayerId, Seq[Ward]],
   notPurchasedSticks: Seq[(PlayerId, PlayerId)],
   notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])],
   unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)]

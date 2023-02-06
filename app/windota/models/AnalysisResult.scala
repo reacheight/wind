@@ -26,7 +26,7 @@ case class UnreasonableHeroDive(hero: HeroId, time: GameTimeState, towerTier: In
 case class WorthlessGlyph(team: Team, times: Seq[GameTimeState])
 case class MouseClickItemDelivery(heroId: HeroId, count: Int)
 case class MouseClickQuickBuy(heroId: HeroId, count: Int)
-case class NotUnblockedCamp(team: Team, lane: Lane, blocks: Seq[GameTimeState])
+case class NotUnblockedCamp(heroId: HeroId, blocks: Seq[(HeroId, GameTimeState)])
 case class NotPurchasedStick(heroId: HeroId, stickHeroId: HeroId)
 case class NotPurchasedItemAgainstHero(heroId: HeroId, itemName: String, noItemWinrate: Int, itemWinrate: Int, candidates: Seq[HeroId])
 case class PowerTreadsAbilityUsages(heroId: HeroId, total: Int, onInt: Int, manaLost: Float)

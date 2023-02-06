@@ -22,6 +22,10 @@ const Laning = ({ target, couriersState, notTankedCreepwaves, notUnblockedCamps 
 
   const targetNotUnblockedCamp = notUnblockedCamps.find(entry => entry.heroId === target)
 
+  const showCategory = showCourierState || targetNotUnblockedCamp
+  if (!showCategory)
+    return null
+
   return (
     <div>
       <span className={styles.title}>Laning</span>

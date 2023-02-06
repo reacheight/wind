@@ -8,6 +8,7 @@ import Courier from "./Courier";
 
 import styles from './Laning.module.css'
 import NotUnblockedCamps from "./NotUnblockedCamps";
+import NotTankedCreepwaves from "./NotTankedCreepwaves";
 
 interface LaningProps {
   target: HeroId
@@ -22,7 +23,10 @@ const Laning = ({ target, couriersState, notTankedCreepwaves, notUnblockedCamps 
 
   const targetNotUnblockedCamp = notUnblockedCamps.find(entry => entry.heroId === target)
 
-  const showCategory = showCourierState || targetNotUnblockedCamp
+  const targetNotTankedCreepwaves = notTankedCreepwaves.filter(entry => entry.heroes.includes(target))
+  const showNotTankedCreepwaves = targetNotTankedCreepwaves.length !== 0
+
+  const showCategory = showCourierState || targetNotUnblockedCamp || showNotTankedCreepwaves
   if (!showCategory)
     return null
 
@@ -32,6 +36,7 @@ const Laning = ({ target, couriersState, notTankedCreepwaves, notUnblockedCamps 
       <div className={styles.grid}>
         {showCourierState && <Courier />}
         {targetNotUnblockedCamp && <NotUnblockedCamps notUnblockedCamp={targetNotUnblockedCamp} />}
+        {notTankedCreepwaves && <NotTankedCreepwaves notTankedCreepwaves={targetNotTankedCreepwaves} />}
       </div>
     </div>
   )

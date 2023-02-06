@@ -13,6 +13,7 @@ class RolesProcessor {
   def roles: Map[PlayerId, Role] = _roles
   private var _roles: Map[PlayerId, Role] = Map.empty
 
+  // todo: check networth at the end of the lane stage
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_nGameState")
   def onGameEnded(ctx: Context, gameRules: Entity, fp: FieldPath): Unit = {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)

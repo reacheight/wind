@@ -14,6 +14,8 @@ GET         /items/:itemId                      controllers.IconsController.getI
 
 GET         /images/abilities/:abilityId        controllers.IconsController.getAbilityIcon(abilityId: Int)
 
+GET         /images/portraits/:heroId        controllers.IconsController.getPortrait(heroId: Int)
+
 GET         /login                              controllers.AccountController.login
 
 GET         /logout                             controllers.AccountController.logout

@@ -15,6 +15,7 @@ object Abilities {
 
   def getName(id: Int): String = idToName(id)
   def getId(name: String): Int = nameToId(name)
+  def isAbilityName(name: String): Boolean = nameToId.contains(name)
 }
 
 case class AbilityJson(id: Int, name: String, isGrantedByShard: Boolean, isGrantedByScepter: Boolean, isUltimate: Boolean)

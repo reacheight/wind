@@ -232,9 +232,10 @@ object Main {
     }
 
     if (result.overlappedStuns.nonEmpty) println("\nOverlapped stuns:")
-    result.overlappedStuns.foreach { case (time, stunnedId, attackerId, overlappedTime, abilityId) =>
-      println(s"${result.heroName(attackerId)} stunned ${result.heroName(stunnedId)} too early at $time (ability is ${Abilities.getName(abilityId)}, overlapped time is $overlappedTime s.)")
-    }
+    result.overlappedStuns.foreach(stun =>
+      println(s"${result.heroName(stun.attacker)} stunned ${result.heroName(stun.target)} too early at ${stun.time} with " +
+        s"${if (stun.isAbility) s"ability ${Abilities.getName(stun.stunSourceId)}" else s"item ${Items.getName(stun.stunSourceId)}"} (overlap time is ${stun.overlapTime} s.)")
+    )
 
     if (result.mouseItemDelivery.nonEmpty) println("\nMouse click item delivery:")
     result.mouseItemDelivery.foreach { case (playerId, count) =>

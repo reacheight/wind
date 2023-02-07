@@ -10,7 +10,7 @@ import skadistats.clarity.wire.common.proto.DotaModifiers
 import skadistats.clarity.wire.common.proto.DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
 import windota.Util
-import windota.constants.Abilities
+import windota.constants.{Abilities, Items}
 import windota.extensions._
 import windota.models._
 
@@ -19,14 +19,14 @@ import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("ModifierNames")
 class ModifierProcessor extends EntitiesProcessor {
-  def overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId, Float, Int)] = _overlappedStuns.toSeq
+  def overlappedStuns = _overlappedStuns.toSeq
 
   def smokedHeroes: Map[PlayerId, GameTimeState] = _smoked.toMap
   def scepter: Set[PlayerId] = _scepter.toSet
   def shard: Set[PlayerId] = _shard.toSet
   def stunned: Map[PlayerId, Stun] = _stun.toMap
 
-  private val _overlappedStuns = ListBuffer.empty[(GameTimeState, PlayerId, PlayerId, Float, Int)] // when, stun target, attacker, overlapped time, ability id
+  private val _overlappedStuns = ListBuffer.empty[internal.OverlappedStun] // when, stun target, attacker, overlapped time, ability/item id, isAbility
 
   private val _smoked = mutable.Map.empty[PlayerId, GameTimeState]
   private val _scepter = mutable.Set.empty[PlayerId]
@@ -67,10 +67,12 @@ class ModifierProcessor extends EntitiesProcessor {
               val overlappedTime = stun.end.gameTime - time.gameTime
               if (overlappedTime >= 1.5 && newStun.duration > 0.5) {
                 val stringTable = ctx.getProcessor(classOf[StringTables]).forName("CombatLogNames")
-                val abilityName = stringTable.getNameByIndex(cle.getModifierAbility)
-                val abilityId = Abilities.getId(abilityName)
+                val stunSourceName = stringTable.getNameByIndex(cle.getModifierAbility)
+                val isAbility = Abilities.isAbilityName(stunSourceName)
+                val stunSourceId = if (isAbility) Abilities.getId(stunSourceName) else Items.getId(stunSourceName)
 
-                _overlappedStuns.addOne((time, stunnedId, attackerId, overlappedTime, abilityId))
+                val overlappedStun = internal.OverlappedStun(time, stunnedId, attackerId, overlappedTime, stunSourceId, isAbility)
+                _overlappedStuns.addOne(overlappedStun)
               }
           }
         }

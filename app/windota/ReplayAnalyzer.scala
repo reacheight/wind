@@ -194,7 +194,7 @@ case class AnalysisResultInternal(
   unreasonableHeroDives: Seq[(GameTimeState, PlayerId, Int)],
   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
-  overlappedStuns: Seq[(GameTimeState, PlayerId, PlayerId, Float, Int)], // (stun time, stunned player, attacker, overlapped time, ability id)
+  overlappedStuns: Seq[internal.OverlappedStun], // (stun time, stunned player, attacker, overlapped time, ability id)
   obsesPlacedOnVisionButNotDestroyed: Seq[Ward],
   mouseItemDelivery: Seq[(PlayerId, Int)],
   mouseQuickBuy: Seq[(PlayerId, Int)],

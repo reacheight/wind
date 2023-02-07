@@ -1,7 +1,7 @@
 package windota
 
 import windota.models.Team._
-import windota.models._
+import windota.models.{internal, _}
 
 object AnalysisResultMapper {
   def toJsonModel(analysisResult: AnalysisResultInternal): AnalysisResult = {
@@ -16,7 +16,7 @@ object AnalysisResultMapper {
       analysisResult.unusedOnAllyWithBlinkAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), AbilityId(ability), time, withBlink = true) })
         .sortBy(e => e.time.gameTime)
 
-    val overlappedStuns = analysisResult.overlappedStuns.map { case (time, target, user, overlappedTime, abilityId) => OverlappedStun(heroId(user), heroId(target), time, overlappedTime, AbilityId(abilityId)) }
+    val overlappedStuns = analysisResult.overlappedStuns.map(stun => OverlappedStun(heroId(stun.attacker), heroId(stun.target), stun.time, stun.overlapTime, stun.stunSourceId, stun.isAbility))
     val courierStates = analysisResult.couriers.map { case (playerId, (isOut, isVersusMK)) => CourierState(heroId(playerId), isOut, isVersusMK) }.toSeq
     val notTankedCreepwave = analysisResult.notTankedCreepwaves.map { case (time, _, lane, players) => NotTankedCreepwave(players.map(heroId), lane, time) }
     val summonGoldFed = analysisResult.goldFedWithSummons.map { case (playerId, gold) => SummonGoldFed(heroId(playerId), gold) }.toSeq

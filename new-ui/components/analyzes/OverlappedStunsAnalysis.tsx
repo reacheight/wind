@@ -4,6 +4,7 @@ import MiniIcon from "../MiniIcon";
 import { Stack } from "@chakra-ui/layout";
 import { Collapse, useDisclosure } from "@chakra-ui/react";
 import AbilityIcon from "../AbilityIcon";
+import ItemIcon from "../ItemIcon";
 
 interface OverlappedStunsProps {
   overlappedStuns: ReadonlyArray<OverlappedStun>
@@ -17,9 +18,9 @@ const OverlappedStunsAnalysis = ({ overlappedStuns }: OverlappedStunsProps) => {
     let userIcon = <MiniIcon heroId={entry.user} />
     let targetIcon = <MiniIcon heroId={entry.target} />
     let overlap = <span className={styles.bold}>{entry.overlappedTime.toFixed(1)}</span>
-    let ability = <AbilityIcon abilityId={entry.abilityId} />
+    let sourceIcon = entry.isAbility ? <AbilityIcon abilityId={entry.sourceId} /> : <ItemIcon itemId={entry.sourceId} />
 
-    return <div className={styles.entry}>{time} {userIcon} stunned {targetIcon} with {ability} with {overlap} second overlap</div>
+    return <div className={styles.entry}>{time} {userIcon} stunned {targetIcon} with {sourceIcon} with {overlap} second overlap</div>
   })
 
   return (

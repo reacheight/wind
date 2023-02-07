@@ -8,5 +8,6 @@ export interface OverlappedStun {
   target: HeroId;
   time: string;
   overlappedTime: number;
-  abilityId: AbilityId;
+  sourceId: number;
+  isAbility: boolean;
 }

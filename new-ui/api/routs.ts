@@ -22,6 +22,9 @@ class Players {
 
 class Images {
   getHorizontalPortrait = (heroId: number) => `${HOST}/miniportraits/${heroId}`
+
+  getVerticalPortrait = (heroId: number) => `${HOST}/images/portraits/${heroId}`
+
   getIcon = (heroId: number) => `${HOST}/icons/${heroId}`
 
   getItemIcon = (itemId: number) => `${HOST}/items/${itemId}`

@@ -1,0 +1,11 @@
+.title {
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.portrait {
+  border-radius: 10px;
+  overflow: hidden;
+  width: 142px;
+  height: 188px;
+}

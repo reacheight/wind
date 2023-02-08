@@ -49,6 +49,9 @@ object AnalysisResultMapper {
 
     val unreactedLaneGanks = analysisResult.unreactedLaneGanks.map { case(target, gankers, time, lane) => UnreactedLaneGank(heroId(target), gankers.map(heroId), time, lane) }
 
+    val scepterOwners = analysisResult.scepterOwners.map(heroId)
+    val shardOwners = analysisResult.shardOwners.map(heroId)
+
     val analysis = Analysis(
       unusedItems,
       unusedAbilities,
@@ -74,6 +77,8 @@ object AnalysisResultMapper {
       notPurchasedItemAgainstHero,
       powerTreadsAbilityUsages,
       unreasonableHeroDives,
+      scepterOwners,
+      shardOwners
     )
 
     val radiant = analysisResult.heroId.filter(_._1.id < 10).values.toSeq

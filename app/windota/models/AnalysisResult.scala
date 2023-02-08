@@ -59,6 +59,9 @@ case class Analysis(
   powerTreadsAbilityUsages: Seq[PowerTreadsAbilityUsages],                   // HUD
   unreasonableHeroDives: Seq[UnreasonableHeroDive],                         // self category
   // todo: пачки крипов, которые умерли об тавер         //self category
+
+  scepterOwners: Seq[HeroId],
+  shardOwners: Seq[HeroId],
 )
 
 

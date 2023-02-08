@@ -22,6 +22,7 @@ import NotPurchasedItemAgainstHero from "./NotPurchasedItemAgainstHero";
 import {PowerTreadsAbilityUsages} from "./PowerTreadsAbilityUsages";
 import { UnreasonableHeroDive } from "./UnreasonableHeroDive";
 import { UnreasonableTeamDive } from "./UnreasonableTeamDive";
+import { HeroId } from "./HeroId";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -46,4 +47,6 @@ export interface Analysis {
   notPurchasedItemAgainstHero: ReadonlyArray<NotPurchasedItemAgainstHero>;
   powerTreadsAbilityUsages: ReadonlyArray<PowerTreadsAbilityUsages>;
   unreasonableHeroDives: ReadonlyArray<UnreasonableHeroDive>;
+  scepterOwners: ReadonlyArray<HeroId>;
+  shardOwners: ReadonlyArray<HeroId>;
 }

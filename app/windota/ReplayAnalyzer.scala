@@ -152,7 +152,9 @@ object ReplayAnalyzer {
       notUnblockedCamps,
       itemBuildProcessor.notPurchasedSticks,
       itemBuildProcessor.notPurchasedItemAgainstHero,
-      unreactedLaneGanksProcessor.unreactedLaneGanks
+      unreactedLaneGanksProcessor.unreactedLaneGanks,
+      modifierProcessor.scepter.toSeq,
+      modifierProcessor.shard.toSeq
     )
   }
 }
@@ -203,5 +205,7 @@ case class AnalysisResultInternal(
   notUnblockedCamps: Map[PlayerId, Seq[Ward]],
   notPurchasedSticks: Seq[(PlayerId, PlayerId)],
   notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])],
-  unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)]
+  unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)],
+  scepterOwners: Seq[PlayerId],
+  shardOwners: Seq[PlayerId],
 )

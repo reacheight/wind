@@ -32,10 +32,15 @@ class Images {
   getAbilityIcon = (abilityId: number) => `${HOST}/images/abilities/${abilityId}`
 }
 
+class Constants {
+  getHeroAbilities = (heroId: number) => `${HOST}/constants/hero/${heroId}/abilities`
+}
+
 export default class Routes {
   public static Account = new Account()
   public static Analysis = new Analysis()
   public static Matches = new Matches()
   public static Players = new Players()
   public static Images = new Images()
+  public static Constants = new Constants()
 }

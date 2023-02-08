@@ -17,7 +17,16 @@ const AnalysisComponent = ( { targetHero, targetTeam, analysis }: AnalysisCompon
   return (
     <div className={styles.analysis}>
       <Laning target={targetHero} couriersState={analysis.couriersState} notTankedCreepwaves={analysis.notTankedCreepwaves} notUnblockedCamps={analysis.notUnblockedCamps} />
-      <Hud target={targetHero} unusedItems={analysis.unusedItems} unusedAbilities={analysis.unusedAbilities} overlappedStuns={analysis.overlappedStuns} midasEfficiency={analysis.midasEfficiency} powerTreadsAbilityUsages={analysis.powerTreadsAbilityUsages} />
+      <Hud
+        target={targetHero}
+        unusedItems={analysis.unusedItems}
+        unusedAbilities={analysis.unusedAbilities}
+        overlappedStuns={analysis.overlappedStuns}
+        midasEfficiency={analysis.midasEfficiency}
+        powerTreadsAbilityUsages={analysis.powerTreadsAbilityUsages}
+        shardOwners={analysis.shardOwners}
+        scepterOwners={analysis.scepterOwners}
+      />
     </div>
   )
 }

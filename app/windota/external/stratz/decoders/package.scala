@@ -63,4 +63,26 @@ package object decoders {
       PlayerItems(heroId, isRadiant, networth, List(item0, item1, item2, item3, item4, item5).flatten)
     }
   }
+
+  implicit val decodeHeroAbilitiesResult: Decoder[GetHeroAbilitiesResult] = (c: HCursor) => {
+    for {
+      abilities <- c.downField("data").downField("constants").downField("hero").downField("abilities").as[List[HeroAbility]]
+    } yield {
+      GetHeroAbilitiesResult(abilities)
+    }
+  }
+
+  implicit val decodeHeroAbility: Decoder[HeroAbility] = (c: HCursor) => {
+    val ability = c.downField("ability")
+    val stat = ability.downField("stat")
+    for {
+      id <- c.downField("abilityId").as[Int]
+      slot <- c.downField("slot").as[Int]
+      displayName <- ability.downField("language").downField("displayName").as[String]
+      isGrantedByShard <- stat.downField("isGrantedByShard").as[Boolean]
+      isGrantedByScepter <- stat.downField("isGrantedByScepter").as[Boolean]
+    } yield {
+      HeroAbility(id, slot, displayName, isGrantedByShard, isGrantedByScepter)
+    }
+  }
 }

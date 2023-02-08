@@ -94,6 +94,20 @@ object StratzClient {
     response.body.toTry.map(r => r.matches)
   }
 
+  def getHeroAbilities(heroId: Int): Try[List[HeroAbility]] = {
+    logger.info(s"Getting hero abilities for hero $heroId.")
+
+    val query = s"{ constants { hero(id: $heroId) { abilities { slot, abilityId, ability { language { displayName }, stat { isGrantedByShard, isGrantedByScepter } } } } } }"
+
+    val response = basicRequest
+      .get(buildQueryUrl(query))
+      .header("Authorization", authorizationToken)
+      .response(asJson[GetHeroAbilitiesResult])
+      .send(backend)
+
+    response.body.toTry.map(r => r.abilities)
+  }
+
   private def buildQueryUrl(query: String) = uri"https://api.stratz.com/graphql?query=$query"
   private val authorizationToken = s"Bearer ${sys.env("STRATZ_TOKEN")}"
 }

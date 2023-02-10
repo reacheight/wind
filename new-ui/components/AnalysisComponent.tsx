@@ -5,6 +5,7 @@ import Laning from "./categories/Laning/Laning";
 
 import styles from "../styles/AnalysisComponent.module.css"
 import Hud from "./categories/Hud/Hud";
+import { VStack } from "@chakra-ui/react";
 
 interface AnalysisComponentProps {
   targetHero: HeroId
@@ -16,6 +17,7 @@ const AnalysisComponent = ( { targetHero, targetTeam, analysis }: AnalysisCompon
 
   return (
     <div className={styles.analysis}>
+      <VStack align={'left'} spacing={'30px'}>
       <Laning target={targetHero} couriersState={analysis.couriersState} notTankedCreepwaves={analysis.notTankedCreepwaves} notUnblockedCamps={analysis.notUnblockedCamps} />
       <Hud
         target={targetHero}
@@ -27,6 +29,7 @@ const AnalysisComponent = ( { targetHero, targetTeam, analysis }: AnalysisCompon
         shardOwners={analysis.shardOwners}
         scepterOwners={analysis.scepterOwners}
       />
+      </VStack>
     </div>
   )
 }

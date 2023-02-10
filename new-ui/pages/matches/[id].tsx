@@ -6,7 +6,6 @@ import Match from "../../models/Match";
 import styles from "../../styles/Match.module.css"
 import Matchup from "../../components/Matchup";
 import { AnalysisResult } from "../../models/AnalysisResult";
-import AnalysisTable from "../../components/AnalysisTable";
 import { Button } from "@chakra-ui/button";
 import { Spinner } from "@chakra-ui/spinner";
 import { Team } from "../../models/Team";
@@ -76,9 +75,7 @@ const Match = () => {
     return null
 
   const userPlayer = match.players.find(p => p.steamAccountId === userContext.user.id)
-  const userHeroId = userPlayer.heroId
-
-  const targetHero = fromHeroView === undefined ? userHeroId : +fromHeroView
+  const targetHero = fromHeroView === undefined ? userPlayer.heroId : +fromHeroView
   const targetTeam = match.players.find(p => p.heroId === targetHero).isRadiant ? Team.Radiant : Team.Dire
 
   return (

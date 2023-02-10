@@ -9,12 +9,16 @@
   width: 142px;
   height: 188px;
 }
-
-.ability {
+.ability,
+.selectedAbility {
   width: 100px;
   height: 100px;
-  border-radius: 5px;
+  border-radius: 3px;
   overflow: hidden;
+}
+
+.selectedAbility {
+  outline: 4px solid #C7A324;
 }
 
 .abilities {
@@ -25,4 +29,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.mistakes {
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.mistakesTitle {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.mistakesEntries {
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+.time {
+  color: white;
+}
+
+.insight {
+  color: #C7A324
 }

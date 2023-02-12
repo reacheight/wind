@@ -20,6 +20,9 @@ const UsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedSt
     return null
 
   const selectedAbility = abilities.find(a => a.id === selectedAbilityId)
+  if (!selectedAbility)
+    return null
+
   const unusedSelectedAbility = unusedAbilities.filter(unusedAbility => unusedAbility.ability === selectedAbilityId)
   const overlappedAbilityStun = overlappedStuns.filter(stun => stun.isAbility && stun.sourceId == selectedAbilityId)
 

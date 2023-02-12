@@ -43,7 +43,7 @@ const UsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedSt
   }).reduce((prev, curr) => [prev, ', ', curr])
 
   const unusedAbilityOnAlliesSpan = <span>
-    {unusedAbilityOnAllies.length} times{unusedAbilityOnAllies.length > 1 ? 's' : ''} <span className={styles.insight}>not used</span> on a <span className={styles.insight}>dying ally</span> — {unusedAbilityOnAlliesTimes}
+    {unusedAbilityOnAllies.length} time{unusedAbilityOnAllies.length > 1 ? 's' : ''} <span className={styles.insight}>not used</span> on a <span className={styles.insight}>dying ally</span> — {unusedAbilityOnAlliesTimes}
   </span>
 
   const overlappedStunTimes = overlappedAbilityStun.length === 0 ? null : overlappedAbilityStun.map(stun => {

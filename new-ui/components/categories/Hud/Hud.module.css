@@ -57,3 +57,8 @@
 .insight {
   color: #C7A324
 }
+
+.abilityButton:disabled {
+  cursor: default;
+  filter: brightness(40%);
+}

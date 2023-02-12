@@ -55,6 +55,8 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
   const targetMidasEfficiency = midasEfficiency.filter(me => me.hero === target)
   const targetPTUsages = powerTreadsAbilityUsages.filter(usage => usage.heroId === target)
 
+  const targetActiveAbilities = targetUnusedAbilities.map(a => a.ability).concat(targetOverlappedStuns.filter(s => s.isAbility).map(s => s.sourceId))
+
   const targetAbilities = abilities.filter(ability => ability.slot <= 6)
     .filter(ability => ability.id !== 6251) // just default empty
     .filter(ability => ability.id !== 5453 && ability.id !== 5454) // rubick's stolen abilities
@@ -69,7 +71,7 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
         <div className={styles.portrait}>
           <Image src={Routes.Images.getVerticalPortrait(target)} width={142} height={188} />
         </div>
-        <AbilitiesPanel selectedAbility={selectedAbilityId} onAbilityClick={id => onAbilityClick(id)} abilities={targetAbilities} />
+        <AbilitiesPanel selectedAbility={selectedAbilityId} onAbilityClick={id => onAbilityClick(id)} abilities={targetAbilities} activeAbilities={targetActiveAbilities} />
         <div>
 
         </div>

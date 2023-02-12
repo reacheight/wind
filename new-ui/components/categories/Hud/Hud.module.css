@@ -31,21 +31,23 @@
   justify-content: space-between;
 }
 
-.mistakes {
+.usages {
   margin-top: 20px;
   background-color: rgba(255, 255, 255, 0.08);
   border-radius: 6px;
   padding: 8px;
 }
 
-.mistakesTitle {
+.usagesTitle {
   font-size: 18px;
   font-weight: 700;
 }
 
-.mistakesEntries {
+.usagesEntries {
   margin-top: 5px;
   margin-left: 20px;
+  color: #9D9FA0;
+  font-size: 18px;
 }
 
 .time {

@@ -29,7 +29,7 @@ const UsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedSt
   ).reduce((prev, curr) => [prev, ', ', curr])
 
   const unusedSelectedAbilitySpan = <span>
-    {unusedSelectedAbilityOnSelf.length} times <span className={styles.insight}>not used</span> before <span className={styles.insight}>death</span> at {unusedSelectedAbilityOnSelfTimes}
+    {unusedSelectedAbilityOnSelf.length} time{unusedSelectedAbilityOnSelf.length > 1 ? 's' : ''} <span className={styles.insight}>not used</span> before <span className={styles.insight}>death</span> at {unusedSelectedAbilityOnSelfTimes}
   </span>
 
   const unusedAbilityOnAllies = unusedSelectedAbility.filter(ua => ua.user !== ua.target)
@@ -40,7 +40,7 @@ const UsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedSt
   }).reduce((prev, curr) => [prev, ', ', curr])
 
   const unusedAbilityOnAlliesSpan = <span>
-    {unusedAbilityOnAllies.length} times <span className={styles.insight}>not used</span> on a <span className={styles.insight}>dying ally</span> — {unusedAbilityOnAlliesTimes}
+    {unusedAbilityOnAllies.length} times{unusedAbilityOnAllies.length > 1 ? 's' : ''} <span className={styles.insight}>not used</span> on a <span className={styles.insight}>dying ally</span> — {unusedAbilityOnAlliesTimes}
   </span>
 
   const overlappedStunTimes = overlappedAbilityStun.length === 0 ? null : overlappedAbilityStun.map(stun => {
@@ -50,7 +50,7 @@ const UsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedSt
   }).reduce((prev, curr) => [prev, ', ', curr])
 
   const overlappedStunSpan = <span>
-    {overlappedAbilityStun.length} times <span className={styles.insight}>stunned</span> an <span className={styles.insight}>already disabled</span> hero — {overlappedStunTimes}
+    {overlappedAbilityStun.length} time{overlappedAbilityStun.length > 1 ? 's' : ''} <span className={styles.insight}>stunned</span> an <span className={styles.insight}>already disabled</span> hero — {overlappedStunTimes}
   </span>
 
   return (

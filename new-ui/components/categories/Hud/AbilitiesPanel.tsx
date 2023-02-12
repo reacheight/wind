@@ -12,6 +12,9 @@ interface AbilitiesPanelProps {
 }
 
 const AbilitiesPanel = ({ selectedAbility, onAbilityClick, abilities }: AbilitiesPanelProps) => {
+  if (!abilities)
+    return null
+  
   const abilitiesIcons = abilities.map(ability => {
     const abilityClassName = ability.id === selectedAbility ? styles.selectedAbility : styles.ability
     return <div className={abilityClassName}>

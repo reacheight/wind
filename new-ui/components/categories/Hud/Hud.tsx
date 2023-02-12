@@ -38,10 +38,13 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
   }
 
   useEffect(() => {
+    setAbilities(null)
+    setSelectedAbilityId(null)
+
     fetch(Routes.Constants.getHeroAbilities(target))
       .then(response => response.json())
       .then(abilities => setAbilities(abilities))
-  }, [])
+  }, [target])
 
   if (abilities === null)
     return null;

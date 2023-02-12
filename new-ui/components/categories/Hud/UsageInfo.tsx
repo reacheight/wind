@@ -12,6 +12,9 @@ interface UsageInfoProps {
 }
 
 const UsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedStuns }: UsageInfoProps) => {
+  if (!abilities)
+    return null
+
   if (!selectedAbilityId)
     return null
 

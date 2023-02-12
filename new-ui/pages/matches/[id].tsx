@@ -75,7 +75,10 @@ const Match = () => {
     return null
 
   const userPlayer = match.players.find(p => p.steamAccountId === userContext.user.id)
-  const targetHero = fromHeroView === undefined ? userPlayer.heroId : +fromHeroView
+  const targetHero = fromHeroView === undefined
+    ? userPlayer === undefined ? match.players[0].heroId : userPlayer.heroId
+    : +fromHeroView
+
   const targetTeam = match.players.find(p => p.heroId === targetHero).isRadiant ? Team.Radiant : Team.Dire
 
   return (

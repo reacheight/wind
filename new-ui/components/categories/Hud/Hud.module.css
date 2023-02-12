@@ -1,10 +1,10 @@
 .title {
   font-weight: 700;
-  font-size: 28px;
+  font-size: 26px;
 }
 
 .portrait {
-  border-radius: 10px;
+  border-radius: 5px;
   overflow: hidden;
   width: 142px;
   height: 188px;
@@ -29,6 +29,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 10px;
 }
 
 .usages {

@@ -1,6 +1,6 @@
 .title {
   font-weight: 700;
-  font-size: 28px;
+  font-size: 26px;
 }
 
 .container {
@@ -16,6 +16,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px 20px;
+  margin-top: 10px;
 }
 
 .insight {

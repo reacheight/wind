@@ -56,7 +56,9 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
   const targetPTUsages = powerTreadsAbilityUsages.filter(usage => usage.heroId === target)
 
   const targetAbilities = abilities.filter(ability => ability.slot <= 6)
-    .filter(ability => ability.id !== 6251)
+    .filter(ability => ability.id !== 6251) // just default empty
+    .filter(ability => ability.id !== 5453 && ability.id !== 5454) // rubick's stolen abilities
+    .filter(ability => ability.id !== 5343 && ability.id !== 5344) // dooms's devour abilities
     .filter(ability => !ability.isGrantedByShard || shardOwners.includes(target))
     .filter(ability => !ability.isGrantedByScepter || scepterOwners.includes(target))
 

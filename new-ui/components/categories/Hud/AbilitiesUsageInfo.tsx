@@ -5,14 +5,14 @@ import { OverlappedStun } from "../../../models/OverlappedStun";
 import styles from "./Hud.module.css";
 import MiniIcon from "../../MiniIcon";
 
-interface UsageInfoProps {
+interface AbilitiesUsageInfoProps {
   selectedAbilityId: number
   abilities: ReadonlyArray<HeroAbility>
   unusedAbilities: ReadonlyArray<UnusedAbility>
   overlappedStuns: ReadonlyArray<OverlappedStun>
 }
 
-const UsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedStuns }: UsageInfoProps) => {
+const AbilitiesUsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedStuns }: AbilitiesUsageInfoProps) => {
   if (!abilities)
     return null
 
@@ -68,4 +68,4 @@ const UsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, overlappedSt
   )
 }
 
-export default UsageInfo
+export default AbilitiesUsageInfo

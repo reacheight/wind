@@ -9,11 +9,12 @@ import Routes from "../../../api/routs";
 import { useEffect, useState } from "react";
 import { HeroAbility } from "../../../models/HeroAbility";
 import AbilitiesPanel from "./AbilitiesPanel";
-import UsageInfo from "./UsageInfo";
+import AbilitiesUsageInfo from "./AbilitiesUsageInfo";
 
 import styles from "./Hud.module.css"
 import { Item } from "../../../models/Item";
 import ItemsPanel from "./ItemsPanel";
+import ItemsUsageInfo from "./ItemsUsageInfo";
 
 interface HudProps {
   target: HeroId
@@ -37,8 +38,8 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
   const targetActiveAbilities = targetUnusedAbilities.map(a => a.ability).concat(targetOverlappedStuns.filter(s => s.isAbility).map(s => s.sourceId))
   const targetActiveItems = [...new Set(targetUnusedItems.map(ui => ui.item))]
 
-  if (targetMidasEfficiency)
-    targetActiveItems.push(65)
+  // if (targetMidasEfficiency)
+  //   targetActiveItems.push(65)
 
   if (targetPTUsages)
     targetActiveItems.push(63)
@@ -106,7 +107,8 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
         <AbilitiesPanel selectedAbility={selectedAbilityId} onAbilityClick={id => onAbilityClick(id)} abilities={targetAbilities} activeAbilities={targetActiveAbilities} />
         <ItemsPanel selectedItemId={selectedItemId} onItemClick={id => onItemClick(id)} items={items} />
       </div>
-      <UsageInfo selectedAbilityId={selectedAbilityId} abilities={targetAbilities} unusedAbilities={targetUnusedAbilities} overlappedStuns={targetOverlappedStuns} />
+      <AbilitiesUsageInfo selectedAbilityId={selectedAbilityId} abilities={targetAbilities} unusedAbilities={targetUnusedAbilities} overlappedStuns={targetOverlappedStuns} />
+      <ItemsUsageInfo selectedItemId={selectedItemId} items={items} unusedItems={targetUnusedItems} midasEfficiency={targetMidasEfficiency} powerTreadsAbilityUsages={targetPTUsages} />
     </div>
   )
 }

@@ -16,4 +16,14 @@ class ConstantsController @Inject()(val controllerComponents: ControllerComponen
       case Success(abilities) => Ok(abilities.asJson)
     }
   }
+
+  def getItems(itemsIds: String) = Action {
+    val ids = itemsIds.split(",").map(s => s.toInt)
+    val items = ids
+      .map(id => StratzClient.getItem(id))
+      .filter(tryItem => tryItem.isSuccess)
+      .map(tryItem => tryItem.get)
+
+    Ok(items.asJson)
+  }
 }

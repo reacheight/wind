@@ -85,4 +85,14 @@ package object decoders {
       HeroAbility(id, slot, displayName, isGrantedByShard, isGrantedByScepter)
     }
   }
+
+  implicit val decodeItem: Decoder[Item] = (c: HCursor) => {
+    val item = c.downField("data").downField("constants").downField("item")
+    for {
+      id <- item.downField("id").as[Int]
+      displayName <- item.downField("displayName").as[String]
+    } yield {
+      Item(id, displayName)
+    }
+  }
 }

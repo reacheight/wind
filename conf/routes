@@ -29,3 +29,4 @@ GET         /matches/:matchId                   controllers.MatchesController.ge
 GET         /players/:accountId/matches         controllers.MatchesController.getMatches(accountId: Long)
 
 GET         /constants/hero/:heroId/abilities   controllers.ConstantsController.getHeroAbilities(heroId: Int)
+GET         /constants/items                    controllers.ConstantsController.getItems(itemsIds: String)

@@ -34,6 +34,7 @@ class Images {
 
 class Constants {
   getHeroAbilities = (heroId: number) => `${HOST}/constants/hero/${heroId}/abilities`
+  getItems = (itemsIds: number[]) => `${HOST}/constants/items?itemsIds=${itemsIds.join(',')}`
 }
 
 export default class Routes {

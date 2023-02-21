@@ -21,6 +21,18 @@
   outline: 4px solid #C7A324;
 }
 
+.item,
+.selectedItem {
+  width: 66px;
+  height: 48px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.selectedItem {
+  outline: 3px solid #C7A324;
+}
+
 .abilities {
 
 }

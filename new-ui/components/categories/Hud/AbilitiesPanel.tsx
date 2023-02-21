@@ -28,7 +28,7 @@ const AbilitiesPanel = ({ selectedAbility, onAbilityClick, abilities, activeAbil
   })
 
   return (
-    <div className={styles.abilities}>
+    <div>
       <HStack spacing='24px'>
         {abilitiesIcons}
       </HStack>

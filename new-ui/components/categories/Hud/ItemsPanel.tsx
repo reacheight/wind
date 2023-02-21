@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Routes from "../../../api/routs";
-import { HStack } from "@chakra-ui/layout";
+import { Item } from "../../../models/Item";
 
 import styles from "./Hud.module.css";
-import { Item } from "../../../models/Item";
 
 interface ItemsPanelProps {
   selectedItemId: number
@@ -24,11 +23,14 @@ const AbilitiesPanel = ({ selectedItemId, onItemClick, items }: ItemsPanelProps)
     </div>;
   })
 
+  const emptySlot = <div className={styles.emptyItemSlot}></div>
+  const emptySlotsNumber = 6 - items.length
+  const emptySlots = Array(emptySlotsNumber).fill(emptySlot)
+
   return (
-    <div className={styles.abilities}>
-      <HStack spacing='20px'>
-        {itemsIcons}
-      </HStack>
+    <div className={styles.itemsPanel}>
+      {itemsIcons}
+      {emptySlots}
     </div>
   )
 }

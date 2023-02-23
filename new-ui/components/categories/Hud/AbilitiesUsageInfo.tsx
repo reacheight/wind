@@ -28,7 +28,7 @@ const AbilitiesUsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, ove
 
   const unusedSelectedAbilityOnSelf = unusedSelectedAbility.filter(ua => ua.user === ua.target)
   const unusedSelectedAbilityOnSelfTimes = unusedSelectedAbilityOnSelf.length === 0 ? null : unusedSelectedAbilityOnSelf.map(ua =>
-    <span className={styles.time}>{ua.time}</span>
+    <span className={styles.white}>{ua.time}</span>
   ).reduce((prev, curr) => [prev, ', ', curr])
 
   const unusedSelectedAbilitySpan = <span>
@@ -37,7 +37,7 @@ const AbilitiesUsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, ove
 
   const unusedAbilityOnAllies = unusedSelectedAbility.filter(ua => ua.user !== ua.target)
   const unusedAbilityOnAlliesTimes = unusedAbilityOnAllies.length === 0 ? null : unusedAbilityOnAllies.map(ua => {
-    let time = <span className={styles.time}>{ua.time}</span>
+    let time = <span className={styles.white}>{ua.time}</span>
     let targetIcon = <MiniIcon heroId={ua.target} />
     return <span>on {targetIcon} at {time}</span>
   }).reduce((prev, curr) => [prev, ', ', curr])
@@ -47,7 +47,7 @@ const AbilitiesUsageInfo = ({ selectedAbilityId, abilities, unusedAbilities, ove
   </span>
 
   const overlappedStunTimes = overlappedAbilityStun.length === 0 ? null : overlappedAbilityStun.map(stun => {
-    let time = <span className={styles.time}>{stun.time}</span>
+    let time = <span className={styles.white}>{stun.time}</span>
     let targetIcon = <MiniIcon heroId={stun.target} />
     return <span>{targetIcon} at {time} ({stun.overlappedTime.toFixed(1)} seconds <span className={styles.insight}>overlap</span>)</span>
   }).reduce((prev, curr) => [prev, ', ', curr])

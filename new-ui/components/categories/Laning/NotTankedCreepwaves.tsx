@@ -9,7 +9,7 @@ interface NotTankedCreepwavesProps {
 const NotTankedCreepwaves = ({ notTankedCreepwaves }: NotTankedCreepwavesProps) => {
   const count = notTankedCreepwaves.length
   const times = notTankedCreepwaves.map(entry =>
-    <span className={styles.time}>{entry.time}</span>
+    <span className={styles.white}>{entry.time}</span>
   ).reduce((prev, curr) => [prev, ', ', curr])
 
   return (

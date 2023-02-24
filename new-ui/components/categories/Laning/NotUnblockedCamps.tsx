@@ -16,7 +16,7 @@ const NotUnblockedCamps = ({ notUnblockedCamp }: NotUnblockedCampsProps) => {
 
   return (
     <div className={styles.container}>
-      <Image src={"/sentry.png"} width={80} height={120} />
+      <div><Image src={"/sentry.png"} width={80} height={120} /></div>
       <span className={styles.text}>
         You didn't <span className={styles.insight}>unblock</span> your lane <span className={styles.insight}>neutral camp</span>, blocked {blocksText}
       </span>

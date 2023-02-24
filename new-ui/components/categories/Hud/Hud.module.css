@@ -18,7 +18,7 @@
 }
 
 .selectedAbility {
-  outline: 4px solid #C7A324;
+  outline: 3px solid rgb(198, 153, 53);
 }
 
 .item,
@@ -31,7 +31,7 @@
 }
 
 .selectedItem {
-  outline: 3px solid #C7A324;
+  outline: 2px solid rgb(198, 153, 53);
 }
 
 .emptyItemSlot {

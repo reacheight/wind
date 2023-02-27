@@ -31,3 +31,18 @@
 .white {
   color: white;
 }
+
+.courier {
+  width: 100px;
+  height: 100px;
+  min-width: 100px;
+  min-height: 100px;
+}
+
+.tower,
+.sentry {
+  width: 66px;
+  height: 100px;
+  min-width: 66px;
+  min-height: 100px;
+}

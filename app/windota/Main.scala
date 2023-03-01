@@ -186,7 +186,7 @@ object Main {
 
     if (result.badFights.nonEmpty) println("\nBad fights:")
     result.badFights.foreach(badFight =>
-      println(s"${badFight.fight.start}, seen heroes: ${badFight.seenPlayers.map(id => result.heroName(id)).mkString(", ")}")
+      println(s"${badFight.fight.start}, seen heroes: ${badFight.seenPlayers.map{ case (id, location) => s"${result.heroName(id)} - seen at $location"}.mkString(", ")}")
     )
 
     if (result.smokeFights.nonEmpty) println(s"\nSmoke fights:")

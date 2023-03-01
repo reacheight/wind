@@ -8,7 +8,7 @@ import reactivemongo.api.bson._
 import windota.models.AnalysisStatus._
 import windota.models.Lane.Lane
 import windota.models.Team.Team
-import windota.models.{AbilityId, AnalysisStatus, Fight, GameTimeState, HeroId, ItemId, PlayerId}
+import windota.models.{AbilityId, AnalysisStatus, Fight, GameTimeState, HeroId, ItemId, Location, PlayerId}
 
 import scala.util.{Failure, Success}
 
@@ -26,6 +26,7 @@ package object converters {
 
   implicit val fromGameTimeState: Encoder[GameTimeState] = (time: GameTimeState) => time.toString.asJson
   implicit val fromFight: Encoder[Fight] = (fight: Fight) => (fight.outnumberedTeam.get, fight.start).asJson
+  implicit val fromLocation: Encoder[Location] = (location: Location) => (location.X, location.Y).asJson
 
   implicit class MapExtensions[K, V](val map: Map[K, V]) extends AnyVal {
     def toStringKeyMap(implicit keyToString: K => String) = map.map { case (k, v) => keyToString(k) -> v }

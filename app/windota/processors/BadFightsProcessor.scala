@@ -3,6 +3,7 @@ package windota.processors
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import windota.Util
+import windota.Util._
 import windota.extensions._
 import windota.models.Team._
 import windota.models._
@@ -28,25 +29,28 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
 
   private var currentFight: Option[Fight] = None
   private var heroesNotInFight = Set.empty[Int]
-  private val seenHeroes = mutable.Set.empty[Int]
+  private val seenHeroes2 = mutable.Map.empty[Int, Location]
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
   def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath): Unit = {
     val gameTimeState = Util.getGameTimeState(gameRulesEntity)
 
-    currentFight.foreach(fight => seenHeroes ++= heroesNotInFight
-      .filter(handle => {
+    currentFight.foreach(fight => seenHeroes2 ++= heroesNotInFight
+      .flatMap(handle => {
         val hero = Entities.getByHandle(handle)
         val heroLocation = Util.getLocation(hero)
         val fightLocation = fight.location
-        Util.isVisibleByEnemies(hero) && Util.getDistance(heroLocation, fightLocation) > NOT_IN_FIGHT_DISTANCE
+        if (Util.isVisibleByEnemies(hero) && Util.getDistance(heroLocation, fightLocation) > NOT_IN_FIGHT_DISTANCE)
+          Some(handle -> heroLocation)
+        else
+          None
       }))
 
     candidates
       .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime - CHECK_HEROES_NOT_IN_FIGHT_DIFF) < EPS)
       .foreach(fight => {
         currentFight = Some(fight)
-        seenHeroes.clear()
+        seenHeroes2.clear()
 
         val teamPredicate: PlayerId => Boolean = if (fight.outnumberedTeam.contains(Radiant)) p => p.id < 10 else p => p.id >= 10
         heroesNotInFight = players
@@ -63,8 +67,10 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
         fight
       })
       .map(fight => {
-        val seenPlayers = seenHeroes.map(Entities.getByHandle).filter(Util.isAlive).map(Util.getPlayerId)
-        BadFight(fight, seenPlayers.toSet)
+        val seenPlayers = seenHeroes2.map { case (handle, location) => (Entities.getByHandle(handle), location) }
+          .filter(_._1.isActive)
+          .map { case (hero, location) => (hero.playerId, location)}
+        BadFight(fight, seenPlayers.toMap)
       })
       .filter(_.seenPlayers.nonEmpty)
       .filter(fight => fight.fight.getParticipants(fight.fight.winner.get).size > 5 - fight.seenPlayers.size)

@@ -2,7 +2,6 @@ package windota.models
 
 import windota.models.Lane.Lane
 import windota.models.Team.Team
-import windota.models.internal.OverlappedStun
 
 case class HeroId(id: Int)
 case class ItemId(id: Int)
@@ -17,7 +16,8 @@ case class SummonGoldFed(owner: HeroId, gold: Int)
 case class MidasEfficiency(hero: HeroId, efficiency: Float)
 case class ObserverOnVision(hero: HeroId, time: GameTimeState, destroyed: Boolean)
 case class SmokeOnVision(hero: HeroId, time: GameTimeState)
-case class BadFightJsonModel(outnumberedTeam: Team, seenHeroes: Seq[HeroId], time: GameTimeState)
+case class BadFightJsonModel(outnumberedTeam: Team, seenHeroes: Seq[SeenHero], time: GameTimeState)
+case class SeenHero(heroId: HeroId, location: Location)
 case class BadSmokeFight(smokedTeam: Team, smokeTime: GameTimeState, fightTime: GameTimeState)
 case class LostFightsUnderTheSameWard(loser: Team, fights: Seq[GameTimeState], wardOwner: HeroId)
 case class FightLostUnderEnemyVision(loser: Team, time: GameTimeState)

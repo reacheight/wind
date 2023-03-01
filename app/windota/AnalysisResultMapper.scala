@@ -23,7 +23,7 @@ object AnalysisResultMapper {
     val midasEfficiency = analysisResult.midasEfficiency.map { case (playerId, efficiency) => MidasEfficiency(heroId(playerId), efficiency) }.toSeq
     val observersOnVision = analysisResult.obsPlacedOnVision.map(obs => ObserverOnVision(heroId(obs.owner), obs.created, !obs.isFullDuration))
     val smokesOnVision = analysisResult.smokesUsedOnVision.map { case (time, playerId) => SmokeOnVision(heroId(playerId), time) }
-    val badFights = analysisResult.badFights.map(fight => BadFightJsonModel(fight.fight.outnumberedTeam.get, fight.seenPlayers.map(heroId).toSeq, fight.fight.start))
+    val badFights = analysisResult.badFights.map(fight => BadFightJsonModel(fight.fight.outnumberedTeam.get, fight.seenPlayers.map { case (id, loc) => SeenHero(heroId(id), loc) }.toSeq, fight.fight.start))
     val badSmokeFights = analysisResult.smokeOnVisionButWonFight.map { case (fightStart, smokeTime, smokedTeam) => BadSmokeFight(smokedTeam, smokeTime, fightStart) }
     val worthlessGlyphs = analysisResult.glyphOnDeadT2.map { case (team, glyphs) => WorthlessGlyph(team, glyphs) }.filter(_.times.nonEmpty).toSeq
     val lostFightsUnderTheSameWard = analysisResult.multipleRadiantLostFightsUnderWard.map { case (observer, fights) => LostFightsUnderTheSameWard(Radiant, fights.map(_.fight.start), heroId(observer.owner))} ++

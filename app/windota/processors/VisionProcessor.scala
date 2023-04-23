@@ -12,7 +12,7 @@ import windota.models._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class VisionProcessor {
+class VisionProcessor extends EntitiesProcessor {
   val OBS_TTL = 360
   val EPS = 0.01
 
@@ -35,7 +35,7 @@ class VisionProcessor {
 
   @OnEntityCreated(classPattern = "CDOTA_NPC_Observer_Ward.*")
   private def onWardPlaced(ctx: Context, wardEntity: Entity): Unit = {
-    val time = Util.getGameTimeState(ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy"))
+    val time = TimeState
     val location = Util.getLocation(wardEntity)
     val owner = PlayerId(wardEntity.get[Int]("m_nPlayerOwnerID").get)
     val isSentry = wardEntity.getDtClass.getDtName.contains("TrueSight")
@@ -52,7 +52,7 @@ class VisionProcessor {
   private def onWardEnded(ctx: Context, ward: Entity, fp: FieldPath): Unit = {
     if (ward.getPropertyForFieldPath[Int](fp) != 1) return
 
-    val time = Util.getGameTimeState(ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy"))
+    val time = TimeState
     val isSentry = ward.getDtClass.getDtName.contains("TrueSight")
     if (isSentry) {
       val current = _sentries(ward.getHandle)
@@ -71,8 +71,7 @@ class VisionProcessor {
 
       val playerId = heroProcessor.combatLogNameToPlayerId.get(cle.getAttackerName)
       playerId.foreach(id => {
-        val gameRules = entities.getByDtName("CDOTAGamerulesProxy")
-        itemUsages(cle.getInflictorName).addOne(Util.getGameTimeState(gameRules), PlayerId(id))
+        itemUsages(cle.getInflictorName).addOne(TimeState, PlayerId(id))
       })
     }
   }

@@ -2,6 +2,9 @@ package windota.processors
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import skadistats.clarity.processor.reader.OnMessage
+import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.Util
 import windota.extensions._
 import windota.models.Lane._
@@ -23,9 +26,9 @@ class LaneProcessor extends EntitiesProcessor {
   var laneNetworth: Map[Int, Int] = Map()
   var laneWinner: Map[Lane, Option[Team]] = Map(Top -> None, Middle -> None, Bot -> None)
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath): Unit = {
-    val gameTimeState = Util.getGameTimeState(gameRulesEntity)
+  @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
+  def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
+    val gameTimeState = TimeState
     if (!gameTimeState.gameStarted || gameTimeState.gameTime < 30 || currentIteration > LaneStageIterationCount || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
 
     val heroEntities = Entities.getAllByPredicate(Util.isHero)

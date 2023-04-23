@@ -27,11 +27,8 @@ class AbilityUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
     if (!checkUsage || !Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+    if (Util.getSpawnTime(hero, Time) < 10) return
 
-    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
-    if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
-
-    val time = Util.getGameTimeState(gameRules)
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
     val abilities = getAbilities(hero)
@@ -63,7 +60,7 @@ class AbilityUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
 
     def addUnusedAbility(entityName: String, abilityId: Int): Unit =
       findUnusedAbility(hero, abilities, entityName)
-        .foreach(_ => _unusedAbilities.addOne((time, playerId, abilityId)))
+        .foreach(_ => _unusedAbilities.addOne((TimeState, playerId, abilityId)))
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
@@ -71,9 +68,9 @@ class AbilityUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
     if (!checkUsage || !Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
-    if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
+    if (Util.getSpawnTime(hero, Time) < 10) return
 
-    val gameTime = Util.getGameTimeState(gameRules)
+    val gameTime = TimeState
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
     val allies = Entities.filter(Util.isHero)

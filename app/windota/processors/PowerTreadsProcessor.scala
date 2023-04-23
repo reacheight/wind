@@ -66,7 +66,7 @@ class PowerTreadsProcessor extends EntitiesProcessor {
 //    if (!powerTreadHandles.contains(playerId)) return
 //
 //    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
-//    if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
+//    if (Util.getSpawnTime(hero, GameTime) < 10) return
 //
 //    val powerTreads = Entities.get(powerTreadHandles(playerId))
 //    powerTreads match {

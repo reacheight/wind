@@ -2,6 +2,9 @@ package windota.processors
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import skadistats.clarity.processor.reader.OnMessage
+import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.Util
 import windota.Util._
 import windota.extensions._
@@ -25,9 +28,9 @@ class UnreasonableDivesProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
   def unreasonableTeamDives = _unreasonableTeamDives.distinct.toSeq
   def unreasonableHeroDives = _unreasonableHeroDives.toSeq
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath): Unit = {
-    val gameTimeState = Util.getGameTimeState(gameRulesEntity)
+  @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
+  def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
+    val gameTimeState = TimeState
 
     candidates
       .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime) < EPS)
@@ -49,7 +52,7 @@ class UnreasonableDivesProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
     enemyTower.foreach { tower =>
       val alliesAround = Entities.filter(e => e.isHero && e.playerId != hero.playerId && e.team == heroTeam && Util.getDistance(e, hero) <= 2000)
       if (alliesAround.isEmpty)
-        _unreasonableHeroDives.addOne((Util.getGameTimeState(Entities).get, hero.playerId, tower.getProperty[Int]("m_iCurrentLevel")))
+        _unreasonableHeroDives.addOne((TimeState, hero.playerId, tower.getProperty[Int]("m_iCurrentLevel")))
     }
   }
 

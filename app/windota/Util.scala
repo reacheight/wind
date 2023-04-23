@@ -21,41 +21,6 @@ object Util {
   private val glyphCooldownPropertyName: Map[Team, String] =
     Map(Radiant -> "m_pGameRules.m_fGoodGlyphCooldown", Dire -> "m_pGameRules.m_fBadGlyphCooldown")
 
-  def getGameTimeState(entities: Entities): Option[GameTimeState] =
-    entities
-      .findByName("CDOTAGamerulesProxy")
-      .map(getGameTimeState)
-
-  def getGameTimeState(gameRulesEntity: Entity): GameTimeState = {
-    if (gameRulesEntity.getDtClass.getDtName != "CDOTAGamerulesProxy") throw new IllegalArgumentException
-
-    val gameTime : Float = gameRulesEntity.getProperty("m_pGameRules.m_fGameTime")
-    if (gameTime > TIME_EPS) {
-      val preGameTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flPreGameStartTime")
-
-      if (preGameTime > TIME_EPS){
-        val startTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flGameStartTime")
-        if (startTime > TIME_EPS) {
-          return GameTimeState(true, true, gameTime - startTime)
-        }
-        else {
-          val transitionTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flStateTransitionTime")
-          return GameTimeState(true, false, gameTime - transitionTime)
-        }
-      }
-
-      return GameTimeState(false, false, Float.MinValue)
-    }
-
-    GameTimeState(false, false, Float.MinValue)
-  }
-
-  def isGlyphOnCooldown(gameRules: Entity, team: Team): Boolean =
-    getGlyphCooldown(gameRules, team) > 0
-
-  def getGlyphCooldown(gameRules: Entity, team: Team): Float =
-    math.max(gameRules.getProperty[Float](glyphCooldownPropertyName(team)) - gameRules.getProperty[Float]("m_pGameRules.m_fGameTime"), 0)
-
   def isHero(entity: Entity): Boolean =
     entity.getDtClass.getDtName.startsWith("CDOTA_Unit_Hero") &&
       entity.hasProperty(replicatingPropertyName) &&

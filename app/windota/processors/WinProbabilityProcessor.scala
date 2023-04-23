@@ -2,7 +2,9 @@ package windota.processors
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.{Entities, OnEntityPropertyChanged}
+import skadistats.clarity.processor.reader.OnMessage
 import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.Util
 import windota.extensions._
 import windota.models.Team._
@@ -10,16 +12,17 @@ import windota.models.WinProbabilityDataEntry
 
 import scala.collection.mutable.ListBuffer
 
-class WinProbabilityProcessor {
+class WinProbabilityProcessor extends EntitiesProcessor {
   var data: ListBuffer[WinProbabilityDataEntry] = ListBuffer.empty
 
   private val IterationInterval = 10
   private val Epsilon = 0.001f
   private var currentIteration = 1
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(ctx: Context, gameRules: Entity, fp: FieldPath): Unit = {
-    val gameTimeState = Util.getGameTimeState(gameRules)
+  @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
+  def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
+    val gameTimeState = TimeState
+    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     val gameOver = gameRules.getProperty[Int]("m_pGameRules.m_nGameState") > 5
     if (gameOver || !gameTimeState.preGameStarted || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
 
@@ -37,7 +40,7 @@ class WinProbabilityProcessor {
     val (radiantBarracks, direBarracks) = entities.filterByName("CDOTA_BaseNPC_Barracks").partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
     val barracks = Map(Radiant -> countBarracks(radiantBarracks), Dire -> countBarracks(direBarracks))
 
-    val time = gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")
+    val time = Time
     val heroProcessor = ctx.getProcessor(classOf[HeroProcessor])
     val radiantHeroes = Util.RadiantPlayerIds.map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
     val direHeroes = Util.DirePlayerIds.map(id => entities.getByHandle(heroProcessor.heroHandle(id)))

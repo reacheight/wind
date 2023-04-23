@@ -48,7 +48,7 @@ class ModifierProcessor extends EntitiesProcessor {
   def onCombatLog(ctx: Context, cle: CombatLogEntry): Unit = {
     if (isStun(cle) && !cle.isTargetIllusion) {
       for {
-        time <- Util.getGameTimeState(Entities)
+        time <- TimeStateOption
         stunnedPlayerId <- combatLogHeroNameToPlayerId.get(cle.getTargetName)
         attackerPlayerId <- combatLogHeroNameToPlayerId.get(cle.getAttackerName)
       } yield {
@@ -85,7 +85,7 @@ class ModifierProcessor extends EntitiesProcessor {
     }
 
     if (cle.getInflictorName == SmokeModifierName) {
-      val time = Util.getGameTimeState(Entities)
+      val time = TimeStateOption
       val playerId = combatLogHeroNameToPlayerId.get(cle.getTargetName)
 
       if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_MODIFIER_ADD)

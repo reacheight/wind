@@ -10,7 +10,7 @@ import windota.Util
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class PurchasesProcessor {
+class PurchasesProcessor extends EntitiesProcessor {
   def purchases: Map[String, Seq[(String, Int)]] = _purchases.map { case (hero, list) => hero -> list.toSeq }.toMap
 
   private val _purchases: mutable.Map[String, ListBuffer[(String, Int)]] = mutable.Map.empty
@@ -20,7 +20,7 @@ class PurchasesProcessor {
     if (cle.getType != DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_PURCHASE) return
 
     val gameRules = ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy")
-    val gameTime = Util.getGameTimeState(gameRules)
+    val gameTime = TimeState
 
     if (!_purchases.contains(cle.getTargetName))
       _purchases(cle.getTargetName) = ListBuffer.empty

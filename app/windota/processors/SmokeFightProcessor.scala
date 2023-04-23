@@ -2,7 +2,9 @@ package windota.processors
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import skadistats.clarity.processor.reader.OnMessage
 import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.Util
 import windota.extensions._
 import windota.models.Team._
@@ -19,9 +21,9 @@ class SmokeFightProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
   private val CHECK_HEROES_SMOKED = 5
   private val EPS = 0.05
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(ctx: Context, gameRulesEntity: Entity, fp: FieldPath): Unit = {
-    val gameTimeState = Util.getGameTimeState(gameRulesEntity)
+  @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
+  def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
+    val gameTimeState = TimeState
 
     fights
       .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime - CHECK_HEROES_SMOKED) < EPS)

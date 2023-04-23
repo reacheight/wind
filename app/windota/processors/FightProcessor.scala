@@ -111,8 +111,6 @@ class FightProcessor extends EntitiesProcessor {
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
     val heroLocation = Util.getLocation(hero)
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
-    val time = Util.getGameTimeState(gameRules)
-
     val heroes = Entities.filter(Util.isHero)
     val locations = heroes
       .filter(Util.isAlive)
@@ -120,19 +118,18 @@ class FightProcessor extends EntitiesProcessor {
       .toMap
       .updated(deadPlayerId, heroLocation)
 
-    _deaths.addOne((time, deadPlayerId, Util.getLocation(hero), locations))
+    _deaths.addOne((TimeState, deadPlayerId, Util.getLocation(hero), locations))
   }
 
   @OnCombatLogEntry
   def onHeroDamage(ctx: Context, cle: CombatLogEntry): Unit = {
     if (isHeroDamagedAnotherHeroEvent(cle)) {
       val heroesProcessor = ctx.getProcessor(classOf[HeroProcessor])
-      val time = Util.getGameTimeState(Entities.getByDtName("CDOTAGamerulesProxy"))
       val attacker = PlayerId(heroesProcessor.combatLogNameToPlayerId(cle.getDamageSourceName))
       val target = PlayerId(heroesProcessor.combatLogNameToPlayerId(cle.getTargetName))
       val damage = cle.getValue
 
-      _damage.addOne(DamageData(time, attacker, target, damage))
+      _damage.addOne(DamageData(TimeState, attacker, target, damage))
     }
   }
 

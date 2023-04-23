@@ -2,6 +2,9 @@ package windota.processors
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import skadistats.clarity.processor.reader.OnMessage
+import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.Util
 import windota.Util._
 import windota.extensions.{EntitiesExtension, FieldPath}
@@ -46,9 +49,9 @@ class UnreactedLaneGanksProcessor(fights: Seq[Fight], playerLanes: Map[PlayerId,
   private val _unreactedLaneGanks: ListBuffer[(PlayerId, Seq[PlayerId], GameTimeState, Lane)] = ListBuffer.empty
   def unreactedLaneGanks = _unreactedLaneGanks.toSeq
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath): Unit = {
-    val gameTimeState = Util.getGameTimeState(gameRulesEntity)
+  @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
+  def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
+    val gameTimeState = TimeState
 
     currentGank.foreach(fight => seenGankers ++= gankers
       .filter(handle => {

@@ -49,7 +49,7 @@ object ReplayAnalyzer {
       val runner = new SimpleRunner(source)
       try {
         runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
-          glyphProcessor, visionProcessor, itemUsageProcessor, abilityUsageProcessor,
+          visionProcessor, itemUsageProcessor, abilityUsageProcessor,
           purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
           laneProcessor, rolesProcessor, powerTreadsProcessor
         )

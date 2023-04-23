@@ -6,7 +6,7 @@ import windota.Util
 import windota.extensions._
 import windota.models.Team._
 
-class ItemStockProcessor {
+class ItemStockProcessor extends EntitiesProcessor {
   private var maxSmokeStockStart: Map[Team, Int] = Map(Radiant -> -1, Dire -> -1)
   private var maxObsStockStart: Map[Team, Int] = Map(Radiant -> -1, Dire -> -1)
 
@@ -18,7 +18,7 @@ class ItemStockProcessor {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
-    val timeState = Util.getGameTimeState(gameRules)
+    val timeState = TimeState
 
     if (maxSmokeStockStart(Radiant) > 0)
       incrementMaxSmokeStockDuration(Radiant, timeState.gameTime.toInt)
@@ -51,7 +51,7 @@ class ItemStockProcessor {
 
   def onSmokeStockChanged(team: Team, gameRules: Entity, fp: FieldPath): Unit = {
     val smokeStockCount = gameRules.getPropertyForFieldPath[Int](fp)
-    val timeState = Util.getGameTimeState(gameRules)
+    val timeState = TimeState
 
     if (smokeStockCount == 3) {
       maxSmokeStockStart += (team -> timeState.gameTime.toInt)
@@ -65,7 +65,7 @@ class ItemStockProcessor {
 
   def onObsStockChanged(team: Team, gameRules: Entity, fp: FieldPath): Unit = {
     val obsStockCount = gameRules.getPropertyForFieldPath[Int](fp)
-    val timeState = Util.getGameTimeState(gameRules)
+    val timeState = TimeState
 
     if (obsStockCount == 4) {
       maxObsStockStart += (team -> timeState.gameTime.toInt)

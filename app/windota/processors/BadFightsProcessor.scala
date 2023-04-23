@@ -2,6 +2,9 @@ package windota.processors
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import skadistats.clarity.processor.reader.OnMessage
+import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.Util
 import windota.Util._
 import windota.extensions._
@@ -31,9 +34,9 @@ class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
   private var heroesNotInFight = Set.empty[Int]
   private val seenHeroes2 = mutable.Map.empty[Int, Location]
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(gameRulesEntity: Entity, fp: FieldPath): Unit = {
-    val gameTimeState = Util.getGameTimeState(gameRulesEntity)
+  @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
+  def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
+    val gameTimeState = TimeState
 
     currentFight.foreach(fight => seenHeroes2 ++= heroesNotInFight
       .flatMap(handle => {

@@ -24,7 +24,7 @@ class CreepwaveProcessor extends EntitiesProcessor {
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_BaseNPC_Creep_Lane", propertyPattern = "m_iHealth")
   def onCreepHPChanged(creep: Entity, fp: FieldPath): Unit = {
-    val time = Util.getGameTimeState(Entities.getByDtName("CDOTAGamerulesProxy"))
+    val time = TimeState
     if (time.gameTime > 60 * 10) return
 
     val towerTeam = Util.getOppositeTeam(Util.getTeam(creep))

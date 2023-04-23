@@ -2,7 +2,9 @@ package windota.processors
 
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import skadistats.clarity.processor.reader.OnMessage
 import skadistats.clarity.processor.runner.Context
+import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.Util
 import windota.Util.EntityExtension2
 import windota.extensions.FieldPath
@@ -32,13 +34,11 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends EntitiesProcessor {
   def notPurchasedSticks: Seq[(PlayerId, PlayerId)] = _notPurchasedSticks.toSeq
   def notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])] = _notPurchasedItemAgainstHero.toSeq
 
-  @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_fGameTime")
-  def onGameTimeChanged(ctx: Context, e: Entity, fp: FieldPath): Unit = {
+  @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
+  def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
     if (STICKS_CHECKED) return
 
-    val gameTimeState = Util.getGameTimeState(e)
-
-    if (gameTimeState.gameTime >= STICKS_CHECK_MINUTE * 60) {
+    if (TimeState.gameTime >= STICKS_CHECK_MINUTE * 60) {
       STICKS_CHECKED = true
       stickHeroes.foreach(stickHeroName => {
         val heroOpt = Entities.findByName(stickHeroName)

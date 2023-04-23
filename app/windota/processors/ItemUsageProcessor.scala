@@ -29,9 +29,9 @@ class ItemUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
     if (!checkUsage || !Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
-    if (Util.getSpawnTime(hero, gameRules.getProperty[Float]("m_pGameRules.m_fGameTime")) < 10) return
+    if (Util.getSpawnTime(hero, Time) < 10) return
 
-    val time = Util.getGameTimeState(gameRules)
+    val time = TimeState
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
     val items = getItems(hero)
 

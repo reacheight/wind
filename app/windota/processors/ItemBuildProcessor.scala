@@ -15,7 +15,7 @@ import windota.models.Attribute._
 
 import scala.collection.mutable.ListBuffer
 
-class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends EntitiesProcessor {
+class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends ProcessorBase {
   private var STICKS_CHECKED = false
   private val STICKS_CHECK_MINUTE = 3
 

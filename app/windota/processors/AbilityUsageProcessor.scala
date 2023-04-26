@@ -12,7 +12,7 @@ import windota.models.{GameTimeState, PlayerId}
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
-class AbilityUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
+class AbilityUsageProcessor(checkUsage: Boolean) extends ProcessorBase {
   def unusedAbilities = _unusedAbilities.toSeq
   def unusedOnAllyAbilities = _unusedOnAllyAbilities.toSeq
   def unusedOnAllyWithBlinkAbilities = _unusedOnAllyWithBlinkAbilities.toSeq

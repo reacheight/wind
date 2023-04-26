@@ -11,7 +11,7 @@ import windota.models._
 
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
-class FightProcessor extends EntitiesProcessor {
+class FightProcessor extends ProcessorBase {
   type DeathData = (GameTimeState, PlayerId, Location, Map[PlayerId, Location])
   case class DamageData(time: GameTimeState, attacker: PlayerId, target: PlayerId, damage: Int)
 

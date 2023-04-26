@@ -6,7 +6,7 @@ import windota.Util
 import windota.extensions._
 import windota.models.Team._
 
-class ItemStockProcessor extends EntitiesProcessor {
+class ItemStockProcessor extends ProcessorBase {
   private var maxSmokeStockStart: Map[Team, Int] = Map(Radiant -> -1, Dire -> -1)
   private var maxObsStockStart: Map[Team, Int] = Map(Radiant -> -1, Dire -> -1)
 

@@ -14,7 +14,7 @@ import windota.models._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class BadFightsProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
+class BadFightsProcessor(fights: Seq[Fight]) extends ProcessorBase {
   def badFights: Seq[BadFight] = _badFights.distinct.toSeq
 
   private val _badFights: ListBuffer[BadFight] = ListBuffer.empty

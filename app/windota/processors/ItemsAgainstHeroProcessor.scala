@@ -8,7 +8,7 @@ import windota.extensions._
 import windota.models.ItemAgainstHeroDataEntry
 import windota.models.Team._
 
-class ItemsAgainstHeroProcessor extends EntitiesProcessor {
+class ItemsAgainstHeroProcessor extends ProcessorBase {
   val HERO_NAME = "CDOTA_Unit_Hero_PhantomAssassin"
   val ITEM_NAME = "item_monkey_king_bar"
 

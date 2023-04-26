@@ -14,7 +14,7 @@ import windota.models._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class PowerTreadsProcessor extends EntitiesProcessor {
+class PowerTreadsProcessor extends ProcessorBase {
   private val PT_ON_INT_MANA_GAIN = 120
 
   private var combatLogHeroNameToPlayerId = Map[String, Int]()

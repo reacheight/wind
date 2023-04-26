@@ -12,7 +12,7 @@ import windota.models._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class VisionProcessor extends EntitiesProcessor {
+class VisionProcessor extends ProcessorBase {
   val OBS_TTL = 360
   val EPS = 0.01
 

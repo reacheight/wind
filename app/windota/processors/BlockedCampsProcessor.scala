@@ -5,7 +5,7 @@ import windota.models.Role.Role
 import windota.models.Team._
 import windota.models._
 
-class BlockedCampsProcessor extends EntitiesProcessor {
+class BlockedCampsProcessor extends ProcessorBase {
   def getUnblockedCamps(allWards: Seq[Ward], roles: Map[PlayerId, Role]) = {
     val fullDurationLaneStageWards = allWards
       .filter(ward => ward.created.gameTime < 600 && ward.isFullDuration)

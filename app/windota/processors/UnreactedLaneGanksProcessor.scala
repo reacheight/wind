@@ -14,7 +14,7 @@ import windota.models._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class UnreactedLaneGanksProcessor(fights: Seq[Fight], playerLanes: Map[PlayerId, Lane]) extends EntitiesProcessor {
+class UnreactedLaneGanksProcessor(fights: Seq[Fight], playerLanes: Map[PlayerId, Lane]) extends ProcessorBase {
   private val EPS = 0.05
   private val LANE_GANK_CHECK_RANGE = 2500
   private val START_CHECK_TIME_BEFORE_GANK = 30

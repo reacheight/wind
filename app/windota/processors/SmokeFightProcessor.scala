@@ -13,7 +13,7 @@ import windota.models._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class SmokeFightProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
+class SmokeFightProcessor(fights: Seq[Fight]) extends ProcessorBase {
   def smokeFights = _smokeFights.distinct.toSeq
 
   private val _smokeFights = ListBuffer.empty[(Map[Team, GameTimeState], Fight)]

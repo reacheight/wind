@@ -7,7 +7,7 @@ import windota.Util
 import windota.extensions._
 import windota.models._
 
-class CourierProcessor extends EntitiesProcessor {
+class CourierProcessor extends ProcessorBase {
   def courierIsOut: Map[PlayerId, (Boolean, Boolean)] = _courierIsOut
 
   private var _courierIsOut: Map[PlayerId, (Boolean, Boolean)] = Map.empty

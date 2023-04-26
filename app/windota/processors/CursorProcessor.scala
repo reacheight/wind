@@ -11,7 +11,7 @@ import windota.models._
 
 import scala.collection.mutable
 
-class CursorProcessor extends EntitiesProcessor {
+class CursorProcessor extends ProcessorBase {
   private var combatLogHeroNameToPlayerId = Map[String, Int]()
 
   val cursorItemDeliveryRangeY = 370 to 380

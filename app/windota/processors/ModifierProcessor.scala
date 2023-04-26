@@ -18,7 +18,7 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("ModifierNames")
-class ModifierProcessor extends EntitiesProcessor {
+class ModifierProcessor extends ProcessorBase {
   def overlappedStuns = _overlappedStuns.toSeq
 
   def smokedHeroes: Map[PlayerId, GameTimeState] = _smoked.toMap

@@ -9,7 +9,7 @@ import windota.extensions.EntitiesExtension
 import windota.models.GameTimeState
 
 @UsesEntities
-class EntitiesProcessor {
+class ProcessorBase {
   private var serverTick = 0
   private val TIME_EPS: Float = 0.001f
 

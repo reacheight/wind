@@ -12,7 +12,7 @@ import windota.models._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class CreepwaveProcessor extends EntitiesProcessor {
+class CreepwaveProcessor extends ProcessorBase {
   def notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])] = _notTankedCreepwaves.toSeq
   def wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)] = _wastedCreepwaves
 

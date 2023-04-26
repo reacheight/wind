@@ -13,7 +13,7 @@ import windota.models._
 
 import scala.collection.mutable.ListBuffer
 
-class UnreasonableDivesProcessor(fights: Seq[Fight]) extends EntitiesProcessor {
+class UnreasonableDivesProcessor(fights: Seq[Fight]) extends ProcessorBase {
   private val EPS = 0.05
   private val TOWER_ATTACK_RANGE = 700
 

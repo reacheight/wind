@@ -11,7 +11,7 @@ import windota.models.Lane._
 import windota.models.Team._
 import windota.models._
 
-class LaneProcessor extends EntitiesProcessor {
+class LaneProcessor extends ProcessorBase {
   private val Epsilon = 0.001f
   private val IterationInterval = 10
   private val LaneStageEndMinute = 10

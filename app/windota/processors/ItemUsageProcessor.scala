@@ -12,7 +12,7 @@ import windota.models._
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
-class ItemUsageProcessor(checkUsage: Boolean) extends EntitiesProcessor {
+class ItemUsageProcessor(checkUsage: Boolean) extends ProcessorBase {
   def unusedItems: Seq[(GameTimeState, PlayerId, Int)] = _unusedItems.toSeq
   def unusedOnAllyItems: Seq[(GameTimeState, PlayerId, PlayerId, Int)] = _unusedOnAllyItems.toSeq
 

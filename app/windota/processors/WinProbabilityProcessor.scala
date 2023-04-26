@@ -12,7 +12,7 @@ import windota.models.WinProbabilityDataEntry
 
 import scala.collection.mutable.ListBuffer
 
-class WinProbabilityProcessor extends EntitiesProcessor {
+class WinProbabilityProcessor extends ProcessorBase {
   var data: ListBuffer[WinProbabilityDataEntry] = ListBuffer.empty
 
   private val IterationInterval = 10

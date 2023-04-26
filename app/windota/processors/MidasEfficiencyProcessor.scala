@@ -11,7 +11,7 @@ import windota.models._
 
 import scala.collection.mutable
 
-class MidasEfficiencyProcessor extends EntitiesProcessor {
+class MidasEfficiencyProcessor extends ProcessorBase {
   def midasEfficiency: Map[PlayerId, Float] = _midasEfficiency
 
   private val MidasName = "item_hand_of_midas"

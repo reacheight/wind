@@ -4,6 +4,7 @@ ThisBuild / version := "1.0"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
+  .disablePlugins(PlayLogback)
   .settings(
     name := """windota""",
     libraryDependencies ++= Seq(

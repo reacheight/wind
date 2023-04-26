@@ -46,6 +46,7 @@ class ItemUsageProcessor extends ProcessorBase {
     addUnusedItem("item_hood_of_defiance", 131)
     addUnusedItem("CDOTA_Item_Trickster_Cloak", 571)
     addUnusedItem("CDOTA_Item_Pipe", 90)
+    addUnusedItem("CDOTA_Item_Pavise", 90)
 
     def addUnusedItem(entityName: String, itemId: Int): Unit =
       ItemsHelper.findUnusedItem(hero, items, entityName)

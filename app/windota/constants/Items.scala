@@ -5,6 +5,7 @@ import io.circe.parser._
 
 import scala.io.Source
 
+// https://github.com/SteamDatabase/SteamTracking/blob/master/API - for actual api
 // https://api.steampowered.com/IEconDOTA2_570/GetGameItems/V001/?key=APIKEY
 object Items {
   private val rawJson = Source.fromResource("items.json").mkString

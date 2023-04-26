@@ -492,10 +492,14 @@
       {
         "name":"npc_dota_hero_primal_beast",
         "id":137
+      },
+      {
+        "name":"npc_dota_hero_muerta",
+        "id":138
       }
     ]
   ,
     "status":200,
-    "count":123
+    "count":124
   }
 }

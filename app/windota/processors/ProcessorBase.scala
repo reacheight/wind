@@ -4,14 +4,21 @@ import skadistats.clarity.event.Insert
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.{Entities, UsesEntities}
 import skadistats.clarity.processor.reader.OnMessage
+import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.extensions.EntitiesExtension
 import windota.models.GameTimeState
+import windota.processors.helpers.AbilityHelperProcessor
 
 @UsesEntities
 class ProcessorBase {
   private var serverTick = 0
   private val TIME_EPS: Float = 0.001f
+
+  @Insert
+  private val ctx: Context = null
+
+  protected lazy val AbilityHelper: AbilityHelperProcessor = ctx.getProcessor(classOf[AbilityHelperProcessor])
 
   @Insert
   protected val Entities: Entities = null

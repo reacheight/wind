@@ -53,9 +53,8 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends ProcessorBase {
             val oppHeroOpt = Entities.find(e => Util.isHero(e) && Util.getTeam(e) == oppTeam && roles(Util.getPlayerId(e)) == oppRole)
 
             oppHeroOpt.foreach(oppHero => {
-              val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
-              val items = itemUsageProcessor.getItems(oppHero)
-              val hasStick = stickItemNames.map(name => itemUsageProcessor.findItem(items, name)).exists(_.isDefined)
+              val items = ItemsHelper.getItems(oppHero)
+              val hasStick = stickItemNames.map(name => ItemsHelper.findItem(items, name)).exists(_.isDefined)
               if (!hasStick)
                 _notPurchasedSticks.addOne(Util.getPlayerId(oppHero), stickPlayerId)
             })
@@ -70,16 +69,13 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends ProcessorBase {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
-    val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
-
     heroItemData.foreach { case (heroId, heroName, itemName, itemRealName, noItemWinrate, itemWinrate, candidatePredicate) =>
       val heroOpt = Entities.findByName(heroName)
       heroOpt.foreach(hero => {
         val heroTeam = Util.getTeam(hero)
         val candidatesForItem = Entities.filter(e => Util.isHero(e) && Util.getTeam(e) != heroTeam && candidatePredicate(e))
         val enemiesHasItem = candidatesForItem.exists(e => {
-          val items = itemUsageProcessor.getItems(e)
-          val hasItem = itemUsageProcessor.findItem(items, itemName).isDefined
+          val hasItem = ItemsHelper.findItem(hero, itemName).isDefined
           hasItem
         })
 

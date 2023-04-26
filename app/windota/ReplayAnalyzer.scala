@@ -9,7 +9,7 @@ import windota.models.Lane._
 import windota.models.Role._
 import windota.models._
 import windota.processors._
-import windota.processors.helpers.AbilityHelperProcessor
+import windota.processors.helpers.{AbilityHelperProcessor, ItemsHelperProcessor}
 
 import java.nio.file.Path
 import scala.util.Using
@@ -31,7 +31,7 @@ object ReplayAnalyzer {
     val itemStockProcessor = new ItemStockProcessor
     val glyphProcessor = new GlyphProcessor
     val visionProcessor = new VisionProcessor
-    val itemUsageProcessor = new ItemUsageProcessor(true)
+    val itemUsageProcessor = new ItemUsageProcessor
     val rolesProcessor = new RolesProcessor
     val abilityUsageProcessor = new AbilityUsageProcessor
     val purchasesProcessor = new PurchasesProcessor
@@ -52,7 +52,7 @@ object ReplayAnalyzer {
         runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
           visionProcessor, itemUsageProcessor, abilityUsageProcessor,
           purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
-          laneProcessor, rolesProcessor, powerTreadsProcessor, new AbilityHelperProcessor
+          laneProcessor, rolesProcessor, powerTreadsProcessor, new AbilityHelperProcessor, new ItemsHelperProcessor
         )
       } catch {
         case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
@@ -70,7 +70,7 @@ object ReplayAnalyzer {
 
       try {
         runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor,
-          unreasonableDivesProcessor, itemBuildProcessor, new ItemUsageProcessor(false), unreactedLaneGanksProcessor
+          unreasonableDivesProcessor, itemBuildProcessor, new ItemsHelperProcessor, unreactedLaneGanksProcessor
         )
       } catch {
         case e =>

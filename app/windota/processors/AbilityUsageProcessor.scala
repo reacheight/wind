@@ -129,7 +129,7 @@ class AbilityUsageProcessor extends ProcessorBase {
             .filter(_ => !requireShard || hasShard(ally))
             .foreach(ability => {
               val distance = Util.getDistance(hero, ally)
-              val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + getAdditionalCastRange(ally)
+              val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + ItemsHelper.getAdditionalCastRange(ally)
 
               if (abilityCastRange >= distance)
                 _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, abilityId)
@@ -140,14 +140,12 @@ class AbilityUsageProcessor extends ProcessorBase {
     }
   }
 
-  private def getAdditionalCastRange(hero: Entity): Int = {
-    val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
-    itemUsageProcessor.getAdditionalCastRange(hero)
-  }
-
   private def getCastRangeIfHasBlink(hero: Entity): Int = {
-    val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
-    itemUsageProcessor.getCastRangeIfHasBlink(hero)
+    val blinkItemName = "CDOTA_Item_BlinkDagger"
+    val items = ItemsHelper.getItems(hero)
+    ItemsHelper.findItem(items, blinkItemName)
+      .filterNot(Util.isOnCooldown)
+      .map(_ => 1200).getOrElse(0)
   }
 
   private def hasScepter(hero: Entity): Boolean = {

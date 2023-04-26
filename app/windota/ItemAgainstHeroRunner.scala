@@ -6,6 +6,7 @@ import skadistats.clarity.source.MappedFileSource
 import windota.external.stratz.StratzClient
 import windota.external.valve.ValveClient
 import windota.models.ItemAgainstHeroDataEntry
+import windota.processors.helpers.ItemsHelperProcessor
 import windota.processors.{ItemUsageProcessor, ItemsAgainstHeroProcessor}
 
 import java.io.FileWriter
@@ -17,7 +18,6 @@ object ItemAgainstHeroRunner {
   private val resultFile = Paths.get("items_against_hero_stats", "pa_mkb_nw_stomp.txt").toFile
 
   def runWithProcessor(matches: Seq[Long]): Unit = {
-    val itemUsageProcessor = new ItemUsageProcessor(false)
     val fw = new FileWriter(resultFile, true)
 
     matches.zip(1 to matches.length).foreach { case (matchId, idx) =>
@@ -35,7 +35,7 @@ object ItemAgainstHeroRunner {
                 val itemsAgainstHeroProcessor = new ItemsAgainstHeroProcessor
 
                 try {
-                  runner.runWith(itemUsageProcessor, itemsAgainstHeroProcessor)
+                  runner.runWith(new ItemsHelperProcessor, itemsAgainstHeroProcessor)
                 } catch {
                   case e => logger.error(s"Error for $matchId: ${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
                 }

@@ -9,8 +9,8 @@ import windota.models.ItemAgainstHeroDataEntry
 import windota.models.Team._
 
 class ItemsAgainstHeroProcessor extends ProcessorBase {
-  val HERO_NAME = "CDOTA_Unit_Hero_PhantomAssassin"
-  val ITEM_NAME = "item_monkey_king_bar"
+  private val HERO_NAME = "CDOTA_Unit_Hero_PhantomAssassin"
+  private val ITEM_NAME = "item_monkey_king_bar"
 
   private var _dataEntry: Option[ItemAgainstHeroDataEntry] = None
   def result: Option[ItemAgainstHeroDataEntry] = _dataEntry
@@ -20,12 +20,8 @@ class ItemsAgainstHeroProcessor extends ProcessorBase {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
-    val itemUsageProcessor = ctx.getProcessor(classOf[ItemUsageProcessor])
-    def heroesHasItem(heroes: Seq[Entity]): Boolean = heroes.exists(h => {
-      val items = itemUsageProcessor.getItems(h)
-      val item = itemUsageProcessor.findItem(items, ITEM_NAME)
-      item.nonEmpty
-    })
+    def heroesHasItem(heroes: Seq[Entity]): Boolean =
+      heroes.exists(h => ItemsHelper.findItem(h, ITEM_NAME).nonEmpty)
 
     val hero = Entities.getByDtName(HERO_NAME)
     val heroTeam = Util.getTeam(hero)

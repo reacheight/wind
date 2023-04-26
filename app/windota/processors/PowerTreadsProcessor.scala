@@ -105,7 +105,7 @@ class PowerTreadsProcessor extends ProcessorBase {
       return
 
     val abilityName = cle.getInflictorName
-    val abilityOpt = AbilityHelper.findAbility(hero, abilityName, shouldBeLearned = true)
+    val abilityOpt = AbilitiesHelper.findAbility(hero, abilityName, shouldBeLearned = true)
     abilityOpt.filter(_.manaCost > 50).foreach(ability => {
       if (ptStat == 1) {
         _ptOnIntAbilityUsageCount += (userPlayerId -> (_ptOnIntAbilityUsageCount(userPlayerId) + 1))

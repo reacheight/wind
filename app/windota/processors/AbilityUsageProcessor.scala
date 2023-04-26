@@ -31,7 +31,7 @@ class AbilityUsageProcessor extends ProcessorBase {
 
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
-    val abilities = AbilityHelper.getAbilities(hero)
+    val abilities = AbilitiesHelper.getAbilities(hero)
 
     addUnusedAbility("CDOTA_Ability_Slark_ShadowDance", 5497)
     addUnusedAbility("CDOTA_Ability_Slark_Depth_Shroud", 729)
@@ -59,7 +59,7 @@ class AbilityUsageProcessor extends ProcessorBase {
     addUnusedAbility("sniper_concussive_grenade", 694)
 
     def addUnusedAbility(entityName: String, abilityId: Int): Unit =
-      AbilityHelper.findUnusedAbility(hero, abilities, entityName)
+      AbilitiesHelper.findUnusedAbility(hero, abilities, entityName)
         .foreach(_ => _unusedAbilities.addOne((TimeState, playerId, abilityId)))
   }
 
@@ -124,7 +124,7 @@ class AbilityUsageProcessor extends ProcessorBase {
         .find(ally => ally.getDtClass.getDtName.contains(heroName))
         .foreach(ally => {
           val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
-          AbilityHelper.findUnusedAbility(ally, entityName)
+          AbilitiesHelper.findUnusedAbility(ally, entityName)
             .filter(_ => !requireScepter || hasScepter(ally))
             .filter(_ => !requireShard || hasShard(ally))
             .foreach(ability => {

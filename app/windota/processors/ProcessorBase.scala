@@ -8,7 +8,7 @@ import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes
 import windota.extensions.EntitiesExtension
 import windota.models.GameTimeState
-import windota.processors.helpers.{AbilityHelperProcessor, ItemsHelperProcessor}
+import windota.processors.helpers.{AbilitiesHelperProcessor, ItemsHelperProcessor}
 
 @UsesEntities
 class ProcessorBase {
@@ -18,7 +18,7 @@ class ProcessorBase {
   @Insert
   private val ctx: Context = null
 
-  protected lazy val AbilityHelper: AbilityHelperProcessor = ctx.getProcessor(classOf[AbilityHelperProcessor])
+  protected lazy val AbilitiesHelper: AbilitiesHelperProcessor = ctx.getProcessor(classOf[AbilitiesHelperProcessor])
   protected lazy val ItemsHelper: ItemsHelperProcessor = ctx.getProcessor(classOf[ItemsHelperProcessor])
 
   @Insert

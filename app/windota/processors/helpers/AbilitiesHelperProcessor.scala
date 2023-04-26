@@ -9,7 +9,7 @@ import windota.Util
 import windota.extensions._
 
 @UsesStringTable("EntityNames")
-class AbilityHelperProcessor {
+class AbilitiesHelperProcessor {
   @Insert
   private val ctx: Context = null
 

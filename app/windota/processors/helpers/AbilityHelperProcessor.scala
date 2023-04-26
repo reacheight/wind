@@ -23,9 +23,11 @@ class AbilityHelperProcessor {
       .flatMap(Entities.get)
   }
 
-  def findAbility(entity: Entity, name: String, shouldBeLearned: Boolean): Option[Entity] = {
-    val stringTable = ctx.getProcessor(classOf[StringTables]).forName("EntityNames")
-    getAbilities(entity)
+  def findAbility(entity: Entity, name: String, shouldBeLearned: Boolean): Option[Entity] =
+    findAbility(getAbilities(entity), name, shouldBeLearned)
+
+  def findAbility(abilities: Seq[Entity], name: String, shouldBeLearned: Boolean): Option[Entity] = {
+    abilities
       .find(ability => ability.getDtClass.getDtName == name ||
         stringTable.getNameByIndex(ability.getProperty[Int]("m_pEntity.m_nameStringableIndex")) == name)
       .filter(ability => !shouldBeLearned || ability.getProperty[Int]("m_iLevel") > 0)
@@ -36,4 +38,12 @@ class AbilityHelperProcessor {
       .filter(ability => Util.hasEnoughMana(hero, ability))
       .filterNot(Util.isOnCooldown)
   }
+
+  def findUnusedAbility(hero: Entity, abilities: Seq[Entity], name: String): Option[Entity] = {
+    findAbility(abilities, name, shouldBeLearned = true)
+      .filter(ability => Util.hasEnoughMana(hero, ability))
+      .filterNot(Util.isOnCooldown)
+  }
+
+  private def stringTable = ctx.getProcessor(classOf[StringTables]).forName("EntityNames")
 }

@@ -33,7 +33,7 @@ object ReplayAnalyzer {
     val visionProcessor = new VisionProcessor
     val itemUsageProcessor = new ItemUsageProcessor(true)
     val rolesProcessor = new RolesProcessor
-    val abilityUsageProcessor = new AbilityUsageProcessor(true)
+    val abilityUsageProcessor = new AbilityUsageProcessor
     val purchasesProcessor = new PurchasesProcessor
     val midasProcessor = new MidasEfficiencyProcessor
     val scanProcessor = new ScanProcessor

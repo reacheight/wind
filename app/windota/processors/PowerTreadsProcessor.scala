@@ -99,8 +99,6 @@ class PowerTreadsProcessor extends ProcessorBase {
   }
 
   def incrementAbilityUsage(cle: CombatLogEntry, ptStat: Int, userPlayerId: Int): Unit = {
-    val abilityUsageProcessor = ctx.getProcessor(classOf[AbilityUsageProcessor])
-
     val hero = Entities.getByPredicate(e => e.isHero && e.playerId.id == userPlayerId)
     val enemiesAround = Entities.filter(e => e.isHero && e.team != hero.team && e.isAlive && Util.getDistance(e, hero) <= 3000)
     if (enemiesAround.nonEmpty)

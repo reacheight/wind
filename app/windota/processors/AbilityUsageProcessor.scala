@@ -12,7 +12,7 @@ import windota.models.{GameTimeState, PlayerId}
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
-class AbilityUsageProcessor(checkUsage: Boolean) extends ProcessorBase {
+class AbilityUsageProcessor extends ProcessorBase {
   def unusedAbilities = _unusedAbilities.toSeq
   def unusedOnAllyAbilities = _unusedOnAllyAbilities.toSeq
   def unusedOnAllyWithBlinkAbilities = _unusedOnAllyWithBlinkAbilities.toSeq
@@ -26,12 +26,12 @@ class AbilityUsageProcessor(checkUsage: Boolean) extends ProcessorBase {
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
-    if (!checkUsage || !Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+    if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
     if (Util.getSpawnTime(hero, Time) < 10) return
 
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
-    val abilities = getAbilities(hero)
+    val abilities = AbilityHelper.getAbilities(hero)
 
     addUnusedAbility("CDOTA_Ability_Slark_ShadowDance", 5497)
     addUnusedAbility("CDOTA_Ability_Slark_Depth_Shroud", 729)
@@ -59,13 +59,13 @@ class AbilityUsageProcessor(checkUsage: Boolean) extends ProcessorBase {
     addUnusedAbility("sniper_concussive_grenade", 694)
 
     def addUnusedAbility(entityName: String, abilityId: Int): Unit =
-      findUnusedAbility(hero, abilities, entityName)
+      AbilityHelper.findUnusedAbility(hero, abilities, entityName)
         .foreach(_ => _unusedAbilities.addOne((TimeState, playerId, abilityId)))
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDiedForAllies(hero: Entity, fp: FieldPath): Unit = {
-    if (!checkUsage || !Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
+    if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     if (Util.getSpawnTime(hero, Time) < 10) return
@@ -124,7 +124,7 @@ class AbilityUsageProcessor(checkUsage: Boolean) extends ProcessorBase {
         .find(ally => ally.getDtClass.getDtName.contains(heroName))
         .foreach(ally => {
           val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
-          findUnusedAbility(ally, getAbilities(ally), entityName)
+          AbilityHelper.findUnusedAbility(ally, entityName)
             .filter(_ => !requireScepter || hasScepter(ally))
             .filter(_ => !requireShard || hasShard(ally))
             .foreach(ability => {
@@ -138,27 +138,6 @@ class AbilityUsageProcessor(checkUsage: Boolean) extends ProcessorBase {
             })
       })
     }
-  }
-
-  def getAbilities(hero: Entity): Seq[Entity] = {
-    (0 to 31)
-      .map(i => hero.getProperty[Int](s"m_hAbilities.000$i"))
-      .filter(_ != Util.NullValue)
-      .flatMap(Entities.get)
-  }
-
-  def findAbility(abilities: Seq[Entity], name: String): Option[Entity] = {
-    val stringTable = ctx.getProcessor(classOf[StringTables]).forName("EntityNames")
-    abilities
-      .find(ability => ability.getDtClass.getDtName == name ||
-        stringTable.getNameByIndex(ability.getProperty[Int]("m_pEntity.m_nameStringableIndex")) == name)
-      .filter(ability => ability.getProperty[Int]("m_iLevel") > 0)
-  }
-
-  private def findUnusedAbility(hero: Entity, abilities: Seq[Entity], name: String): Option[Entity] = {
-    findAbility(abilities, name)
-      .filter(ability => Util.hasEnoughMana(hero, ability))
-      .filterNot(Util.isOnCooldown)
   }
 
   private def getAdditionalCastRange(hero: Entity): Int = {

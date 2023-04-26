@@ -38,18 +38,18 @@ class ProcessorBase {
       if (preGameTime > TIME_EPS) {
         val startTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flGameStartTime")
         if (startTime > TIME_EPS) {
-          return GameTimeState(true, true, Time - startTime)
+          return GameTimeState(preGameStarted = true, gameStarted = true, gameTime = Time - startTime)
         }
         else {
           val transitionTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flStateTransitionTime")
-          return GameTimeState(true, false, Time - transitionTime)
+          return GameTimeState(preGameStarted = true, gameStarted = false, gameTime = Time - transitionTime)
         }
       }
 
-      return GameTimeState(false, false, Float.MinValue)
+      return GameTimeState(preGameStarted = false, gameStarted = false, gameTime = Float.MinValue)
     }
 
-    GameTimeState(false, false, Float.MinValue)
+    GameTimeState(preGameStarted = false, gameStarted = false, gameTime = Float.MinValue)
   }
 
   @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])

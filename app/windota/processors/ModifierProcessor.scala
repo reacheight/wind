@@ -46,9 +46,10 @@ class ModifierProcessor extends ProcessorBase {
 
   @OnCombatLogEntry
   def onCombatLog(ctx: Context, cle: CombatLogEntry): Unit = {
+    val time = GameTimeHelper.State
+
     if (isStun(cle) && !cle.isTargetIllusion) {
       for {
-        time <- TimeStateOption
         stunnedPlayerId <- combatLogHeroNameToPlayerId.get(cle.getTargetName)
         attackerPlayerId <- combatLogHeroNameToPlayerId.get(cle.getAttackerName)
       } yield {
@@ -85,11 +86,10 @@ class ModifierProcessor extends ProcessorBase {
     }
 
     if (cle.getInflictorName == SmokeModifierName) {
-      val time = TimeStateOption
       val playerId = combatLogHeroNameToPlayerId.get(cle.getTargetName)
 
       if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_MODIFIER_ADD)
-        time.foreach(t => playerId.foreach(id => _smoked(PlayerId(id)) = t))
+        playerId.foreach(id => _smoked(PlayerId(id)) = time)
 
       if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_MODIFIER_REMOVE)
         playerId.foreach(id => _smoked.remove(PlayerId(id)))

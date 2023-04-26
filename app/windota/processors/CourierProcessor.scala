@@ -14,9 +14,7 @@ class CourierProcessor extends ProcessorBase {
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy.*", propertyPattern = "m_pGameRules.m_flGameStartTime")
   def onGameStartTimeChanged(ctx: Context, e: Entity, fp: FieldPath): Unit = {
-    val gameTimeState = TimeState
-
-    if (gameTimeState.gameStarted) {
+    if (GameTimeHelper.State.gameStarted) {
       val monkeyKingTeam = Entities.findByName("CDOTA_Unit_Hero_MonkeyKing")
         .find(Util.isHero)
         .map(Util.getTeam)

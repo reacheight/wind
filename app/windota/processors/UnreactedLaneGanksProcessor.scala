@@ -51,7 +51,7 @@ class UnreactedLaneGanksProcessor(fights: Seq[Fight], playerLanes: Map[PlayerId,
 
   @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
   def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
-    val gameTimeState = TimeState
+    val gameTimeState = GameTimeHelper.State
 
     currentGank.foreach(fight => seenGankers ++= gankers
       .filter(handle => {

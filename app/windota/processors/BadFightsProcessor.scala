@@ -1,7 +1,5 @@
 package windota.processors
 
-import skadistats.clarity.model.Entity
-import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.reader.OnMessage
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes
@@ -36,7 +34,7 @@ class BadFightsProcessor(fights: Seq[Fight]) extends ProcessorBase {
 
   @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
   def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
-    val gameTimeState = TimeState
+    val gameTimeState = GameTimeHelper.State
 
     currentFight.foreach(fight => seenHeroes2 ++= heroesNotInFight
       .flatMap(handle => {

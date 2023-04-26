@@ -28,7 +28,7 @@ class LaneProcessor extends ProcessorBase {
 
   @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
   def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
-    val gameTimeState = TimeState
+    val gameTimeState = GameTimeHelper.State
     if (!gameTimeState.gameStarted || gameTimeState.gameTime < 30 || currentIteration > LaneStageIterationCount || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
 
     val heroEntities = Entities.getAllByPredicate(Util.isHero)

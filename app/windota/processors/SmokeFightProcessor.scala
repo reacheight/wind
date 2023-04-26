@@ -23,10 +23,9 @@ class SmokeFightProcessor(fights: Seq[Fight]) extends ProcessorBase {
 
   @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
   def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
-    val gameTimeState = TimeState
 
     fights
-      .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime - CHECK_HEROES_SMOKED) < EPS)
+      .find(fight => math.abs(fight.start.gameTime - GameTimeHelper.State.gameTime - CHECK_HEROES_SMOKED) < EPS)
       .foreach(fight => {
         val modifierProcessor = ctx.getProcessor(classOf[ModifierProcessor])
         val smoked = modifierProcessor.smokedHeroes

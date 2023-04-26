@@ -20,11 +20,10 @@ class PurchasesProcessor extends ProcessorBase {
     if (cle.getType != DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_PURCHASE) return
 
     val gameRules = ctx.getProcessor(classOf[Entities]).getByDtName("CDOTAGamerulesProxy")
-    val gameTime = TimeState
 
     if (!_purchases.contains(cle.getTargetName))
       _purchases(cle.getTargetName) = ListBuffer.empty
 
-    _purchases(cle.getTargetName).addOne((cle.getValueName, gameTime.gameTime.toInt))
+    _purchases(cle.getTargetName).addOne((cle.getValueName, GameTimeHelper.State.gameTime.toInt))
   }
 }

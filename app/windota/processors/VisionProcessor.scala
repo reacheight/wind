@@ -35,7 +35,7 @@ class VisionProcessor extends ProcessorBase {
 
   @OnEntityCreated(classPattern = "CDOTA_NPC_Observer_Ward.*")
   private def onWardPlaced(ctx: Context, wardEntity: Entity): Unit = {
-    val time = TimeState
+    val time = GameTimeHelper.State
     val location = Util.getLocation(wardEntity)
     val owner = PlayerId(wardEntity.get[Int]("m_nPlayerOwnerID").get)
     val isSentry = wardEntity.getDtClass.getDtName.contains("TrueSight")
@@ -52,7 +52,7 @@ class VisionProcessor extends ProcessorBase {
   private def onWardEnded(ctx: Context, ward: Entity, fp: FieldPath): Unit = {
     if (ward.getPropertyForFieldPath[Int](fp) != 1) return
 
-    val time = TimeState
+    val time = GameTimeHelper.State
     val isSentry = ward.getDtClass.getDtName.contains("TrueSight")
     if (isSentry) {
       val current = _sentries(ward.getHandle)
@@ -71,7 +71,7 @@ class VisionProcessor extends ProcessorBase {
 
       val playerId = heroProcessor.combatLogNameToPlayerId.get(cle.getAttackerName)
       playerId.foreach(id => {
-        itemUsages(cle.getInflictorName).addOne(TimeState, PlayerId(id))
+        itemUsages(cle.getInflictorName).addOne(GameTimeHelper.State, PlayerId(id))
       })
     }
   }

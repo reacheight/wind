@@ -38,7 +38,7 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends ProcessorBase {
   def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
     if (STICKS_CHECKED) return
 
-    if (TimeState.gameTime >= STICKS_CHECK_MINUTE * 60) {
+    if (GameTimeHelper.State.gameTime >= STICKS_CHECK_MINUTE * 60) {
       STICKS_CHECKED = true
       stickHeroes.foreach(stickHeroName => {
         val heroOpt = Entities.findByName(stickHeroName)

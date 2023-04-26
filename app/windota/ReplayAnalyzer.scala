@@ -9,7 +9,7 @@ import windota.models.Lane._
 import windota.models.Role._
 import windota.models._
 import windota.processors._
-import windota.processors.helpers.{AbilitiesHelperProcessor, ItemsHelperProcessor}
+import windota.processors.helpers.{AbilitiesHelperProcessor, GameTimeHelperProcessor, ItemsHelperProcessor}
 
 import java.nio.file.Path
 import scala.util.Using
@@ -52,7 +52,7 @@ object ReplayAnalyzer {
         runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
           visionProcessor, itemUsageProcessor, abilityUsageProcessor,
           purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
-          laneProcessor, rolesProcessor, powerTreadsProcessor, new AbilitiesHelperProcessor, new ItemsHelperProcessor
+          laneProcessor, rolesProcessor, powerTreadsProcessor, new AbilitiesHelperProcessor, new ItemsHelperProcessor, new GameTimeHelperProcessor
         )
       } catch {
         case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
@@ -70,7 +70,7 @@ object ReplayAnalyzer {
 
       try {
         runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor,
-          unreasonableDivesProcessor, itemBuildProcessor, new ItemsHelperProcessor, unreactedLaneGanksProcessor
+          unreasonableDivesProcessor, itemBuildProcessor, new ItemsHelperProcessor, unreactedLaneGanksProcessor, new GameTimeHelperProcessor
         )
       } catch {
         case e =>

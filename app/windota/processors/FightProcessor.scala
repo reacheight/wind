@@ -118,7 +118,7 @@ class FightProcessor extends ProcessorBase {
       .toMap
       .updated(deadPlayerId, heroLocation)
 
-    _deaths.addOne((TimeState, deadPlayerId, Util.getLocation(hero), locations))
+    _deaths.addOne((GameTimeHelper.State, deadPlayerId, Util.getLocation(hero), locations))
   }
 
   @OnCombatLogEntry
@@ -129,7 +129,7 @@ class FightProcessor extends ProcessorBase {
       val target = PlayerId(heroesProcessor.combatLogNameToPlayerId(cle.getTargetName))
       val damage = cle.getValue
 
-      _damage.addOne(DamageData(TimeState, attacker, target, damage))
+      _damage.addOne(DamageData(GameTimeHelper.State, attacker, target, damage))
     }
   }
 

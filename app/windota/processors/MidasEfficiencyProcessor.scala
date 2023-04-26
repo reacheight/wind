@@ -26,9 +26,8 @@ class MidasEfficiencyProcessor extends ProcessorBase {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
-    val time = TimeState
     _midasEfficiency = _midasPurchases.map { case (playerId, purchaseTime) =>
-      val maxPossibleUsageCount = (time.gameTime - purchaseTime.gameTime).toInt / MidasCooldown
+      val maxPossibleUsageCount = (GameTimeHelper.State.gameTime - purchaseTime.gameTime).toInt / MidasCooldown
       val playerUsageCount = _midasUsageCount(playerId)
       playerId -> (playerUsageCount.toFloat / maxPossibleUsageCount) * 100
     }.toMap
@@ -37,10 +36,9 @@ class MidasEfficiencyProcessor extends ProcessorBase {
   @OnCombatLogEntry
   def onMidasPurchase(ctx: Context, cle: CombatLogEntry): Unit = {
     if (isMidasPurchase(cle)) {
-      val time = TimeState
       val playerId = PlayerId(ctx.getProcessor(classOf[HeroProcessor]).combatLogNameToPlayerId(cle.getTargetName))
 
-      _midasPurchases(playerId) = time
+      _midasPurchases(playerId) = GameTimeHelper.State
       _midasUsageCount(playerId) = 0
     }
   }

@@ -18,19 +18,19 @@ class ItemStockProcessor extends ProcessorBase {
     val gameState = gameRules.getPropertyForFieldPath[Int](fp)
     if (gameState != 6) return
 
-    val timeState = TimeState
+    val gameTimeState = GameTimeHelper.State
 
     if (maxSmokeStockStart(Radiant) > 0)
-      incrementMaxSmokeStockDuration(Radiant, timeState.gameTime.toInt)
+      incrementMaxSmokeStockDuration(Radiant, gameTimeState.gameTime.toInt)
 
     if (maxSmokeStockStart(Dire) > 0)
-      incrementMaxSmokeStockDuration(Dire, timeState.gameTime.toInt)
+      incrementMaxSmokeStockDuration(Dire, gameTimeState.gameTime.toInt)
 
     if (maxObsStockStart(Radiant) > 0)
-      incrementMaxObsStockDuration(Radiant, timeState.gameTime.toInt)
+      incrementMaxObsStockDuration(Radiant, gameTimeState.gameTime.toInt)
 
     if (maxObsStockStart(Dire) > 0)
-      incrementMaxObsStockDuration(Dire, timeState.gameTime.toInt)
+      incrementMaxObsStockDuration(Dire, gameTimeState.gameTime.toInt)
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTAGamerulesProxy", propertyPattern = "m_pGameRules.m_vecItemStockInfo.0010.iStockCount")
@@ -51,28 +51,28 @@ class ItemStockProcessor extends ProcessorBase {
 
   def onSmokeStockChanged(team: Team, gameRules: Entity, fp: FieldPath): Unit = {
     val smokeStockCount = gameRules.getPropertyForFieldPath[Int](fp)
-    val timeState = TimeState
+    val gameTimeState = GameTimeHelper.State
 
     if (smokeStockCount == 3) {
-      maxSmokeStockStart += (team -> timeState.gameTime.toInt)
+      maxSmokeStockStart += (team -> gameTimeState.gameTime.toInt)
     }
 
     if (smokeStockCount == 2 && maxSmokeStockStart(team) > 0) {
-      incrementMaxSmokeStockDuration(team, timeState.gameTime.toInt)
+      incrementMaxSmokeStockDuration(team, gameTimeState.gameTime.toInt)
       maxSmokeStockStart += (team -> -1)
     }
   }
 
   def onObsStockChanged(team: Team, gameRules: Entity, fp: FieldPath): Unit = {
     val obsStockCount = gameRules.getPropertyForFieldPath[Int](fp)
-    val timeState = TimeState
+    val gameTimeState = GameTimeHelper.State
 
     if (obsStockCount == 4) {
-      maxObsStockStart += (team -> timeState.gameTime.toInt)
+      maxObsStockStart += (team -> gameTimeState.gameTime.toInt)
     }
 
     if (obsStockCount == 3 && maxObsStockStart(team) > 0) {
-      incrementMaxObsStockDuration(team, timeState.gameTime.toInt)
+      incrementMaxObsStockDuration(team, gameTimeState.gameTime.toInt)
       maxObsStockStart += (team -> -1)
     }
   }

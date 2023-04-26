@@ -21,7 +21,7 @@ class WinProbabilityProcessor extends ProcessorBase {
 
   @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
   def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
-    val gameTimeState = TimeState
+    val gameTimeState = GameTimeHelper.State
     val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     val gameOver = gameRules.getProperty[Int]("m_pGameRules.m_nGameState") > 5
     if (gameOver || !gameTimeState.preGameStarted || currentIteration * IterationInterval - gameTimeState.gameTime > Epsilon) return
@@ -40,11 +40,10 @@ class WinProbabilityProcessor extends ProcessorBase {
     val (radiantBarracks, direBarracks) = entities.filterByName("CDOTA_BaseNPC_Barracks").partition(tower => tower.getProperty[Int]("m_iTeamNum") == 2)
     val barracks = Map(Radiant -> countBarracks(radiantBarracks), Dire -> countBarracks(direBarracks))
 
-    val time = Time
     val heroProcessor = ctx.getProcessor(classOf[HeroProcessor])
     val radiantHeroes = Util.RadiantPlayerIds.map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
     val direHeroes = Util.DirePlayerIds.map(id => entities.getByHandle(heroProcessor.heroHandle(id)))
-    val respawnTime = Map(Radiant -> getSpawnTimes(radiantHeroes, time), Dire -> getSpawnTimes(direHeroes, time))
+    val respawnTime = Map(Radiant -> getSpawnTimes(radiantHeroes, gameTimeState.gameTime), Dire -> getSpawnTimes(direHeroes, gameTimeState.gameTime))
 
     val buybackState = Map(
       Radiant -> getBuybackStates(radiantData, networth(Radiant), gameTimeState.gameTime),

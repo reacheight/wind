@@ -21,10 +21,9 @@ class ItemUsageProcessor extends ProcessorBase {
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
-    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
-    if (Util.getSpawnTime(hero, Time) < 10) return
+    val gameTimeState = GameTimeHelper.State
+    if (Util.getSpawnTime(hero, gameTimeState.gameTime) < 10) return
 
-    val time = TimeState
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
     val items = ItemsHelper.getItems(hero)
 
@@ -50,7 +49,7 @@ class ItemUsageProcessor extends ProcessorBase {
 
     def addUnusedItem(entityName: String, itemId: Int): Unit =
       ItemsHelper.findUnusedItem(hero, items, entityName)
-        .foreach(_ => _unusedItems.addOne((time, playerId, itemId)))
+        .foreach(_ => _unusedItems.addOne((gameTimeState, playerId, itemId)))
 
 
     val allies = Entities.filter(Util.isHero)
@@ -78,7 +77,7 @@ class ItemUsageProcessor extends ProcessorBase {
             val itemCastRange = castRange + ItemsHelper.getAdditionalCastRange(ally)
             itemCastRange >= distance
           })
-          .foreach(_ => _unusedOnAllyItems.addOne(time, playerId, allyPlayerId, itemId))
+          .foreach(_ => _unusedOnAllyItems.addOne(gameTimeState, playerId, allyPlayerId, itemId))
       })
     }
   }

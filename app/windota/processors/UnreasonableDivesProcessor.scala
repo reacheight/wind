@@ -30,10 +30,9 @@ class UnreasonableDivesProcessor(fights: Seq[Fight]) extends ProcessorBase {
 
   @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])
   def onGameTimeChanged(ctx: Context, message: NetworkBaseTypes.CNETMsg_Tick): Unit = {
-    val gameTimeState = TimeState
 
     candidates
-      .find(fight => math.abs(fight.start.gameTime - gameTimeState.gameTime) < EPS)
+      .find(fight => math.abs(fight.start.gameTime - GameTimeHelper.State.gameTime) < EPS)
       .filter(fight => {
         val winner = fight.winner.get
         val winnerMidT3 = Entities.find(e => Util.isTower(e) && Util.getDistance(getMidT3Location(winner), Util.getLocation(e)) < 1)
@@ -52,7 +51,7 @@ class UnreasonableDivesProcessor(fights: Seq[Fight]) extends ProcessorBase {
     enemyTower.foreach { tower =>
       val alliesAround = Entities.filter(e => e.isHero && e.playerId != hero.playerId && e.team == heroTeam && Util.getDistance(e, hero) <= 2000)
       if (alliesAround.isEmpty)
-        _unreasonableHeroDives.addOne((TimeState, hero.playerId, tower.getProperty[Int]("m_iCurrentLevel")))
+        _unreasonableHeroDives.addOne((GameTimeHelper.State, hero.playerId, tower.getProperty[Int]("m_iCurrentLevel")))
     }
   }
 

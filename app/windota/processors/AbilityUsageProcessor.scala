@@ -27,7 +27,8 @@ class AbilityUsageProcessor extends ProcessorBase {
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
-    if (Util.getSpawnTime(hero, Time) < 10) return
+    val gameTimeState = GameTimeHelper.State
+    if (Util.getSpawnTime(hero, gameTimeState.gameTime) < 10) return
 
     val playerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
@@ -60,17 +61,16 @@ class AbilityUsageProcessor extends ProcessorBase {
 
     def addUnusedAbility(entityName: String, abilityId: Int): Unit =
       AbilitiesHelper.findUnusedAbility(hero, abilities, entityName)
-        .foreach(_ => _unusedAbilities.addOne((TimeState, playerId, abilityId)))
+        .foreach(_ => _unusedAbilities.addOne((gameTimeState, playerId, abilityId)))
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDiedForAllies(hero: Entity, fp: FieldPath): Unit = {
     if (!Util.isHero(hero) || hero.getPropertyForFieldPath[Int](fp) != 1) return
 
-    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
-    if (Util.getSpawnTime(hero, Time) < 10) return
+    val gameTimeState = GameTimeHelper.State
+    if (Util.getSpawnTime(hero, gameTimeState.gameTime) < 10) return
 
-    val gameTime = TimeState
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
 
     val allies = Entities.filter(Util.isHero)
@@ -132,9 +132,9 @@ class AbilityUsageProcessor extends ProcessorBase {
               val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + ItemsHelper.getAdditionalCastRange(ally)
 
               if (abilityCastRange >= distance)
-                _unusedOnAllyAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, abilityId)
+                _unusedOnAllyAbilities.addOne(gameTimeState, deadPlayerId, allyPlayerId, abilityId)
               else if (checkBlink && abilityCastRange + getCastRangeIfHasBlink(ally) >= distance)
-                _unusedOnAllyWithBlinkAbilities.addOne(gameTime, deadPlayerId, allyPlayerId, abilityId)
+                _unusedOnAllyWithBlinkAbilities.addOne(gameTimeState, deadPlayerId, allyPlayerId, abilityId)
             })
       })
     }

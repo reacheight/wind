@@ -80,8 +80,8 @@ object ReplayAnalyzer {
 
     logger.info(s"Analysis finished for ${game.getMatchId}. Time: ${System.currentTimeMillis() - start} ms.")
 
-    val notUnblockedCamps = new BlockedCampsProcessor()
-      .getUnblockedCamps(visionProcessor.observers.appendedAll(visionProcessor.sentries), rolesProcessor.roles)
+    val notUnblockedCamps = Map.empty[PlayerId, Seq[Ward]]
+//      new BlockedCampsProcessor().getUnblockedCamps(visionProcessor.observers.appendedAll(visionProcessor.sentries), rolesProcessor.roles)
 
     val smokeOnVisionButWonFight = visionProcessor.smokeUsedOnVision.flatMap { case (smokeTime, playerId) =>
       val smokeTeam = if (Util.RadiantPlayerIds.contains(playerId)) Radiant else Dire

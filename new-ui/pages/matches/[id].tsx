@@ -10,6 +10,7 @@ import { Button } from "@chakra-ui/button";
 import { Spinner } from "@chakra-ui/spinner";
 import { Team } from "../../models/Team";
 import AnalysisComponent from "../../components/AnalysisComponent";
+import { HeroAbility } from "../../models/HeroAbility";
 
 const Match = () => {
   let userContext = getUserContext()
@@ -84,7 +85,7 @@ const Match = () => {
   return (
     <div>
       <Matchup match={match}/>
-      {analysis && <AnalysisComponent targetHero={targetHero} targetTeam={targetTeam} analysis={analysis.analysis} />}
+      {analysis && <AnalysisComponent heroes={match.players.map(p => p.heroId)} targetHero={targetHero} targetTeam={targetTeam} analysis={analysis.analysis} />}
       <div className={styles.centered}>
         {analysisLoading && <Spinner />}
         {(!analysisLoading && !analysis) &&

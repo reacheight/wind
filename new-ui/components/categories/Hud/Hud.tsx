@@ -7,7 +7,7 @@ import { HeroId } from "../../../models/HeroId";
 import Image from "next/image";
 import Routes from "../../../api/routs";
 import { useEffect, useState } from "react";
-import { HeroAbility } from "../../../models/HeroAbility";
+import { HeroAbilities, HeroAbility } from "../../../models/HeroAbility";
 import AbilitiesPanel from "./AbilitiesPanel";
 import AbilitiesUsageInfo from "./AbilitiesUsageInfo";
 
@@ -25,9 +25,10 @@ interface HudProps {
   powerTreadsAbilityUsages: ReadonlyArray<PowerTreadsAbilityUsages>
   shardOwners: ReadonlyArray<HeroId>
   scepterOwners: ReadonlyArray<HeroId>
+  allAbilities: HeroAbilities[]
 }
 
-const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEfficiency, powerTreadsAbilityUsages, scepterOwners, shardOwners }: HudProps) => {
+const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEfficiency, powerTreadsAbilityUsages, scepterOwners, shardOwners, allAbilities }: HudProps) => {
   const targetUnusedAbilities = unusedAbilities.filter(unusedAbility => unusedAbility.user === target)
   const targetOverlappedStuns = overlappedStuns.filter(overlappedStun => overlappedStun.user === target)
 
@@ -44,7 +45,8 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
   if (targetPTUsages)
     targetActiveItems.push(63)
 
-  const [abilities, setAbilities] = useState<ReadonlyArray<HeroAbility>>(null)
+  const abilities = allAbilities.find(x => x.heroId === target).abilities
+
   const [selectedAbilityId, setSelectedAbilityId] = useState(null)
 
   const [items, setItems] = useState<ReadonlyArray<Item>>(null)
@@ -70,14 +72,9 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
   }
 
   useEffect(() => {
-    setAbilities(null)
     setSelectedAbilityId(null)
     setItems(null)
     setSelectedItemId(null)
-
-    fetch(Routes.Constants.getHeroAbilities(target))
-      .then(response => response.json())
-      .then(abilities => setAbilities(abilities))
 
     fetch(Routes.Constants.getItems(targetActiveItems))
       .then(response => response.json())

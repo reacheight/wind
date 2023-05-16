@@ -26,9 +26,10 @@ interface HudProps {
   shardOwners: ReadonlyArray<HeroId>
   scepterOwners: ReadonlyArray<HeroId>
   allAbilities: HeroAbilities[]
+  allItems: Item[]
 }
 
-const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEfficiency, powerTreadsAbilityUsages, scepterOwners, shardOwners, allAbilities }: HudProps) => {
+const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEfficiency, powerTreadsAbilityUsages, scepterOwners, shardOwners, allAbilities, allItems }: HudProps) => {
   const targetUnusedAbilities = unusedAbilities.filter(unusedAbility => unusedAbility.user === target)
   const targetOverlappedStuns = overlappedStuns.filter(overlappedStun => overlappedStun.user === target)
 
@@ -49,7 +50,7 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
 
   const [selectedAbilityId, setSelectedAbilityId] = useState(null)
 
-  const [items, setItems] = useState<ReadonlyArray<Item>>(null)
+  const items = allItems ? allItems.filter(item => targetActiveItems.includes(item.id)) : [];
   const [selectedItemId, setSelectedItemId] = useState(null)
 
   const onAbilityClick = (abilityId) => {
@@ -73,12 +74,7 @@ const Hud = ({ target, unusedItems, unusedAbilities, overlappedStuns, midasEffic
 
   useEffect(() => {
     setSelectedAbilityId(null)
-    setItems(null)
     setSelectedItemId(null)
-
-    fetch(Routes.Constants.getItems(targetActiveItems))
-      .then(response => response.json())
-      .then(items => setItems(items))
   }, [target])
 
   if (abilities === null)

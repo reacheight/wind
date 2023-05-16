@@ -9,6 +9,7 @@ import { VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { HeroAbilities, HeroAbility } from "../models/HeroAbility";
 import Routes from "../api/routs";
+import { Item } from "../models/Item";
 
 interface AnalysisComponentProps {
   heroes: ReadonlyArray<HeroId>
@@ -19,6 +20,17 @@ interface AnalysisComponentProps {
 
 const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis }: AnalysisComponentProps) => {
   const [abilities, setAbilities] = useState<HeroAbilities[]>(null)
+  const [items, setItems] = useState<Item[]>(null)
+
+  useEffect(() => {
+    const itemsIds = analysis.unusedItems.map(i => i.item)
+    if (analysis.powerTreadsAbilityUsages.length !== 0)
+      itemsIds.push(63);
+
+    fetch(Routes.Constants.getItems([...new Set(itemsIds)]))
+      .then(response => response.json())
+      .then(items => setItems(items))
+  }, [])
 
   useEffect(() =>  {
     Promise.all(heroes.map(id =>
@@ -46,6 +58,7 @@ const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis }: Analys
           shardOwners={analysis.shardOwners}
           scepterOwners={analysis.scepterOwners}
           allAbilities={abilities}
+          allItems={items}
         />
       <Laning target={targetHero} couriersState={analysis.couriersState} notTankedCreepwaves={analysis.notTankedCreepwaves} notUnblockedCamps={analysis.notUnblockedCamps} />
       </VStack>

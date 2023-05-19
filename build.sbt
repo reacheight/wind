@@ -9,6 +9,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       guice,
       openId,
+      "ch.qos.logback" % "logback-classic" % "1.3.5",
       "com.typesafe.scala-logging"    %% "scala-logging"       % "3.9.5",
       "com.softwaremill.sttp.client3" %% "core"                % "3.7.1",
       "com.softwaremill.sttp.client3" %% "circe"               % "3.7.1",

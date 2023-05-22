@@ -34,7 +34,6 @@ object ReplayAnalyzer {
     val itemUsageProcessor = new ItemUsageProcessor
     val rolesProcessor = new RolesProcessor
     val abilityUsageProcessor = new AbilityUsageProcessor
-    val purchasesProcessor = new PurchasesProcessor
     val midasProcessor = new MidasEfficiencyProcessor
     val scanProcessor = new ScanProcessor
     val creepwaveProcessor = new CreepwaveProcessor
@@ -51,7 +50,7 @@ object ReplayAnalyzer {
       try {
         runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
           visionProcessor, itemUsageProcessor, abilityUsageProcessor,
-          purchasesProcessor, midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
+          midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
           laneProcessor, rolesProcessor, powerTreadsProcessor, new AbilitiesHelperProcessor, new ItemsHelperProcessor, new GameTimeHelperProcessor
         )
       } catch {
@@ -132,7 +131,6 @@ object ReplayAnalyzer {
       abilityUsageProcessor.unusedOnAllyWithBlinkAbilities,
       itemUsageProcessor.unusedItems,
       itemUsageProcessor.unusedOnAllyItems,
-      purchasesProcessor.purchases,
       midasProcessor.midasEfficiency,
       scanProcessor.scanUsageCount,
       creepwaveProcessor.wastedCreepwaves,
@@ -185,7 +183,6 @@ case class AnalysisResultInternal(
   unusedOnAllyWithBlinkAbilities: Seq[(GameTimeState, PlayerId, PlayerId, Int)],
   unusedItems: Seq[(GameTimeState, PlayerId, Int)],
   unusedOnAllyItems: Seq[(GameTimeState, PlayerId, PlayerId, Int)],
-  purchases: Map[String, Seq[(String, Int)]],
   midasEfficiency: Map[PlayerId, Float],
   scanUsageCount: Map[Team, Int],
   wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],

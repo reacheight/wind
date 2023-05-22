@@ -47,7 +47,7 @@ case class Analysis(
   badSmokeFights: Seq[BadSmokeFight],                                  // bad fights panel
   lostFightsUnderTheSameWard: Seq[LostFightsUnderTheSameWard],         // bad fights panel
   unreasonableTeamDives: Seq[UnreasonableTeamDive],                    // bad fights panel
-  unreactedLaneGanks: Seq[UnreactedLaneGank],                          // ? bad fights panel ?
+//  unreactedLaneGanks: Seq[UnreactedLaneGank],                          // ? bad fights panel ?
   unreasonableHeroDive: Seq[UnreasonableHeroDive],
   summonGoldFed: Seq[SummonGoldFed],
   worthlessGlyphs: Seq[WorthlessGlyph],

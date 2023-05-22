@@ -4,6 +4,8 @@ import com.typesafe.scalalogging.Logger
 import skadistats.clarity.Clarity
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
+import windota.external.stratz.StratzClient
+import windota.external.stratz.models.Position.Position
 import windota.models.Team._
 import windota.models.Lane._
 import windota.models.Role._
@@ -12,7 +14,10 @@ import windota.processors._
 import windota.processors.helpers.{AbilitiesHelperProcessor, GameTimeHelperProcessor, ItemsHelperProcessor}
 
 import java.nio.file.Path
-import scala.util.Using
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success, Using}
 
 object ReplayAnalyzer {
   private val logger = Logger[ReplayAnalyzer.type]
@@ -44,6 +49,9 @@ object ReplayAnalyzer {
     logger.info(s"Starting analysis for ${game.getMatchId}.")
     val start = System.currentTimeMillis()
 
+    //todo: make async
+    val stratzMatchTry = StratzClient.getMatch(game.getMatchId)
+
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
@@ -51,25 +59,30 @@ object ReplayAnalyzer {
         runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
           visionProcessor, itemUsageProcessor, abilityUsageProcessor,
           midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
-          laneProcessor, rolesProcessor, powerTreadsProcessor, new AbilitiesHelperProcessor, new ItemsHelperProcessor, new GameTimeHelperProcessor
+          powerTreadsProcessor, new AbilitiesHelperProcessor, new ItemsHelperProcessor, new GameTimeHelperProcessor
         )
       } catch {
         case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
       }
     }
 
+    val positions = stratzMatchTry match {
+      case Failure(_) => Map.empty[PlayerId, Position]
+      case Success(stratzMatch) => stratzMatch.players.map(p => heroProcessor.playerId(HeroId(p.heroId)) -> p.position).toMap
+    }
+
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
     val smokeFightProcessor = new SmokeFightProcessor(fightProcessor.fights)
     val unreasonableDivesProcessor = new UnreasonableDivesProcessor(fightProcessor.fights)
-    val itemBuildProcessor = new ItemBuildProcessor(rolesProcessor.roles)
-    val unreactedLaneGanksProcessor = new UnreactedLaneGanksProcessor(fightProcessor.fights, laneProcessor.playerLane.map(pair => (PlayerId(pair._1), pair._2._1)))
+    val itemBuildProcessor = new ItemBuildProcessor(positions)
+//    val unreactedLaneGanksProcessor = new UnreactedLaneGanksProcessor(fightProcessor.fights, laneProcessor.playerLane.map(pair => (PlayerId(pair._1), pair._2._1)))
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
 
       try {
         runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor,
-          unreasonableDivesProcessor, itemBuildProcessor, new ItemsHelperProcessor, unreactedLaneGanksProcessor, new GameTimeHelperProcessor
+          unreasonableDivesProcessor, itemBuildProcessor, new ItemsHelperProcessor,  new GameTimeHelperProcessor
         )
       } catch {
         case e =>
@@ -151,7 +164,7 @@ object ReplayAnalyzer {
       notUnblockedCamps,
       itemBuildProcessor.notPurchasedSticks,
       itemBuildProcessor.notPurchasedItemAgainstHero,
-      unreactedLaneGanksProcessor.unreactedLaneGanks,
+//      unreactedLaneGanksProcessor.unreactedLaneGanks,
       modifierProcessor.scepter.toSeq,
       modifierProcessor.shard.toSeq
     )
@@ -203,7 +216,7 @@ case class AnalysisResultInternal(
   notUnblockedCamps: Map[PlayerId, Seq[Ward]],
   notPurchasedSticks: Seq[(PlayerId, PlayerId)],
   notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])],
-  unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)],
+//  unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)],
   scepterOwners: Seq[PlayerId],
   shardOwners: Seq[PlayerId],
 )

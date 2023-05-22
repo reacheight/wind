@@ -13,11 +13,13 @@ class HeroProcessor(replayInfo: CDemoFileInfo) {
   def heroName: Map[Int, String] = heroNameBuilder.result
   def heroHandle: Map[Int, Int] = heroHandleBuilder.result
   def heroId: Map[PlayerId, HeroId] = heroIdBuilder.result
+  def playerId: Map[HeroId, PlayerId] = heroIdToPlayerIdBuilder.result
   val combatLogNameToPlayerId: Map[String, Int] = (0 to 9).map(id => game.getPlayerInfo(id).getHeroName -> id * 2).toMap
 
   private val heroNameBuilder = Map.newBuilder[Int, String]
   private val heroHandleBuilder = Map.newBuilder[Int, Int]
   private val heroIdBuilder = Map.newBuilder[PlayerId, HeroId]
+  private val heroIdToPlayerIdBuilder = Map.newBuilder[HeroId, PlayerId]
 
   @OnEntityCreated(classPattern = "CDOTA_Unit_Hero_.*")
   def onHeroCreated(hero: Entity): Unit = {
@@ -33,5 +35,6 @@ class HeroProcessor(replayInfo: CDemoFileInfo) {
     val cleName = combatLogNameToPlayerId.map(_.swap)(playerId)
     val heroId = Heroes.getId(cleName)
     heroIdBuilder += (PlayerId(playerId) -> HeroId(heroId))
+    heroIdToPlayerIdBuilder += (HeroId(heroId) -> PlayerId(playerId))
   }
 }

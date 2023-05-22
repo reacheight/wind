@@ -2,6 +2,8 @@ package windota.external.stratz
 
 import io.circe.{Decoder, HCursor}
 import io.circe.generic.auto._
+import windota.external.stratz.models.Lane._
+import windota.external.stratz.models.Position._
 import windota.external.stratz.models._
 
 package object decoders {
@@ -16,6 +18,21 @@ package object decoders {
       User(id, name, isAnon, url)
     }
   }
+
+  implicit val decodePosition: Decoder[Position] = (c: HCursor) =>
+    for {
+      posString <- c.as[String]
+    } yield {
+      mapPosition(posString)
+    }
+
+  implicit val decodeLane: Decoder[Lane] = (c: HCursor) =>
+    for {
+      laneString <- c.as[String]
+    } yield {
+      mapLane(laneString)
+    }
+
 
   implicit val decodeMatches: Decoder[GetMatchesResult] = (c: HCursor) =>
     for {
@@ -94,5 +111,24 @@ package object decoders {
     } yield {
       Item(id, displayName)
     }
+  }
+
+  private def mapPosition(positionString: String): Position = positionString match {
+    case "POSITION_1" => Pos1
+    case "POSITION_2" => Pos2
+    case "POSITION_3" => Pos3
+    case "POSITION_4" => Pos4
+    case "POSITION_5" => Pos5
+    case "POSITION_5" => Pos5
+    case _ => Position.Unknown
+  }
+
+  private def mapLane(laneString: String): Lane = laneString match {
+    case "SAFE_LANE" => SafeLane
+    case "MID_LANE" => MidLane
+    case "OFF_LANE" => OffLane
+    case "JUNGLE" => Jungle
+    case "ROAMING" => Roaming
+    case _ => Lane.Unknown
   }
 }

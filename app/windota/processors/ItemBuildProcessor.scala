@@ -9,13 +9,13 @@ import windota.Util
 import windota.Util.EntityExtension2
 import windota.extensions.FieldPath
 import windota.extensions._
+import windota.external.stratz.models.Position._
 import windota.models.{HeroId, PlayerId}
-import windota.models.Role.{OffLane, Role}
 import windota.models.Attribute._
 
 import scala.collection.mutable.ListBuffer
 
-class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends ProcessorBase {
+class ItemBuildProcessor(roles: Map[PlayerId, Position]) extends ProcessorBase {
   private var STICKS_CHECKED = false
   private val STICKS_CHECK_MINUTE = 3
 
@@ -23,9 +23,9 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends ProcessorBase {
   private val stickItemNames = List("item_magic_stick", "item_magic_wand")
 
   private val heroItemData: List[(HeroId, String, String, String, Int, Int, Entity => Boolean)] = List(
-    (HeroId(44), "CDOTA_Unit_Hero_PhantomAssassin", "item_monkey_king_bar", "Monkey King Bar", 48, 60, e => Util.isCoreRole(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != OffLane && e.primaryAttribute != Intelligence),
-    (HeroId(10), "CDOTA_Unit_Hero_Morphling", "item_skadi", "Eye of Skadi", 45, 65, e => Util.isCoreRole(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != OffLane && e.primaryAttribute != Intelligence),
-    (HeroId(99), "CDOTA_Unit_Hero_Bristleback", "item_silver_edge", "Silver Edge", 47, 57, e => Util.isCoreRole(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != OffLane && e.primaryAttribute != Intelligence),
+    (HeroId(44), "CDOTA_Unit_Hero_PhantomAssassin", "item_monkey_king_bar", "Monkey King Bar", 48, 60, e => Util.isCorePosition(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != Pos3 && e.primaryAttribute != Intelligence),
+    (HeroId(10), "CDOTA_Unit_Hero_Morphling", "item_skadi", "Eye of Skadi", 45, 65, e => Util.isCorePosition(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != Pos3 && e.primaryAttribute != Intelligence),
+    (HeroId(99), "CDOTA_Unit_Hero_Bristleback", "item_silver_edge", "Silver Edge", 47, 57, e => Util.isCorePosition(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != Pos3 && e.primaryAttribute != Intelligence),
   )
 
   private val _notPurchasedSticks: ListBuffer[(PlayerId, PlayerId)] = ListBuffer.empty //  (hero, stick hero)
@@ -47,8 +47,8 @@ class ItemBuildProcessor(roles: Map[PlayerId, Role]) extends ProcessorBase {
           val stickHeroRole = roles(stickPlayerId)
           val stickHeroTeam = Util.getTeam(hero)
 
-          if (Util.isCoreRole(stickHeroRole)) {
-            val oppRole = Util.getOppositeCoreRole(stickHeroRole)
+          if (Util.isCorePosition(stickHeroRole)) {
+            val oppRole = Util.getOppositeCorePosition(stickHeroRole)
             val oppTeam = Util.getOppositeTeam(stickHeroTeam)
             val oppHeroOpt = Entities.find(e => Util.isHero(e) && Util.getTeam(e) == oppTeam && roles(Util.getPlayerId(e)) == oppRole)
 

@@ -262,10 +262,10 @@ object Main {
       println(s"${playerIds.map(id => result.heroName(id)).mkString(", ")} didn't buy $itemName VS ${Heroes.getName(heroId.id)} (no item winrate = $noItemWinrate%, item winrate = $itemWinrate%)")
     }
 
-    if (result.unreactedLaneGanks.nonEmpty) println("\nUnreacted lane ganks:")
-    result.unreactedLaneGanks.foreach { case (playerId, gankers, gankTime, gankLane) =>
-      println(s"${result.heroName(playerId)} saw ${gankers.map(id => result.heroName(id)).mkString(", ")} coming on vision but didn't react to gank and died at $gankTime on $gankLane.")
-    }
+//    if (result.unreactedLaneGanks.nonEmpty) println("\nUnreacted lane ganks:")
+//    result.unreactedLaneGanks.foreach { case (playerId, gankers, gankTime, gankLane) =>
+//      println(s"${result.heroName(playerId)} saw ${gankers.map(id => result.heroName(id)).mkString(", ")} coming on vision but didn't react to gank and died at $gankTime on $gankLane.")
+//    }
   }
 
   def runItemsAgainstHero(pathToMatches: String): Unit = {

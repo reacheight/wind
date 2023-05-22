@@ -3,6 +3,7 @@ package windota
 import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.Entities
 import windota.extensions.EntitiesExtension
+import windota.external.stratz.models.Position._
 import windota.models.Attribute.{Agility, Attribute, Intelligence, Strength}
 import windota.models.Lane.Lane
 import windota.models.Role.{MidLane, OffLane, Role, SafeLane}
@@ -116,11 +117,18 @@ object Util {
   }
 
   def isCoreRole(role: Role): Boolean = role == SafeLane || role == MidLane || role == OffLane
+  def isCorePosition(position: Position) = position == Pos1 || position == Pos2 || position == Pos3
 
   def getOppositeCoreRole(role: Role): Role = role match {
     case MidLane => MidLane
     case SafeLane => OffLane
     case OffLane => SafeLane
+  }
+
+  def getOppositeCorePosition(position: Position) = position match {
+    case Pos2 => Pos2
+    case Pos1 => Pos3
+    case Pos3 => Pos1
   }
 
   implicit class EntityExtension2(val entity: Entity) extends AnyVal {

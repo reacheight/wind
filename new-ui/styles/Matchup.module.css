@@ -44,6 +44,18 @@
   background: linear-gradient(to left, #AA0000, #FF8383);
 }
 
+.duration {
+  margin: auto;
+  font-weight: 600;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.empty {
+  display: inline-block;
+  min-width: 90px;
+}
+
 .vs {
   color: rgba(255, 255, 255, 0.36);
 }

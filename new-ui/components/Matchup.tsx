@@ -20,6 +20,9 @@ const Matchup = ({ match }: MatchupProps) => {
 
   const radiantWinner = <span className={styles.radiantWinner}>Winner</span>
   const direWinner = <span className={styles.direWinner}>Winner</span>
+  const emptySpace = <span className={styles.empty}></span>
+  const minutes = Math.floor(match.durationSeconds / 60)
+  const seconds = ('0' + (match.durationSeconds % 60)).slice(-2)
 
   return (
     <div>
@@ -29,6 +32,11 @@ const Matchup = ({ match }: MatchupProps) => {
             <Image src={"/radiant.png"} width={60} height={60} />
           </div>
           {match.didRadiantWin && radiantWinner}
+        </div>
+        <div className={styles.duration}>
+          {!match.didRadiantWin && emptySpace}
+          <span>{minutes}:{seconds}</span>
+          {match.didRadiantWin && emptySpace}
         </div>
         <div className={styles.side}>
           {!match.didRadiantWin && direWinner}

@@ -1,9 +1,11 @@
 .kda {
-  color: rgba(255, 255, 255, 0.8);
+  color: #bbbbbb;
   font-weight: 600;
+  font-size: 14px;
   text-align: center;
 }
 
 .slash {
+  padding: 4px;
   color: rgba(255, 255, 255, 0.36);
 }

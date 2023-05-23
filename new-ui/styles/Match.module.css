@@ -21,3 +21,9 @@
   text-align: center;
   font-size: 18px;
 }
+
+.stratz {
+  text-align: right;
+  margin-left: auto;
+  padding-top: 10px;
+}

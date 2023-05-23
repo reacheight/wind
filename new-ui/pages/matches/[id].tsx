@@ -10,7 +10,7 @@ import { Button } from "@chakra-ui/button";
 import { Spinner } from "@chakra-ui/spinner";
 import { Team } from "../../models/Team";
 import AnalysisComponent from "../../components/AnalysisComponent";
-import { HeroAbility } from "../../models/HeroAbility";
+import Image from "next/image";
 
 const Match = () => {
   let userContext = getUserContext()
@@ -85,6 +85,14 @@ const Match = () => {
   return (
     <div>
       <Matchup match={match}/>
+      <div className={styles.stratz}>
+        <a href={"https://stratz.com/matches/" + match.id} target={"_blank"}>
+          <Button fontSize={'14px'} fontWeight={'600'}>
+            More match stats on STRATZ<span>&nbsp;</span>
+            <Image src={"/stratz.png"} width={16} height={16}/>
+          </Button>
+        </a>
+      </div>
       {analysis && <AnalysisComponent heroes={match.players.map(p => p.heroId)} targetHero={targetHero} targetTeam={targetTeam} analysis={analysis.analysis} />}
       <div className={styles.centered}>
         {analysisLoading && <Spinner />}

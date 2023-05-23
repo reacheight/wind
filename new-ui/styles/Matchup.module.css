@@ -1,8 +1,47 @@
-.main {
+.matchup {
+  padding-top: 10px;
   display: flex;
   justify-content: space-between;
   border-radius: 6px;
   align-items: center;
+}
+
+.sides {
+  display: flex;
+  justify-content: space-between;
+}
+
+.side {
+  display: flex;
+  vertical-align: bottom;
+}
+
+.radiant, .dire {
+  border-radius: 5px;
+  overflow: hidden;
+  width: 60px;
+  height: 60px;
+}
+
+.radiantWinner, .direWinner {
+  height: 25px;
+  width: 80px;
+  text-align: center;
+  border-radius: 3px;
+  color: black;
+  font-weight: bold;
+  margin-top: auto;
+  font-size: 15px;
+}
+
+.radiantWinner {
+  margin-left: 10px;
+  background: linear-gradient(to left, #0e5d00, #85c47d);
+}
+
+.direWinner {
+  margin-right: 10px;
+  background: linear-gradient(to left, #AA0000, #FF8383);
 }
 
 .vs {

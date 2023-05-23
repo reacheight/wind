@@ -1,0 +1,36 @@
+.title {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.container {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 18px;
+  color: #9D9FA0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px 20px;
+  margin-top: 10px;
+}
+
+.insight {
+  color: #C7A324
+}
+
+.text {
+  margin-top: 15px;
+  margin-right: 70px;
+}
+
+.summons {
+  width: 124px;
+  height: 96px;
+  min-width: 100px;
+  min-height: 100px;
+}

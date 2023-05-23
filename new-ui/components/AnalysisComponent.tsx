@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { HeroAbilities, HeroAbility } from "../models/HeroAbility";
 import Routes from "../api/routs";
 import { Item } from "../models/Item";
+import Resources from "./categories/Resources/Resources";
 
 interface AnalysisComponentProps {
   heroes: ReadonlyArray<HeroId>
@@ -61,6 +62,7 @@ const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis }: Analys
           allItems={items}
         />
       <Laning target={targetHero} couriersState={analysis.couriersState} notTankedCreepwaves={analysis.notTankedCreepwaves} notUnblockedCamps={analysis.notUnblockedCamps} />
+      <Resources target={targetHero} summonGoldFed={analysis.summonGoldFed} />
       </VStack>
     </div>
   )

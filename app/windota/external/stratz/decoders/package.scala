@@ -21,14 +21,14 @@ package object decoders {
 
   implicit val decodePosition: Decoder[Position] = (c: HCursor) =>
     for {
-      posString <- c.as[String]
+      posString <- c.as[Option[String]]
     } yield {
       mapPosition(posString)
     }
 
   implicit val decodeLane: Decoder[Lane] = (c: HCursor) =>
     for {
-      laneString <- c.as[String]
+      laneString <- c.as[Option[String]]
     } yield {
       mapLane(laneString)
     }
@@ -113,22 +113,21 @@ package object decoders {
     }
   }
 
-  private def mapPosition(positionString: String): Position = positionString match {
-    case "POSITION_1" => Pos1
-    case "POSITION_2" => Pos2
-    case "POSITION_3" => Pos3
-    case "POSITION_4" => Pos4
-    case "POSITION_5" => Pos5
-    case "POSITION_5" => Pos5
+  private def mapPosition(positionString: Option[String]): Position = positionString match {
+    case Some("POSITION_1") => Pos1
+    case Some("POSITION_2") => Pos2
+    case Some("POSITION_3") => Pos3
+    case Some("POSITION_4") => Pos4
+    case Some("POSITION_5") => Pos5
     case _ => Position.Unknown
   }
 
-  private def mapLane(laneString: String): Lane = laneString match {
-    case "SAFE_LANE" => SafeLane
-    case "MID_LANE" => MidLane
-    case "OFF_LANE" => OffLane
-    case "JUNGLE" => Jungle
-    case "ROAMING" => Roaming
+  private def mapLane(laneString: Option[String]): Lane = laneString match {
+    case Some("SAFE_LANE") => SafeLane
+    case Some("MID_LANE") => MidLane
+    case Some("OFF_LANE") => OffLane
+    case Some("JUNGLE") => Jungle
+    case Some("ROAMING") => Roaming
     case _ => Lane.Unknown
   }
 }

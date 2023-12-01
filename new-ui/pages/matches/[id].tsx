@@ -13,9 +13,9 @@ import AnalysisComponent from "../../components/AnalysisComponent";
 import Image from "next/image";
 
 const Match = () => {
-  let userContext = getUserContext()
-  if (userContext.loading || userContext.user === null)
-    return <div>Log in to view the match.</div>
+//   let userContext = getUserContext()
+//   if (userContext.loading || userContext.user === null)
+//     return <div>Log in to view the match.</div>
 
   const router = useRouter()
   const { id: matchId, fromHeroView } = router.query

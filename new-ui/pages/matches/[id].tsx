@@ -13,7 +13,7 @@ import AnalysisComponent from "../../components/AnalysisComponent";
 import Image from "next/image";
 
 const Match = () => {
-//   let userContext = getUserContext()
+  let userContext = getUserContext()
 //   if (userContext.loading || userContext.user === null)
 //     return <div>Log in to view the match.</div>
 

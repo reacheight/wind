@@ -30,7 +30,7 @@ object Main {
         if (!Files.exists(cacheReplayPath(`match`))) {
           val replayLocation = StratzClient.getReplayLocation(`match`.toLong)
           replayLocation match {
-            case Failure(_) => println(s"Can't find replay for match ${`match`}.")
+            case Failure(e) => println(s"Can't find replay for match ${`match`}. ${e.getMessage}")
             case Success(location) =>
               if (downloadReplay(location, compressedReplayPath(`match`), cacheReplayPath(`match`))) {
                 if (args(0) == "analyze") analyze(cacheReplayPath(`match`)) else printCurrentState(cacheReplayPath(`match`))

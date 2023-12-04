@@ -5,6 +5,7 @@ import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
+import windota.Util
 import windota.Util.EntityExtension2
 import windota.constants.Clarity
 import windota.extensions.{EntityExtension, FieldPath}
@@ -34,7 +35,7 @@ class DeathsSummaryProcessor extends ProcessorBase {
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
-    if (!hero.isHero || hero.get[Int](fp) != 1) return
+    if (!hero.isHero || hero.get[Int](fp) != 1 || hero.getSpawnTime(GameTimeHelper.State) < 6) return
 
     for {
       playerIdRaw <- hero.get[Int](Clarity.Property.Names.PlayerId)
@@ -45,7 +46,7 @@ class DeathsSummaryProcessor extends ProcessorBase {
         .groupBy(d => d.attacker)
         .map { case (attackerId, group) => attackerId -> group.map(d => d.amount).sum }
 
-      _deaths += DeathSummaryData(playerId, GameTimeHelper.State, damageReceived)
+      _deaths += DeathSummaryData(playerId, GameTimeHelper.State, damageReceived, hero.getSpawnTime(GameTimeHelper.State))
       _damage.filterInPlace(d => d.target != playerId)
     }
   }

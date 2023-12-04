@@ -150,5 +150,6 @@ object Util {
     def maxMana: Float = entity.getProperty[Float]("m_flMaxMana")
     def currentMana: Float = entity.getProperty[Float]("m_flMana")
     def manaCost: Float = entity.getProperty[Int]("m_iManaCost")
+    def getSpawnTime(now: GameTimeState): Int = Util.getSpawnTime(entity, now.gameTime).toInt
   }
 }

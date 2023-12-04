@@ -110,7 +110,6 @@ class FightProcessor extends ProcessorBase {
 
     val deadPlayerId = PlayerId(hero.getProperty[Int]("m_iPlayerID"))
     val heroLocation = Util.getLocation(hero)
-    val gameRules = Entities.getByDtName("CDOTAGamerulesProxy")
     val heroes = Entities.filter(Util.isHero)
     val locations = heroes
       .filter(Util.isAlive)

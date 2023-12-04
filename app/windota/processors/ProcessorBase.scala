@@ -13,6 +13,7 @@ class ProcessorBase {
   protected lazy val AbilitiesHelper: AbilitiesHelperProcessor = ctx.getProcessor(classOf[AbilitiesHelperProcessor])
   protected lazy val ItemsHelper: ItemsHelperProcessor = ctx.getProcessor(classOf[ItemsHelperProcessor])
   protected lazy val GameTimeHelper: GameTimeHelperProcessor = ctx.getProcessor(classOf[GameTimeHelperProcessor])
+  protected lazy val HeroProcessor: HeroProcessor = ctx.getProcessor(classOf[HeroProcessor])
 
   @Insert
   protected val Entities: Entities = null

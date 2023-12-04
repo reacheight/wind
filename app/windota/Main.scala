@@ -266,6 +266,11 @@ object Main {
 //    result.unreactedLaneGanks.foreach { case (playerId, gankers, gankTime, gankLane) =>
 //      println(s"${result.heroName(playerId)} saw ${gankers.map(id => result.heroName(id)).mkString(", ")} coming on vision but didn't react to gank and died at $gankTime on $gankLane.")
 //    }
+
+    result.deathsSummary.foreach(data => {
+      println(s"${data.time.toString}: ${result.heroName(data.player)} died, damage received: " +
+        s"${data.damageReceived.map { case (attackerId, amount) => s"$amount from ${result.heroName(attackerId)}" }.mkString(", ")}")
+    })
   }
 
   def runItemsAgainstHero(pathToMatches: String): Unit = {

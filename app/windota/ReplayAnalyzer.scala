@@ -10,6 +10,7 @@ import windota.models.Team._
 import windota.models.Lane._
 import windota.models.Role._
 import windota.models._
+import windota.models.internal.DeathSummaryData
 import windota.processors._
 import windota.processors.helpers.{AbilitiesHelperProcessor, GameTimeHelperProcessor, ItemsHelperProcessor}
 
@@ -45,6 +46,7 @@ object ReplayAnalyzer {
     val fightProcessor = new FightProcessor
     val modifierProcessor = new ModifierProcessor
     val cursorProcessor = new CursorProcessor
+    val deathsSummaryProcessor = new DeathsSummaryProcessor
 
     logger.info(s"Starting analysis for ${game.getMatchId}.")
     val start = System.currentTimeMillis()
@@ -59,7 +61,8 @@ object ReplayAnalyzer {
         runner.runWith(courierProcessor, heroProcessor, summonsProcessor,
           visionProcessor, itemUsageProcessor, abilityUsageProcessor,
           midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
-          powerTreadsProcessor, new AbilitiesHelperProcessor, new ItemsHelperProcessor, new GameTimeHelperProcessor
+          new AbilitiesHelperProcessor, new ItemsHelperProcessor, new GameTimeHelperProcessor,
+          deathsSummaryProcessor
         )
       } catch {
         case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
@@ -166,57 +169,59 @@ object ReplayAnalyzer {
       itemBuildProcessor.notPurchasedItemAgainstHero,
 //      unreactedLaneGanksProcessor.unreactedLaneGanks,
       modifierProcessor.scepter.toSeq,
-      modifierProcessor.shard.toSeq
+      modifierProcessor.shard.toSeq,
+      deathsSummaryProcessor.deaths
     )
   }
 }
 
 case class AnalysisResultInternal(
-  matchId: Long,
-  matchDuration: Int,
-  radiantWon: Boolean,
-  couriers: Map[PlayerId, (Boolean, Boolean)],
-  lanes: Map[PlayerId, (Lane, Lane)],
-  roles: Map[PlayerId, Role],
-  laneOutcomes: Map[Lane, Option[Team]],
-  abilityUsagesWithPT: Map[PlayerId, (Int, Int, Float)],
-  resourceItemsUsagesWithPT: Map[PlayerId, (Int, Int)],
-  ptNotOnStrength: Seq[(GameTimeState, PlayerId)],
-  goldFedWithSummons: Map[PlayerId, Int],
-  maxStockSmokesDuration: Map[Team, Int],
-  maxStockObsDuration: Map[Team, Int],
-  glyphNotUsedOnT1: Map[Team, Int],
-  glyphOnDeadT2: Map[Team, Seq[GameTimeState]],
-  smokesUsedOnVision: Seq[(GameTimeState, PlayerId)],
-  obsPlacedOnVision: Seq[Ward],
-  heroName: Map[PlayerId, String],
-  heroId: Map[PlayerId, HeroId],
-  unusedAbilities: Seq[(GameTimeState, PlayerId, Int)],
-  unusedOnAllyAbilities: Seq[(GameTimeState, PlayerId, PlayerId, Int)],
-  unusedOnAllyWithBlinkAbilities: Seq[(GameTimeState, PlayerId, PlayerId, Int)],
-  unusedItems: Seq[(GameTimeState, PlayerId, Int)],
-  unusedOnAllyItems: Seq[(GameTimeState, PlayerId, PlayerId, Int)],
-  midasEfficiency: Map[PlayerId, Float],
-  scanUsageCount: Map[Team, Int],
-  wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
-  notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])],
-  fights: Seq[Fight],
-  badFights: Seq[BadFight],
-  fightsUnderVision: Seq[FightUnderVision],
-  multipleRadiantLostFightsUnderWard: Seq[(Ward, Seq[FightUnderVision])],
-  multipleDireLostFightsUnderWard: Seq[(Ward, Seq[FightUnderVision])],
-  unreasonableTeamDives: Seq[Fight],
-  unreasonableHeroDives: Seq[(GameTimeState, PlayerId, Int)],
-  smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
-  smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
-  overlappedStuns: Seq[internal.OverlappedStun], // (stun time, stunned player, attacker, overlapped time, ability id)
-  obsesPlacedOnVisionButNotDestroyed: Seq[Ward],
-  mouseItemDelivery: Seq[(PlayerId, Int)],
-  mouseQuickBuy: Seq[(PlayerId, Int)],
-  notUnblockedCamps: Map[PlayerId, Seq[Ward]],
-  notPurchasedSticks: Seq[(PlayerId, PlayerId)],
-  notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])],
-//  unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)],
-  scepterOwners: Seq[PlayerId],
-  shardOwners: Seq[PlayerId],
+                                   matchId: Long,
+                                   matchDuration: Int,
+                                   radiantWon: Boolean,
+                                   couriers: Map[PlayerId, (Boolean, Boolean)],
+                                   lanes: Map[PlayerId, (Lane, Lane)],
+                                   roles: Map[PlayerId, Role],
+                                   laneOutcomes: Map[Lane, Option[Team]],
+                                   abilityUsagesWithPT: Map[PlayerId, (Int, Int, Float)],
+                                   resourceItemsUsagesWithPT: Map[PlayerId, (Int, Int)],
+                                   ptNotOnStrength: Seq[(GameTimeState, PlayerId)],
+                                   goldFedWithSummons: Map[PlayerId, Int],
+                                   maxStockSmokesDuration: Map[Team, Int],
+                                   maxStockObsDuration: Map[Team, Int],
+                                   glyphNotUsedOnT1: Map[Team, Int],
+                                   glyphOnDeadT2: Map[Team, Seq[GameTimeState]],
+                                   smokesUsedOnVision: Seq[(GameTimeState, PlayerId)],
+                                   obsPlacedOnVision: Seq[Ward],
+                                   heroName: Map[PlayerId, String],
+                                   heroId: Map[PlayerId, HeroId],
+                                   unusedAbilities: Seq[(GameTimeState, PlayerId, Int)],
+                                   unusedOnAllyAbilities: Seq[(GameTimeState, PlayerId, PlayerId, Int)],
+                                   unusedOnAllyWithBlinkAbilities: Seq[(GameTimeState, PlayerId, PlayerId, Int)],
+                                   unusedItems: Seq[(GameTimeState, PlayerId, Int)],
+                                   unusedOnAllyItems: Seq[(GameTimeState, PlayerId, PlayerId, Int)],
+                                   midasEfficiency: Map[PlayerId, Float],
+                                   scanUsageCount: Map[Team, Int],
+                                   wastedCreepwaves: Seq[(GameTimeState, Team, Lane, Int)],
+                                   notTankedCreepwaves: Seq[(GameTimeState, Team, Lane, Seq[PlayerId])],
+                                   fights: Seq[Fight],
+                                   badFights: Seq[BadFight],
+                                   fightsUnderVision: Seq[FightUnderVision],
+                                   multipleRadiantLostFightsUnderWard: Seq[(Ward, Seq[FightUnderVision])],
+                                   multipleDireLostFightsUnderWard: Seq[(Ward, Seq[FightUnderVision])],
+                                   unreasonableTeamDives: Seq[Fight],
+                                   unreasonableHeroDives: Seq[(GameTimeState, PlayerId, Int)],
+                                   smokeFights: Seq[(Map[Team, GameTimeState], Fight)],
+                                   smokeOnVisionButWonFight: Seq[(GameTimeState, GameTimeState, Team)], // (fight start, smoke time, smoked team)
+                                   overlappedStuns: Seq[internal.OverlappedStun], // (stun time, stunned player, attacker, overlapped time, ability id)
+                                   obsesPlacedOnVisionButNotDestroyed: Seq[Ward],
+                                   mouseItemDelivery: Seq[(PlayerId, Int)],
+                                   mouseQuickBuy: Seq[(PlayerId, Int)],
+                                   notUnblockedCamps: Map[PlayerId, Seq[Ward]],
+                                   notPurchasedSticks: Seq[(PlayerId, PlayerId)],
+                                   notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])],
+                                   //  unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)],
+                                   scepterOwners: Seq[PlayerId],
+                                   shardOwners: Seq[PlayerId],
+                                   deathsSummary: Seq[DeathSummaryData],
 )

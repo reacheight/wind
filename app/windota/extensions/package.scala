@@ -19,6 +19,7 @@ package object extensions {
   implicit class EntityExtension(val entity: Entity) extends AnyVal {
     def exists(propertyName: String) = entity.hasProperty(propertyName)
     def get[T](propertyName: String) = Option(entity.getProperty[T](propertyName))
+    def get[T](fp: FieldPath) = entity.getPropertyForFieldPath[T](fp)
   }
 
   def toList[T](iterator: java.util.Iterator[T]): List[T] = {

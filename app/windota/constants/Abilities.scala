@@ -2,6 +2,7 @@ package windota.constants
 
 import io.circe.generic.auto._
 import io.circe.parser._
+import windota.models.AbilityId
 
 import scala.io.Source
 
@@ -15,6 +16,7 @@ object Abilities {
 
   def getName(id: Int): String = idToName(id)
   def getId(name: String): Int = nameToId(name)
+  def findId(name: String): Option[AbilityId] = nameToId.get(name).map(id => AbilityId(id))
   def isAbilityName(name: String): Boolean = nameToId.contains(name)
 }
 

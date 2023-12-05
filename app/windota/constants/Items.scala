@@ -2,6 +2,7 @@ package windota.constants
 
 import io.circe.generic.auto._
 import io.circe.parser._
+import windota.models.ItemId
 
 import scala.io.Source
 
@@ -16,10 +17,9 @@ object Items {
   private val nameToId = idToName.map(_.swap)
 
   def getName(id: Int): String = idToName(id)
-
   def getTag(id: Int): String = getName(id).replace("item_", "")
-
   def getId(name: String): Int = nameToId(name)
+  def findId(name: String): Option[ItemId] = nameToId.get(name).map(id => ItemId(id))
 }
 
 case class ItemJson(id: Int, name: String, cost: Int, secret_shop: Int, side_shop: Int, recipe: Int)

@@ -268,13 +268,14 @@ object Main {
 //    }
 
     result.deathsSummary.foreach(data => {
-      println(s"${data.time}: ${result.heroName(data.player)} died, damage received:")
-      data.damageReceived.map { case (attackerId, damageDealt) =>
+      println(s"${data.time}: ${result.heroName(data.player)} died, respawn time: ${data.respawnTime}, gold penalty: ${data.goldPenalty}, damage received:")
+      data.damageReceived.foreach { case (attackerId, damageDealt) =>
         println(s"    From ${result.heroName(attackerId)}:")
         println(s"        attack damage: ${damageDealt.attackDamage.physical} physical, ${damageDealt.attackDamage.magical} magical, ${damageDealt.attackDamage.pure} pure")
         damageDealt.abilityDamage.foreach { case (abilityId, damage ) => println(s"        ${Abilities.getName(abilityId.id)}: ${damage.physical} physical, ${damage.magical} magical, ${damage.pure} pure") }
         damageDealt.itemDamage.foreach { case (itemId, damage ) => println(s"        ${Items.getName(itemId.id)}: ${damage.physical} physical, ${damage.magical} magical, ${damage.pure} pure") }
       }
+      println(s"Gold earnings: ${data.goldEarnings.map { case (receiverId, amount) => s"${result.heroName(receiverId)} - $amount" }.mkString(", ")}\n")
     })
   }
 

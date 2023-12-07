@@ -1,17 +1,14 @@
 package windota.processors
 
-import skadistats.clarity.model.{CombatLogEntry, Entity}
-import skadistats.clarity.processor.entities.OnEntityPropertyChanged
+import skadistats.clarity.model.CombatLogEntry
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
-import skadistats.clarity.processor.stringtables.{StringTables, UsesStringTable}
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
-import windota.Util
 import windota.Util.EntityExtension2
-import windota.constants.{Abilities, Clarity, Items}
-import windota.extensions.{EntityExtension, FieldPath}
-import windota.models.{DamageType, PlayerId}
-import windota.models.internal.{DamageAmount, DamageEventData, DeathSummaryDamageDealt, DeathSummaryData}
+import windota.constants.{Abilities, Items}
+import windota.extensions.EntitiesExtension
+import windota.models.DamageType
+import windota.models.internal._
 
 import scala.collection.mutable.ListBuffer
 
@@ -20,8 +17,17 @@ class DeathsSummaryProcessor extends ProcessorBase {
 
   private val _damage = ListBuffer.empty[DamageEventData]
   private val _deaths = ListBuffer.empty[DeathSummaryData]
+  private val _gold = ListBuffer.empty[GoldUpdate]
 
   def deaths: Seq[DeathSummaryData] = _deaths.toList
+
+  @OnCombatLogEntry
+  def onGoldReceived(ctx: Context, cle: CombatLogEntry): Unit = {
+    if (cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_GOLD && (cle.getGoldReason == 1 || cle.getGoldReason == 12)) {
+      val receiver = HeroProcessor.clNameToPlayerId(cle.getTargetName)
+      _gold += GoldUpdate(receiver, cle.getValue, cle.getGoldReason, cle.getTimestamp)
+    }
+  }
 
   @OnCombatLogEntry
   def onHeroDamage(ctx: Context, cle: CombatLogEntry): Unit = {
@@ -36,14 +42,13 @@ class DeathsSummaryProcessor extends ProcessorBase {
     }
   }
 
-  @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
-  def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
-    if (!hero.isHero || hero.get[Int](fp) != 1 || hero.getSpawnTime(GameTimeHelper.State) < 6) return
+  @OnCombatLogEntry
+  def onHeroDied(ctx: Context, cle: CombatLogEntry): Unit = {
+    if (cle.getType != DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DEATH || !cle.getTargetName.startsWith("npc_dota_hero")) return
+    val playerId = HeroProcessor.clNameToPlayerId(cle.getTargetName)
+    val heroOpt = Entities.find(e => e.isHero && e.playerId == playerId)
 
-    for {
-      playerIdRaw <- hero.get[Int](Clarity.Property.Names.PlayerId)
-    } yield {
-      val playerId = PlayerId(playerIdRaw)
+    heroOpt.foreach(hero => {
       val damageReceived = _damage
         .filter(d => d.target == playerId && GameTimeHelper.State.gameTime - d.time.gameTime <= DEATH_DAMAGE_WINDOW)
         .groupBy(d => d.attacker)
@@ -61,9 +66,16 @@ class DeathsSummaryProcessor extends ProcessorBase {
           attackerId -> DeathSummaryDamageDealt(attackDamage, abilityDamage, itemDamage)
         }
 
-      _deaths += DeathSummaryData(playerId, GameTimeHelper.State, damageReceived, hero.getSpawnTime(GameTimeHelper.State))
+      val goldUpdates = _gold.filter(u => u.clTimestamp == cle.getTimestamp)
+      val penalty = goldUpdates.filter(u => u.playerId == playerId && u.reason == 1).map(u => u.amount).sum
+      val earnings = goldUpdates.filter(u => u.reason == 12)
+        .groupBy(u => u.playerId)
+        .map { case (goldReceiver, updates) => goldReceiver -> updates.map(u => u.amount).sum }
+
+      _deaths += DeathSummaryData(playerId, GameTimeHelper.State, cle.getTimestamp, damageReceived, hero.getSpawnTime(GameTimeHelper.State), 0 - penalty, earnings)
       _damage.filterInPlace(d => d.target != playerId)
-    }
+      _gold.clear()
+    })
   }
 
   private def heroDamagedAnotherHero(cle: CombatLogEntry): Boolean =

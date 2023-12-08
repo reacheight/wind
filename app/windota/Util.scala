@@ -111,6 +111,15 @@ object Util {
     }
   }
 
+  def getSpawnTime(hero: Entity, time: GameTimeState): Float = {
+    if (Util.isAlive(hero))
+      0
+    else {
+      val respawnTime = hero.getProperty[Float]("m_flRespawnTime")
+      if (respawnTime < 0) 0 else math.max(respawnTime - time.gameTime - time.transitionTime, 0)
+    }
+  }
+
   def getOppositeTeam(team: Team): Team = team match {
     case Radiant => Dire
     case Dire => Radiant
@@ -150,6 +159,6 @@ object Util {
     def maxMana: Float = entity.getProperty[Float]("m_flMaxMana")
     def currentMana: Float = entity.getProperty[Float]("m_flMana")
     def manaCost: Float = entity.getProperty[Int]("m_iManaCost")
-    def getSpawnTime(now: GameTimeState): Int = Util.getSpawnTime(entity, now.gameTime).toInt
+    def getSpawnTime(now: GameTimeState): Int = Util.getSpawnTime(entity, now).toInt
   }
 }

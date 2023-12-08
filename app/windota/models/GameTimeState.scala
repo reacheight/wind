@@ -1,10 +1,10 @@
 package windota.models
 
-case class GameTimeState(preGameStarted: Boolean, gameStarted: Boolean, gameTime: Float) {
+case class GameTimeState(preGameStarted: Boolean, gameStarted: Boolean, gameTime: Float, transitionTime: Float) {
   def addSeconds(seconds: Float): GameTimeState = {
     val newSeconds = gameTime + seconds
     val newGameStarted = newSeconds >= 0
-    GameTimeState(true, newGameStarted, newSeconds)
+    GameTimeState(true, newGameStarted, newSeconds, transitionTime)
   }
 
   override def toString: String = {

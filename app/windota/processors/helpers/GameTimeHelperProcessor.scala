@@ -21,7 +21,7 @@ class GameTimeHelperProcessor {
       .findByName("CDOTAGamerulesProxy")
 
     gameRulesOpt match {
-      case None => GameTimeState(preGameStarted = false, gameStarted = false, gameTime = Float.MinValue)
+      case None => GameTimeState(preGameStarted = false, gameStarted = false, gameTime = Float.MinValue, transitionTime = 0)
       case Some(gameRules) => getGameTimeState(gameRules)
     }
   }
@@ -33,20 +33,20 @@ class GameTimeHelperProcessor {
       val preGameTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flPreGameStartTime")
 
       if (preGameTime > TIME_EPS) {
+        val transitionTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flStateTransitionTime")
         val startTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flGameStartTime")
         if (startTime > TIME_EPS) {
-          return GameTimeState(preGameStarted = true, gameStarted = true, gameTime = Time - startTime)
+          return GameTimeState(preGameStarted = true, gameStarted = true, gameTime = Time - startTime, transitionTime)
         }
         else {
-          val transitionTime = gameRulesEntity.getProperty[Float]("m_pGameRules.m_flStateTransitionTime")
-          return GameTimeState(preGameStarted = true, gameStarted = false, gameTime = Time - transitionTime)
+          return GameTimeState(preGameStarted = true, gameStarted = false, gameTime = Time - transitionTime, transitionTime)
         }
       }
 
-      return GameTimeState(preGameStarted = false, gameStarted = false, gameTime = Float.MinValue)
+      return GameTimeState(preGameStarted = false, gameStarted = false, gameTime = Float.MinValue, transitionTime = 0)
     }
 
-    GameTimeState(preGameStarted = false, gameStarted = false, gameTime = Float.MinValue)
+    GameTimeState(preGameStarted = false, gameStarted = false, gameTime = Float.MinValue, transitionTime = 0)
   }
 
   @OnMessage(classOf[NetworkBaseTypes.CNETMsg_Tick])

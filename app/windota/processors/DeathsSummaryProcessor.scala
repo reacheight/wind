@@ -81,6 +81,7 @@ class DeathsSummaryProcessor extends ProcessorBase {
   private def heroDamagedAnotherHero(cle: CombatLogEntry): Boolean =
     cle.getType == DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DAMAGE &&
       cle.getDamageSourceName.startsWith("npc_dota_hero") && cle.getTargetName.startsWith("npc_dota_hero") &&
+      !cle.isTargetIllusion && !cle.isAttackerIllusion &&
       cle.getDamageSourceName != cle.getTargetName
 
   private def calculateDamage(damageEvents: ListBuffer[DamageEventData]): DamageAmount = DamageAmount(

@@ -2,6 +2,7 @@ package windota.models
 
 import windota.models.Lane.Lane
 import windota.models.Team.Team
+import windota.models.dto.DeathSummary
 
 case class HeroId(id: Int)
 case class ItemId(id: Int)
@@ -62,6 +63,7 @@ case class Analysis(
 
   scepterOwners: Seq[HeroId],
   shardOwners: Seq[HeroId],
+  deathSummary: Seq[DeathSummary],
 )
 
 

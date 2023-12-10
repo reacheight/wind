@@ -1,6 +1,7 @@
 package windota
 
 import windota.models.Team._
+import windota.models.dto.DeathSummary
 import windota.models.{internal, _}
 
 object AnalysisResultMapper {
@@ -78,7 +79,8 @@ object AnalysisResultMapper {
       powerTreadsAbilityUsages,
       unreasonableHeroDives,
       scepterOwners,
-      shardOwners
+      shardOwners,
+      analysisResult.deathsSummary.map(d => DeathSummary.fromInternal(d, heroId))
     )
 
     val radiant = analysisResult.heroId.filter(_._1.id < 10).values.toSeq

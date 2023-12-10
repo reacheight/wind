@@ -7,19 +7,15 @@ import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.runner.Context
 import windota.Util
 import windota.extensions.{EntitiesExtension, FieldPath}
-import windota.models.{GameTimeState, PlayerId}
+import windota.models.internal.UnusedAbility
+import windota.models.{AbilityId, GameTimeState, PlayerId}
 
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
 class AbilityUsageProcessor extends ProcessorBase {
-  def unusedAbilities = _unusedAbilities.toSeq
-  def unusedOnAllyAbilities = _unusedOnAllyAbilities.toSeq
-  def unusedOnAllyWithBlinkAbilities = _unusedOnAllyWithBlinkAbilities.toSeq
-
-  private val _unusedAbilities: ListBuffer[(GameTimeState, PlayerId, Int)] = ListBuffer.empty
-  private val _unusedOnAllyAbilities: ListBuffer[(GameTimeState, PlayerId, PlayerId, Int)] = ListBuffer.empty
-  private val _unusedOnAllyWithBlinkAbilities: ListBuffer[(GameTimeState, PlayerId, PlayerId, Int)] = ListBuffer.empty
+  def unusedAbilities: Seq[UnusedAbility] = _unusedAbilities.toSeq
+  private val _unusedAbilities: ListBuffer[UnusedAbility] = ListBuffer.empty
 
   @Insert
   private val ctx: Context = null
@@ -61,7 +57,7 @@ class AbilityUsageProcessor extends ProcessorBase {
 
     def addUnusedAbility(entityName: String, abilityId: Int): Unit =
       AbilitiesHelper.findUnusedAbility(hero, abilities, entityName)
-        .foreach(_ => _unusedAbilities.addOne((gameTimeState, playerId, abilityId)))
+        .foreach(_ => _unusedAbilities.addOne(UnusedAbility(playerId, playerId, AbilityId(abilityId), gameTimeState, withBlink = false)))
   }
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
@@ -130,11 +126,11 @@ class AbilityUsageProcessor extends ProcessorBase {
             .foreach(ability => {
               val distance = Util.getDistance(hero, ally)
               val abilityCastRange = castRange(ability.getProperty[Int]("m_iLevel")) + ItemsHelper.getAdditionalCastRange(ally)
+              val castRangeWithBlink = abilityCastRange + getCastRangeIfHasBlink(ally)
+              val needUseBlink = abilityCastRange < distance
 
-              if (abilityCastRange >= distance)
-                _unusedOnAllyAbilities.addOne(gameTimeState, deadPlayerId, allyPlayerId, abilityId)
-              else if (checkBlink && abilityCastRange + getCastRangeIfHasBlink(ally) >= distance)
-                _unusedOnAllyWithBlinkAbilities.addOne(gameTimeState, deadPlayerId, allyPlayerId, abilityId)
+              if (castRangeWithBlink >= distance)
+                _unusedAbilities.addOne(UnusedAbility(allyPlayerId, deadPlayerId, AbilityId(abilityId), gameTimeState, needUseBlink))
             })
       })
     }

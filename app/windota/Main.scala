@@ -126,20 +126,15 @@ object Main {
       println(s"${obs.created} ${result.heroName(obs.owner)}${if (obs.isFullDuration) " - not destroyed" else ""}")
     )
 
-    if (result.unusedAbilities.nonEmpty) println("\nAbilities not used before death:")
-    result.unusedAbilities.foreach { case (time, id, abilityId) =>
-      println(s"${time.toString} ${result.heroName(id)} didn't use ${Abilities.getName(abilityId)}")
-    }
+    if (result.unusedAbilities.exists(d => d.user == d.target)) println("\nAbilities not used before death:")
+    result.unusedAbilities.filter(d => d.user == d.target).foreach(unusedAbility =>
+      println(s"${unusedAbility.time} ${result.heroName(unusedAbility.user)} didn't use ${Abilities.getName(unusedAbility.abilityId.id)}")
+    )
 
-    if (result.unusedOnAllyAbilities.nonEmpty) println("\nAbilities not used on ally:")
-    result.unusedOnAllyAbilities foreach { case (time, deadPlayerId, allyId, abilityId) =>
-      println(s"${time.toString} ${result.heroName(allyId)} didn't use ${Abilities.getName(abilityId)} for ${result.heroName(deadPlayerId)}")
-    }
-
-    if (result.unusedOnAllyWithBlinkAbilities.nonEmpty) println("\nAbilities not used with Blink Dagger on ally:")
-    result.unusedOnAllyWithBlinkAbilities foreach { case (time, deadPlayerId, allyId, abilityId) =>
-      println(s"${time.toString} ${result.heroName(allyId)} didn't use Blink Dagger + ${Abilities.getName(abilityId)} for ${result.heroName(deadPlayerId)}")
-    }
+    if (result.unusedAbilities.exists(d => d.user != d.target)) println("\nAbilities not used on ally:")
+    result.unusedAbilities.filter(d => d.user != d.target).foreach(unusedAbility =>
+      println(s"${unusedAbility.time} ${result.heroName(unusedAbility.user)} didn't use ${Abilities.getName(unusedAbility.abilityId.id)} for ${result.heroName(unusedAbility.target)}")
+    )
 
     if (result.unusedItems.nonEmpty) println("\nItems not used before death:")
     result.unusedItems.foreach { case (time, id, itemId) =>

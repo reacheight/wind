@@ -1,7 +1,7 @@
 package windota
 
 import windota.models.Team._
-import windota.models.dto.DeathSummary
+import windota.models.dto.{DeathSummary, UnusedAbility}
 import windota.models.{internal, _}
 
 object AnalysisResultMapper {
@@ -10,11 +10,6 @@ object AnalysisResultMapper {
 
     val unusedItems = (analysisResult.unusedItems.map { case (time, id, item) => UnusedItem(heroId(id), heroId(id), ItemId(item), time) } ++
       analysisResult.unusedOnAllyItems.map { case (time, target, user, item) => UnusedItem(heroId(user), heroId(target), ItemId(item), time) })
-        .sortBy(e => e.time.gameTime)
-
-    val unusedAbilities = (analysisResult.unusedAbilities.map { case (time, id, ability) => UnusedAbility(heroId(id), heroId(id), AbilityId(ability), time) } ++
-      analysisResult.unusedOnAllyAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), AbilityId(ability), time) } ++
-      analysisResult.unusedOnAllyWithBlinkAbilities.map { case (time, target, user, ability) => UnusedAbility(heroId(user), heroId(target), AbilityId(ability), time, withBlink = true) })
         .sortBy(e => e.time.gameTime)
 
     val overlappedStuns = analysisResult.overlappedStuns.map(stun => OverlappedStun(heroId(stun.attacker), heroId(stun.target), stun.time, stun.overlapTime, stun.stunSourceId, stun.isAbility))
@@ -55,7 +50,7 @@ object AnalysisResultMapper {
 
     val analysis = Analysis(
       unusedItems,
-      unusedAbilities,
+      analysisResult.unusedAbilities.map(d => UnusedAbility.fromInternal(d, heroId)),
       overlappedStuns,
       midasEfficiency,
       courierStates,

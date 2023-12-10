@@ -5,17 +5,15 @@ import skadistats.clarity.processor.entities.OnEntityPropertyChanged
 import skadistats.clarity.processor.stringtables.UsesStringTable
 import windota.Util
 import windota.extensions.{EntitiesExtension, FieldPath}
-import windota.models._
+import windota.models.{ItemId, PlayerId}
+import windota.models.internal.UnusedItem
 
 import scala.collection.mutable.ListBuffer
 
 @UsesStringTable("EntityNames")
 class ItemUsageProcessor extends ProcessorBase {
-  def unusedItems: Seq[(GameTimeState, PlayerId, Int)] = _unusedItems.toSeq
-  def unusedOnAllyItems: Seq[(GameTimeState, PlayerId, PlayerId, Int)] = _unusedOnAllyItems.toSeq
-
-  private val _unusedItems: ListBuffer[(GameTimeState, PlayerId, Int)] = ListBuffer.empty
-  private val _unusedOnAllyItems: ListBuffer[(GameTimeState, PlayerId, PlayerId, Int)] = ListBuffer.empty
+  def unusedItems: Seq[UnusedItem] = _unusedItems.toSeq
+  private val _unusedItems: ListBuffer[UnusedItem] = ListBuffer.empty
 
   @OnEntityPropertyChanged(classPattern = "CDOTA_Unit_Hero_.*", propertyPattern = "m_lifeState")
   def onHeroDied(hero: Entity, fp: FieldPath): Unit = {
@@ -50,7 +48,7 @@ class ItemUsageProcessor extends ProcessorBase {
 
     def addUnusedItem(entityName: String, itemId: Int): Unit =
       ItemsHelper.findUnusedItem(hero, items, entityName)
-        .foreach(_ => _unusedItems.addOne((gameTimeState, playerId, itemId)))
+        .foreach(_ => _unusedItems.addOne(UnusedItem(playerId, playerId, ItemId(itemId), gameTimeState, withBlink = false)))
 
 
     val allies = Entities.filter(Util.isHero)
@@ -78,7 +76,7 @@ class ItemUsageProcessor extends ProcessorBase {
             val itemCastRange = castRange + ItemsHelper.getAdditionalCastRange(ally)
             itemCastRange >= distance
           })
-          .foreach(_ => _unusedOnAllyItems.addOne(gameTimeState, playerId, allyPlayerId, itemId))
+          .foreach(_ => _unusedItems.addOne(UnusedItem(allyPlayerId, playerId, ItemId(itemId), gameTimeState, withBlink = false)))
       })
     }
   }

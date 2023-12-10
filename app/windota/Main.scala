@@ -136,15 +136,15 @@ object Main {
       println(s"${unusedAbility.time} ${result.heroName(unusedAbility.user)} didn't use ${Abilities.getName(unusedAbility.abilityId.id)} for ${result.heroName(unusedAbility.target)}")
     )
 
-    if (result.unusedItems.nonEmpty) println("\nItems not used before death:")
-    result.unusedItems.foreach { case (time, id, itemId) =>
-      println(s"${time.toString} ${result.heroName(id)} didn't use ${Items.getTag(itemId)}")
-    }
+    if (result.unusedItems.exists(d => d.user == d.target)) println("\nItems not used before death:")
+    result.unusedItems.filter(d => d.user == d.target).foreach(unusedItem =>
+      println(s"${unusedItem.time} ${result.heroName(unusedItem.user)} didn't use ${Items.getTag(unusedItem.item.id)}")
+    )
 
-    if (result.unusedOnAllyItems.nonEmpty) println("\nItems not used on ally:")
-    result.unusedOnAllyItems foreach { case (time, deadPlayerId, allyId, itemId) =>
-      println(s"${time.toString} ${result.heroName(allyId)} didn't use ${Items.getTag(itemId)} for ${result.heroName(deadPlayerId)}")
-    }
+    if (result.unusedItems.exists(d => d.user != d.target)) println("\nItems not used on ally:")
+    result.unusedItems.filter(d => d.user != d.target).foreach(unusedItem =>
+      println(s"${unusedItem.time} ${result.heroName(unusedItem.user)} didn't use ${Items.getTag(unusedItem.item.id)} for ${result.heroName(unusedItem.target)}")
+    )
 
     if (result.ptNotOnStrength.nonEmpty) println("\nPower Treads not on strength:")
     result.ptNotOnStrength.foreach { case (time, id) =>

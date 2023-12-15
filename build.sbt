@@ -4,6 +4,7 @@ ThisBuild / version := "1.0"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
+  .enablePlugins(TypeScriptGeneratorPlugin)
   .settings(
     name := """windota""",
     libraryDependencies ++= Seq(

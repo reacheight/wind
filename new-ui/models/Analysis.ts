@@ -23,6 +23,7 @@ import {PowerTreadsAbilityUsages} from "./PowerTreadsAbilityUsages";
 import { UnreasonableHeroDive } from "./UnreasonableHeroDive";
 import { UnreasonableTeamDive } from "./UnreasonableTeamDive";
 import { HeroId } from "./HeroId";
+import { DeathSummary } from './DeathSummary';
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -49,4 +50,5 @@ export interface Analysis {
   unreasonableHeroDives: ReadonlyArray<UnreasonableHeroDive>;
   scepterOwners: ReadonlyArray<HeroId>;
   shardOwners: ReadonlyArray<HeroId>;
+  deathSummary: ReadonlyArray<DeathSummary>;
 }

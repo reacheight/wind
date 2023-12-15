@@ -1,0 +1,28 @@
+.title {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.shortContainer {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 8px;
+}
+
+.time {
+  margin-left: 5px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.goldPenalty {
+  display: flex;
+  color: #AA0000;
+  font-weight: 700;
+}
+
+.goldIcon {
+  padding-top: 3px;
+  display: inline-block;
+  margin-right: 8px;
+}

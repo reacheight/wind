@@ -1,7 +1,7 @@
 package windota
 
 import windota.models.Team._
-import windota.models.dto.{DeathSummary, UnusedAbility, UnusedItem}
+import windota.models.dto.{DeathSummary, PlayerHero, UnusedAbility, UnusedItem}
 import windota.models.{internal, _}
 
 object AnalysisResultMapper {
@@ -80,7 +80,8 @@ object AnalysisResultMapper {
       radiant,
       dire,
       analysisResult.radiantWon,
-      analysisResult.matchDuration
+      analysisResult.matchDuration,
+      analysisResult.heroId.map { case (playerId, heroId) => PlayerHero(playerId, heroId) }.toSeq
     )
 
     AnalysisResult(matchInfo, analysis)

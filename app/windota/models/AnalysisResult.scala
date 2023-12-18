@@ -65,5 +65,5 @@ case class Analysis(
 )
 
 
-case class MatchInfo(radiant: Seq[HeroId], dire: Seq[HeroId], radiantWon: Boolean, matchLength: Int)
+case class MatchInfo(radiant: Seq[HeroId], dire: Seq[HeroId], radiantWon: Boolean, matchLength: Int, playersHeroes: Seq[PlayerHero])
 case class AnalysisResult(matchInfo: MatchInfo, analysis: Analysis)

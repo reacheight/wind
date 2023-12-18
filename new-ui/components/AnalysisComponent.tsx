@@ -12,15 +12,17 @@ import Routes from "../api/routs";
 import { Item } from "../models/Item";
 import Resources from "./categories/Resources/Resources";
 import DeathSummary from "./categories/DeathSummary/DeathSummary";
+import { MatchInfo } from "../models/MatchInfo";
 
 interface AnalysisComponentProps {
   heroes: ReadonlyArray<HeroId>
   targetHero: HeroId
   targetTeam: Team
   analysis: Analysis
+  matchInfo: MatchInfo
 }
 
-const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis }: AnalysisComponentProps) => {
+const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis, matchInfo }: AnalysisComponentProps) => {
   const [abilities, setAbilities] = useState<HeroAbilities[]>(null)
   const [items, setItems] = useState<Item[]>(null)
 
@@ -62,7 +64,7 @@ const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis }: Analys
           allAbilities={abilities}
           allItems={items}
         />
-        <DeathSummary target={targetHero} deathSummary={analysis.deathSummary} />
+        <DeathSummary target={targetHero} deathSummary={analysis.deathSummary} playersHeroes={matchInfo.playersHeroes} />
         <Laning target={targetHero} couriersState={analysis.couriersState} notTankedCreepwaves={analysis.notTankedCreepwaves} notUnblockedCamps={analysis.notUnblockedCamps} />
         <Resources target={targetHero} summonGoldFed={analysis.summonGoldFed} />
       </VStack>

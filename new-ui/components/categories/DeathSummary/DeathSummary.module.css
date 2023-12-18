@@ -4,9 +4,12 @@
 }
 
 .shortContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 33%);
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  padding: 8px;
+  padding: 5px;
+  align-items: center;
 }
 
 .time {
@@ -25,4 +28,31 @@
   padding-top: 3px;
   display: inline-block;
   margin-right: 8px;
+}
+
+.damageFullLine {
+  display: flex;
+  border-radius: 6px;
+  width: 300px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.damageFullLine,
+.damageSubLine {
+  height: 8px;
+}
+
+.damageSubLine {
+  opacity: 60%;
+}
+
+.heroIconsLine {
+  display: flex;
+  width: 300px;
+  height: 20px;
+}
+
+.heroIconSubLine {
+  text-align: center;
 }

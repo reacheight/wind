@@ -53,22 +53,27 @@ class AnalysisController @Inject()(val controllerComponents: ControllerComponent
   }
 
   private def startAnalysis(matchId: Long): Unit = {
-    if (!Files.exists(Paths.get(DownloadingDirectory)))
-      Files.createDirectory(Paths.get(DownloadingDirectory))
+//    if (!Files.exists(Paths.get(DownloadingDirectory)))
+//      Files.createDirectory(Paths.get(DownloadingDirectory))
+//
+//    val replayTry = StratzClient.getReplayLocation(matchId)
+//      .flatMap(location => ValveClient.downloadReplay(location, compressedReplayPath(matchId)))
+//      .flatMap(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
+//
+    val path = s"D:\\SteamLibrary\\steamapps\\common\\dota 2 beta\\game\\dota\\replays\\$matchId.dem"
+    val analysis = ReplayAnalyzer.analyze(Paths.get(path))
+    MongoClient.saveAnalysis(analysis)
+      .flatMap(_ => MongoClient.setStatus(matchId, AnalysisStatus.Finished))
 
-    val replayTry = StratzClient.getReplayLocation(matchId)
-      .flatMap(location => ValveClient.downloadReplay(location, compressedReplayPath(matchId)))
-      .flatMap(_ => BZip2Decompressor.decompress(compressedReplayPath(matchId), replayPath(matchId)))
-
-    replayTry match {
-      case Failure(e) =>
-        MongoClient.setStatus(matchId, AnalysisStatus.Failed)
-        logger.error(s"Failed to get replay of $matchId: ${e.toString}.")
-      case Success(_) =>
-        val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
-        Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
-        MongoClient.saveAnalysis(analysis)
-          .flatMap(_ => MongoClient.setStatus(matchId, AnalysisStatus.Finished))
-    }
+//    replayTry match {
+//      case Failure(e) =>
+//        MongoClient.setStatus(matchId, AnalysisStatus.Failed)
+//        logger.error(s"Failed to get replay of $matchId: ${e.toString}.")
+//      case Success(_) =>
+//        val analysis = ReplayAnalyzer.analyze(replayPath(matchId))
+//        Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
+//        MongoClient.saveAnalysis(analysis)
+//          .flatMap(_ => MongoClient.setStatus(matchId, AnalysisStatus.Finished))
+//    }
   }
 }

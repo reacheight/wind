@@ -93,7 +93,7 @@ const Match = () => {
           </Button>
         </a>
       </div>
-      {analysis && <AnalysisComponent heroes={match.players.map(p => p.heroId)} targetHero={targetHero} targetTeam={targetTeam} analysis={analysis.analysis} />}
+      {analysis && <AnalysisComponent heroes={match.players.map(p => p.heroId)} targetHero={targetHero} targetTeam={targetTeam} analysis={analysis.analysis} matchInfo={analysis.matchInfo} />}
       <div className={styles.centered}>
         {analysisLoading && <Spinner />}
         {(!analysisLoading && !analysis) &&

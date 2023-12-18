@@ -19,9 +19,11 @@ const DeathSummary = ({ target, playersHeroes, deathSummary }: DeathSummaryProps
   return (
     <div>
       <span className={styles.title}>Death Summary</span>
-      <VStack align={'left'}>
-        {targetDeathSummary.map(entry => <DeathSummaryShort deathSummaryEntry={entry} playersHeroes={playersHeroes} />)}
-      </VStack>
+      <div className={styles.summaryList}>
+        <VStack align={'left'}>
+          {targetDeathSummary.map(entry => <DeathSummaryShort deathSummaryEntry={entry} playersHeroes={playersHeroes} />)}
+        </VStack>
+      </div>
     </div>
   )
 }

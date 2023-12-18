@@ -5,7 +5,6 @@ import { PlayerHero } from "../../../models/PlayerHero";
 import styles from "./DeathSummary.module.css";
 import { PlayerId } from "../../../models/PlayerId";
 import MiniIcon from "../../MiniIcon";
-import { percent } from "style-value-types";
 
 interface DamageReceivedLineProps {
   damageReceivedList: ReadonlyArray<DamageReceived>
@@ -56,7 +55,7 @@ const DamageReceivedLine = ({ damageReceivedList, playersHeroes }: DamageReceive
   })
 
   return (
-    <div>
+    <div className={styles.damageSummary}>
       <div className={styles.damageFullLine}>
         {subLines}
       </div>

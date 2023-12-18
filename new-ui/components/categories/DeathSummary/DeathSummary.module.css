@@ -3,9 +3,12 @@
   font-size: 22px;
 }
 
+.summaryList {
+  margin-top: 10px;
+}
+
 .shortContainer {
-  display: grid;
-  grid-template-columns: repeat(3, 33%);
+  display: flex;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 5px;
@@ -14,6 +17,7 @@
 
 .time {
   margin-left: 5px;
+  margin-right: 50px;
   font-size: 14px;
   font-weight: 700;
 }
@@ -28,6 +32,10 @@
   padding-top: 3px;
   display: inline-block;
   margin-right: 8px;
+}
+
+.damageSummary {
+  margin-right: 50px;
 }
 
 .damageFullLine {

@@ -34,18 +34,23 @@
   margin-right: 8px;
 }
 
-.damageSummary {
+.damageSummaryLine {
   margin-right: 50px;
 }
 
+.damageTypeFullLine,
 .damageFullLine {
   display: flex;
   border-radius: 6px;
   width: 300px;
   overflow: hidden;
+}
+
+.damageFullLine {
   margin-bottom: 5px;
 }
 
+.damageTypeFullLine,
 .damageFullLine,
 .damageSubLine {
   height: 8px;

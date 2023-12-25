@@ -55,7 +55,7 @@ const DamageReceivedLine = ({ damageReceivedList, playersHeroes }: DamageReceive
   })
 
   return (
-    <div className={styles.damageSummary}>
+    <div className={styles.damageSummaryLine}>
       <div className={styles.damageFullLine}>
         {subLines}
       </div>

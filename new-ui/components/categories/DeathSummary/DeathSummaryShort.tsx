@@ -16,7 +16,7 @@ const DeathSummaryShort = ({ deathSummaryEntry, playersHeroes }: DeathSummarySho
       <span className={styles.time}>{deathSummaryEntry.time}</span>
       <DamageReceivedLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes} />
       <span className={styles.goldPenalty}>
-        <div className={styles.goldIcon}><Image src={'/gold.webp'} width={20} height={20} /></div>
+        <div className={styles.goldIcon}><Image src={'/gold.png'} width={20} height={20} /></div>
         -{deathSummaryEntry.goldPenalty}
       </span>
     </div>

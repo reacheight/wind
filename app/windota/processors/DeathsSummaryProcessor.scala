@@ -1,5 +1,6 @@
 package windota.processors
 
+import com.typesafe.scalalogging.Logger
 import skadistats.clarity.model.CombatLogEntry
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
@@ -13,6 +14,8 @@ import windota.models.internal._
 import scala.collection.mutable.ListBuffer
 
 class DeathsSummaryProcessor extends ProcessorBase {
+  private val logger = Logger[DeathsSummaryProcessor]
+
   private val DEATH_DAMAGE_WINDOW = 30
 
   private val _damage = ListBuffer.empty[DamageEventData]
@@ -37,8 +40,14 @@ class DeathsSummaryProcessor extends ProcessorBase {
       val damageAmount = cle.getValue
       val abilityOpt = Abilities.findId(cle.getInflictorName)
       val itemOpt = Items.findId(cle.getInflictorName)
+      val damageTypeOpt = DamageType.fromCLValue(cle.getDamageType)
 
-      _damage += DamageEventData(target, attacker, damageAmount, GameTimeHelper.State, abilityOpt, itemOpt, DamageType.fromCLValue(cle.getDamageType))
+      damageTypeOpt match {
+        case Some(damageType) =>
+          _damage += DamageEventData(target, attacker, damageAmount, GameTimeHelper.State, abilityOpt, itemOpt, damageType)
+        case None =>
+          logger.warn(s"Unknown Damage Type: ${cle.getDamageType}, inflictor: ${cle.getInflictorName}, attacker: ${cle.getDamageSourceName}.")
+      }
     }
   }
 

@@ -35,7 +35,10 @@
 }
 
 .damageSummaryLine {
+  display: inline-block;
   margin-right: 50px;
+  min-width: 300px;
+  position: relative;
 }
 
 .damageTypeFullLine,
@@ -47,9 +50,10 @@
 }
 
 .damageFullLine {
-  margin-bottom: 5px;
+  position: absolute;
 }
 
+.damageSummaryLine,
 .damageTypeFullLine,
 .damageFullLine,
 .damageSubLine {
@@ -57,9 +61,11 @@
 }
 
 .heroIconsLine {
+  position: absolute;
   display: flex;
   width: 300px;
   height: 20px;
+  bottom: -50%;
 }
 
 .heroIconSubLine {

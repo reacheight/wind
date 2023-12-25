@@ -48,9 +48,9 @@ const DamageReceivedLine = ({ damageReceivedList, playersHeroes }: DamageReceive
 
   const heroIcons = damageAmountFromHeroes.map(({ hero, damage }) => {
     let percentage = (damage / fullDamage) * 100
-    let showIcon = percentage > 8
+    let showIcon = percentage > 10
     let iconDisplayValue = showIcon ? 'inline' : 'none';
-    let icon = <div style={{display: iconDisplayValue}}><MiniIcon heroId={hero} width={20} height={20} /></div>
+    let icon = <div style={{display: iconDisplayValue}}><MiniIcon heroId={hero} width={25} height={25} /></div>
     return <div className={styles.heroIconSubLine} style={{width: percentage + '%'}}>{icon}</div>
   })
 

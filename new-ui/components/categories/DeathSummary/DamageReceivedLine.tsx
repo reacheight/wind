@@ -18,17 +18,17 @@ interface DamageFromHero {
 
 const getPlayerColor = (playerId: PlayerId) => {
   switch (playerId) {
-    case 0: return "#1D1D70FF"
-    case 2: return "#31ad96"
-    case 4: return "#61146e"
-    case 6: return "#675b1c"
-    case 8: return "#c74b1c"
+    case 0: return "#1b2ab7"
+    case 2: return "#11c7a7"
+    case 4: return "#9709ad"
+    case 6: return "#c9b005"
+    case 8: return "#be4419"
 
-    case 10: return "#b450b0"
-    case 12: return "#66802e"
-    case 14: return "#1f6d81"
-    case 16: return "#1c6409"
-    case 18: return "#543403"
+    case 10: return "#cc47c4"
+    case 12: return "#7fb20d"
+    case 14: return "#11aed7"
+    case 16: return "#00861d"
+    case 18: return "#6c4101"
   }
 }
 

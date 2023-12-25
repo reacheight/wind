@@ -51,10 +51,6 @@
   height: 8px;
 }
 
-.damageSubLine {
-  opacity: 60%;
-}
-
 .heroIconsLine {
   display: flex;
   width: 300px;

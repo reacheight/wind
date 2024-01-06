@@ -11,16 +11,14 @@ interface DeathSummaryShortProps {
   playersHeroes: ReadonlyArray<PlayerHero>
 }
 
-const DeathSummaryShort = ({ deathSummaryEntry, playersHeroes }: DeathSummaryShortProps) => {
-  return (
-    <div className={styles.shortContainer}>
-      <span className={styles.time}>{deathSummaryEntry.time}</span>
-      <DamageReceivedLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes} />
-      <DamageTypeLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes} />
-      <GoldPenalty amount={deathSummaryEntry.goldPenalty} />
-      <RespawnTime time={deathSummaryEntry.respawnTime} />
-    </div>
-  )
-}
+const DeathSummaryShort = ({ deathSummaryEntry, playersHeroes }: DeathSummaryShortProps) => (
+  <div className={styles.shortContainer}>
+    <span className={styles.time}>{deathSummaryEntry.time}</span>
+    <DamageReceivedLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes}/>
+    <DamageTypeLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes}/>
+    <GoldPenalty amount={deathSummaryEntry.goldPenalty}/>
+    <RespawnTime time={deathSummaryEntry.respawnTime}/>
+  </div>
+)
 
 export default DeathSummaryShort

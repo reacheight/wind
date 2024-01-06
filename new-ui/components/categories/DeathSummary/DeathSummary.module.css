@@ -8,7 +8,8 @@
 }
 
 .shortContainer {
-  display: flex;
+  display: grid;
+  grid-template-columns: 10% 30% 30% 10%;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 5px;
@@ -26,6 +27,7 @@
   display: flex;
   color: #722929;
   font-weight: 600;
+  max-width: 60px;
 }
 
 .goldIcon {

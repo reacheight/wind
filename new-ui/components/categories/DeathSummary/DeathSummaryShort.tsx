@@ -4,6 +4,7 @@ import DamageReceivedLine from "./DamageReceivedLine";
 import { PlayerHero } from "../../../models/PlayerHero";
 import DamageTypeLine from "./DamageTypeLine";
 import GoldPenalty from "./GoldPenalty";
+import RespawnTime from "./RespawnTime";
 
 interface DeathSummaryShortProps {
   deathSummaryEntry: DeathSummary
@@ -17,6 +18,7 @@ const DeathSummaryShort = ({ deathSummaryEntry, playersHeroes }: DeathSummarySho
       <DamageReceivedLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes} />
       <DamageTypeLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes} />
       <GoldPenalty amount={deathSummaryEntry.goldPenalty} />
+      <RespawnTime time={deathSummaryEntry.respawnTime} />
     </div>
   )
 }

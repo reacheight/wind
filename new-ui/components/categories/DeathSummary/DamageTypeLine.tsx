@@ -28,10 +28,10 @@ const calculateDamageOfType = (damageAmountList: ReadonlyArray<DamageAmount>, ty
 const calculateFullDamageOfType = (damageReceivedList: ReadonlyArray<DamageReceived>, type: string) =>
   damageReceivedList.map(d => d.attackDamage[type]
     + calculateDamageOfType(d.abilityDamage.map(ad => ad.damage), type)
-    + calculateDamageOfType(d.itemDamage.map(id => id.damage), type)).reduce((a, b) => a + b)
+    + calculateDamageOfType(d.itemDamage.map(id => id.damage), type)).reduce((a, b) => a + b, 0)
 
 const DamageTypeLine = ({ damageReceivedList, playersHeroes }: DamageTypeLineProps) => {
-  const totalDamage = damageReceivedList.map(dr => calculateFullDamageReceived(dr)).reduce((a, b) => a + b)
+  const totalDamage = damageReceivedList.map(dr => calculateFullDamageReceived(dr)).reduce((a, b) => a + b, 0)
   const subLines = Array("pure", "magical", "physical")
     .map(type => ({ type, amount: calculateFullDamageOfType(damageReceivedList, type), color: getDamageTypeColor(type) }) as DamageTypeEntry)
     .map(entry => {

@@ -5,6 +5,8 @@ import { PlayerHero } from "../../../models/PlayerHero";
 import styles from "./DeathSummary.module.css";
 import { PlayerId } from "../../../models/PlayerId";
 import MiniIcon from "../../MiniIcon";
+import { Tooltip } from '@chakra-ui/react'
+import { Heroes } from "../../../constants/heroes";
 
 interface DamageReceivedLineProps {
   damageReceivedList: ReadonlyArray<DamageReceived>
@@ -51,7 +53,11 @@ const DamageReceivedLine = ({ damageReceivedList, playersHeroes }: DamageReceive
     let showIcon = percentage > 10
     let iconDisplayValue = showIcon ? 'inline' : 'none';
     let icon = <div style={{display: iconDisplayValue}}><MiniIcon heroId={hero} width={25} height={25} /></div>
-    return <div className={styles.heroIconSubLine} style={{width: percentage + '%'}}>{icon}</div>
+    return (
+      <Tooltip label={damage + ' damage from ' + Heroes[hero]} bg='black' color={'darkgrey'} borderRadius={'6px'}>
+        <div className={styles.heroIconSubLine} style={{width: percentage + '%'}}>{icon}</div>
+      </Tooltip>
+    )
   })
 
   return (

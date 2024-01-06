@@ -5,6 +5,7 @@ import DamageReceivedLine from "./DamageReceivedLine";
 import { calculateFullDamageReceived } from "../../../utils";
 import { PlayerHero } from "../../../models/PlayerHero";
 import DamageTypeLine from "./DamageTypeLine";
+import { Tooltip } from "@chakra-ui/tooltip";
 
 interface DeathSummaryShortProps {
   deathSummaryEntry: DeathSummary
@@ -17,10 +18,12 @@ const DeathSummaryShort = ({ deathSummaryEntry, playersHeroes }: DeathSummarySho
       <span className={styles.time}>{deathSummaryEntry.time}</span>
       <DamageReceivedLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes} />
       <DamageTypeLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes} />
-      <span className={styles.goldPenalty}>
-        <div className={styles.goldIcon}><Image src={'/gold.png'} width={20} height={20} /></div>
-        -{deathSummaryEntry.goldPenalty}
-      </span>
+      <Tooltip label={deathSummaryEntry.goldPenalty + ' gold total NW lost'} bg='black' color={'darkgrey'} borderRadius={'6px'}>
+        <span className={styles.goldPenalty}>
+          <div className={styles.goldIcon}><Image src={'/gold.png'} width={20} height={20} /></div>
+          {deathSummaryEntry.goldPenalty}
+        </span>
+      </Tooltip>
     </div>
   )
 }

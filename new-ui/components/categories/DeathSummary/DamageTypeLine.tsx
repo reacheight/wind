@@ -4,6 +4,7 @@ import { DamageAmount } from "../../../models/DamageAmount";
 import styles from "./DeathSummary.module.css";
 import { calculateFullDamageReceived } from "../../../utils";
 import { PlayerId } from "../../../models/PlayerId";
+import { Tooltip } from "@chakra-ui/tooltip";
 
 interface DamageTypeLineProps {
   damageReceivedList: ReadonlyArray<DamageReceived>
@@ -36,7 +37,11 @@ const DamageTypeLine = ({ damageReceivedList, playersHeroes }: DamageTypeLinePro
     .map(type => ({ type, amount: calculateFullDamageOfType(damageReceivedList, type), color: getDamageTypeColor(type) }) as DamageTypeEntry)
     .map(entry => {
       let percentage = (entry.amount / totalDamage) * 100
-      return <div className={styles.damageSubLine} style={{width: percentage + '%', backgroundColor: entry.color}}></div>
+      return (
+        <Tooltip label={entry.amount + ' ' + entry.type + ' damage'} bg='black' color={'darkgrey'} borderRadius={'6px'}>
+          <div className={styles.damageSubLine} style={{width: percentage + '%', backgroundColor: entry.color}}></div>
+        </Tooltip>
+      )
     })
 
   return (

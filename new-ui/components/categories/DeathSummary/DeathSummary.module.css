@@ -16,6 +16,11 @@
   align-items: center;
 }
 
+.shortContainer:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
 .time {
   margin-left: 5px;
   margin-right: 50px;
@@ -86,4 +91,54 @@
 
 .heroIconSubLine {
   text-align: center;
+}
+
+.expandedContainer {
+  padding-top: 5px;
+}
+
+.damageBreakdown {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 5px;
+  width: 60%;
+}
+
+.portrait {
+  position: relative;
+  width: 68px;
+  height: 40px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.damageBreakdownEntries {
+  display: flex;
+}
+
+.damageBreakdownEntry {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  width: 80px;
+}
+
+.damageBreakdownEntryIcon {
+  border-radius: 6px;
+  overflow: hidden;
+  margin-right: 3px;
+}
+
+.physical {
+  color: #ad1a1a;
+}
+
+.magical {
+  color: #4d7bb9;
+}
+
+.pure {
+  color: #d98d04;
 }

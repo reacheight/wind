@@ -27,11 +27,12 @@ const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis, matchInf
   const [items, setItems] = useState<Item[]>(null)
 
   useEffect(() => {
-    const itemsIds = analysis.unusedItems.map(i => i.item)
+    const damageItemsIds = analysis.deathSummary.flatMap(s => s.damageReceived.flatMap(dr => dr.itemDamage.map(id => id.ItemId)))
+    const unusedItemsIds = analysis.unusedItems.map(i => i.item)
     if (analysis.powerTreadsAbilityUsages.length !== 0)
-      itemsIds.push(63);
+      unusedItemsIds.push(63);
 
-    fetch(Routes.Constants.getItems([...new Set(itemsIds)]))
+    fetch(Routes.Constants.getItems([...new Set(unusedItemsIds.concat(damageItemsIds))]))
       .then(response => response.json())
       .then(items => setItems(items))
   }, [])
@@ -64,7 +65,7 @@ const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis, matchInf
           allAbilities={abilities}
           allItems={items}
         />
-        <DeathSummary target={targetHero} deathSummary={analysis.deathSummary} playersHeroes={matchInfo.playersHeroes} />
+        <DeathSummary target={targetHero} deathSummary={analysis.deathSummary} playersHeroes={matchInfo.playersHeroes} abilities={abilities} items={items} />
         <Laning target={targetHero} couriersState={analysis.couriersState} notTankedCreepwaves={analysis.notTankedCreepwaves} notUnblockedCamps={analysis.notUnblockedCamps} />
         <Resources target={targetHero} summonGoldFed={analysis.summonGoldFed} />
       </VStack>

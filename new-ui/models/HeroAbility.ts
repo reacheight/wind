@@ -3,7 +3,7 @@ import { HeroId } from "./HeroId";
 export interface HeroAbility {
   id: number
   slot: number
-  displayName: number
+  displayName: string
   isGrantedByShard: boolean
   isGrantedByScepter: boolean
 }

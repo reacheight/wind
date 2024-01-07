@@ -175,3 +175,28 @@
   font-weight: 600;
   color: gold;
 }
+
+.unusedItemsAndAbilities {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 5px;
+  margin-top: 10px;
+  width: 20%;
+}
+
+.unusedItemsAndAbilitiesList {
+  display: flex;
+  margin-top: 5px;
+}
+
+.miniTitle {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.unusedItemOrAbilityIcon {
+  border-radius: 6px;
+  overflow: hidden;
+  height: 30px;
+  margin-right: 3px;
+}

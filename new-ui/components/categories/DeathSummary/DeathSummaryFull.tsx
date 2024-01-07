@@ -5,15 +5,19 @@ import { useEffect, useState } from "react";
 import DeathSummaryExpanded from "./DeathSummaryExpanded";
 import { HeroAbilities } from "../../../models/HeroAbility";
 import { Item } from "../../../models/Item";
+import { UnusedItem } from "../../../models/UnusedItem";
+import { UnusedAbility } from "../../../models/UnusedAbility";
 
 interface DeathSummaryFullProps {
   deathSummaryEntry: DeathSummary
   playersHeroes: ReadonlyArray<PlayerHero>
   abilities: HeroAbilities[]
   items: Item[]
+  unusedItems: ReadonlyArray<UnusedItem>
+  unusedAbilities: ReadonlyArray<UnusedAbility>
 }
 
-const DeathSummaryFull = ({ deathSummaryEntry, playersHeroes, abilities, items }: DeathSummaryFullProps) => {
+const DeathSummaryFull = ({ deathSummaryEntry, playersHeroes, abilities, items, unusedItems, unusedAbilities }: DeathSummaryFullProps) => {
   const [showExpanded, setShowExpanded] = useState(false)
   useEffect(() => setShowExpanded(false), [deathSummaryEntry])
 
@@ -22,7 +26,7 @@ const DeathSummaryFull = ({ deathSummaryEntry, playersHeroes, abilities, items }
       <div onClick={() => setShowExpanded(!showExpanded)}>
         <DeathSummaryShort deathSummaryEntry={deathSummaryEntry} playersHeroes={playersHeroes} />
       </div>
-      {showExpanded && <DeathSummaryExpanded deathSummaryEntry={deathSummaryEntry} abilities={abilities} items={items} />}
+      {showExpanded && <DeathSummaryExpanded deathSummaryEntry={deathSummaryEntry} abilities={abilities} items={items} unusedItems={unusedItems} unusedAbilities={unusedAbilities} />}
     </div>
   )
 }

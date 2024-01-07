@@ -8,17 +8,24 @@ import { DamageBreakdownEntry } from "./DamageBreakdownEntry";
 import { HeroAbilities } from "../../../models/HeroAbility";
 import { Item } from "../../../models/Item";
 import { calculateFullDamageReceived } from "../../../utils";
+import { UnusedItem } from "../../../models/UnusedItem";
+import { UnusedAbility } from "../../../models/UnusedAbility";
 
 interface DeathSummaryExpandedProps {
   deathSummaryEntry: DeathSummary
   abilities: HeroAbilities[]
   items: Item[]
+  unusedItems: ReadonlyArray<UnusedItem>
+  unusedAbilities: ReadonlyArray<UnusedAbility>
 }
 
-const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items }: DeathSummaryExpandedProps) => {
-  const damageBreakdown = deathSummaryEntry.damageReceived.map(dr => {
-    let totalDamage = calculateFullDamageReceived(dr)
+const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items, unusedItems, unusedAbilities }: DeathSummaryExpandedProps) => {
+  const deathUnusedItems = unusedItems.filter(ui => ui.user === deathSummaryEntry.hero && ui.target === deathSummaryEntry.hero && ui.time === deathSummaryEntry.time)
+  const deathUnusedAbilities = unusedAbilities.filter(ua => ua.user === deathSummaryEntry.hero && ua.target === deathSummaryEntry.hero && ua.time === deathSummaryEntry.time)
+
+  const deathSummaryHeroEntries = deathSummaryEntry.damageReceived.map(dr => {
     let goldEarnings = deathSummaryEntry.goldEarnings.find(e => e.hero === dr.from)
+    let totalDamage = calculateFullDamageReceived(dr)
 
     let abilityDamage = dr.abilityDamage.map(ad =>
       <DamageBreakdownEntry
@@ -59,8 +66,17 @@ const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items }: DeathSumm
   return (
     <div className={styles.expandedContainer}>
       <VStack align={'left'}>
-        {damageBreakdown}
+        {deathSummaryHeroEntries}
       </VStack>
+      {(deathUnusedAbilities.length > 0 || deathUnusedItems.length > 0) && (
+        <div className={styles.unusedItemsAndAbilities}>
+          <span className={styles.miniTitle}>Unused items and abilities</span>
+          <div className={styles.unusedItemsAndAbilitiesList}>
+            {deathUnusedAbilities.map(ua => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getAbilityIcon(ua.ability)} width={30} height={30} /></div>)}
+            {deathUnusedItems.map(ui => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getItemIcon(ui.item)} width={40} height={30} /></div>)}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

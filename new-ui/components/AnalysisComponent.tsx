@@ -65,7 +65,7 @@ const AnalysisComponent = ( { heroes, targetHero, targetTeam, analysis, matchInf
           allAbilities={abilities}
           allItems={items}
         />
-        <DeathSummary target={targetHero} deathSummary={analysis.deathSummary} playersHeroes={matchInfo.playersHeroes} abilities={abilities} items={items} />
+        <DeathSummary target={targetHero} deathSummary={analysis.deathSummary} playersHeroes={matchInfo.playersHeroes} abilities={abilities} items={items} unusedItems={analysis.unusedItems} unusedAbilities={analysis.unusedAbilities} />
         <Laning target={targetHero} couriersState={analysis.couriersState} notTankedCreepwaves={analysis.notTankedCreepwaves} notUnblockedCamps={analysis.notUnblockedCamps} />
         <Resources target={targetHero} summonGoldFed={analysis.summonGoldFed} />
       </VStack>

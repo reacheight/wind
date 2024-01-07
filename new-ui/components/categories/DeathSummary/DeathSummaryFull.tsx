@@ -24,7 +24,7 @@ const DeathSummaryFull = ({ deathSummaryEntry, playersHeroes, abilities, items, 
   return (
     <div>
       <div onClick={() => setShowExpanded(!showExpanded)}>
-        <DeathSummaryShort deathSummaryEntry={deathSummaryEntry} playersHeroes={playersHeroes} />
+        <DeathSummaryShort deathSummaryEntry={deathSummaryEntry} playersHeroes={playersHeroes} isExpanded={showExpanded} />
       </div>
       {showExpanded && <DeathSummaryExpanded deathSummaryEntry={deathSummaryEntry} abilities={abilities} items={items} unusedItems={unusedItems} unusedAbilities={unusedAbilities} />}
     </div>

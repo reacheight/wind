@@ -10,10 +10,11 @@ import deathSummaryFull from "./DeathSummaryFull";
 interface DeathSummaryShortProps {
   deathSummaryEntry: DeathSummary
   playersHeroes: ReadonlyArray<PlayerHero>
+  isExpanded: boolean
 }
 
-const DeathSummaryShort = ({ deathSummaryEntry, playersHeroes }: DeathSummaryShortProps) => (
-  <div className={styles.shortContainer}>
+const DeathSummaryShort = ({ deathSummaryEntry, playersHeroes, isExpanded }: DeathSummaryShortProps) => (
+  <div className={styles.shortContainer} style={isExpanded ? {background: 'rgba(255, 255, 255, 0.15)'} : {}}>
     <span className={styles.time}>{deathSummaryEntry.time}</span>
     <DamageReceivedLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes}/>
     <DamageTypeLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes}/>

@@ -5,6 +5,7 @@ import { PlayerHero } from "../../../models/PlayerHero";
 import DamageTypeLine from "./DamageTypeLine";
 import GoldPenalty from "./GoldPenalty";
 import RespawnTime from "./RespawnTime";
+import deathSummaryFull from "./DeathSummaryFull";
 
 interface DeathSummaryShortProps {
   deathSummaryEntry: DeathSummary
@@ -16,7 +17,7 @@ const DeathSummaryShort = ({ deathSummaryEntry, playersHeroes }: DeathSummarySho
     <span className={styles.time}>{deathSummaryEntry.time}</span>
     <DamageReceivedLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes}/>
     <DamageTypeLine damageReceivedList={deathSummaryEntry.damageReceived} playersHeroes={playersHeroes}/>
-    <GoldPenalty amount={deathSummaryEntry.goldPenalty}/>
+    <GoldPenalty amount={deathSummaryEntry.goldPenalty + deathSummaryEntry.goldEarnings.map(e => e.amount).reduce((a, b) => a + b, 0)}/>
     <RespawnTime time={deathSummaryEntry.respawnTime}/>
   </div>
 )

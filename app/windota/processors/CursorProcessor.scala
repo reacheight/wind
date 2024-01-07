@@ -58,6 +58,8 @@ class CursorProcessor extends ProcessorBase {
 
   def getPlayerCursor(id: Int): (Int, Int) = {
     val playerController = Entities.getByPredicate(e => e.getDtClass.getDtName.startsWith("CDOTAPlayerController") && e.getProperty[Int]("m_nPlayerID") == id)
+    if (playerController == null)
+      return (0, 0) // TODO
     (playerController.getProperty[Int]("m_iCursor.0000"), playerController.getProperty[Int]("m_iCursor.0001"))
   }
 }

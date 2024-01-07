@@ -7,6 +7,7 @@ import { VStack } from "@chakra-ui/react";
 import { DamageBreakdownEntry } from "./DamageBreakdownEntry";
 import { HeroAbilities } from "../../../models/HeroAbility";
 import { Item } from "../../../models/Item";
+import { calculateFullDamageReceived } from "../../../utils";
 
 interface DeathSummaryExpandedProps {
   deathSummaryEntry: DeathSummary
@@ -16,6 +17,9 @@ interface DeathSummaryExpandedProps {
 
 const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items }: DeathSummaryExpandedProps) => {
   const damageBreakdown = deathSummaryEntry.damageReceived.map(dr => {
+    let totalDamage = calculateFullDamageReceived(dr)
+    let goldEarnings = deathSummaryEntry.goldEarnings.find(e => e.hero === dr.from)
+
     let abilityDamage = dr.abilityDamage.map(ad =>
       <DamageBreakdownEntry
         iconSource={Routes.Images.getAbilityIcon(ad.abilityId)}
@@ -31,11 +35,23 @@ const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items }: DeathSumm
     )
 
     return (
-      <div className={styles.damageBreakdown}>
+      <div className={styles.deathSummaryHeroEntry}>
         <div className={styles.portrait}><Image src={Routes.Images.getHorizontalPortrait(dr.from)} layout={'fill'} objectFit={'contain'}/></div>
-        <DamageBreakdownEntry iconSource={'/attack.webp'} sourceName={'attack'} damageAmount={dr.attackDamage} />
-        {abilityDamage}
-        {itemDamage}
+        <div className={styles.damageBreakdownFull}>
+          <div className={styles.damageBreakdownShort}>
+            <DamageBreakdownEntry iconSource={'/attack.webp'} sourceName={'attack'} damageAmount={dr.attackDamage} />
+            {abilityDamage}
+            {itemDamage}
+          </div>
+          <span className={styles.damageBreakdownTotal}>{totalDamage}</span>
+        </div>
+        <div className={styles.verticalLine} />
+        {goldEarnings && (
+          <div className={styles.goldEarning}>
+            <div className={styles.goldIcon}><Image src={'/gold.png'} width={20} height={20} /></div>
+            +{goldEarnings.amount}
+          </div>
+        )}
       </div>
     )
   })

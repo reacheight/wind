@@ -10,12 +10,11 @@ import { Item } from "../../../models/Item";
 
 interface DeathSummaryExpandedProps {
   deathSummaryEntry: DeathSummary
-  playersHeroes: ReadonlyArray<PlayerHero>
   abilities: HeroAbilities[]
   items: Item[]
 }
 
-const DeathSummaryExpanded = ({ deathSummaryEntry, playersHeroes, abilities, items }: DeathSummaryExpandedProps) => {
+const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items }: DeathSummaryExpandedProps) => {
   const damageBreakdown = deathSummaryEntry.damageReceived.map(dr => {
     let abilityDamage = dr.abilityDamage.map(ad =>
       <DamageBreakdownEntry

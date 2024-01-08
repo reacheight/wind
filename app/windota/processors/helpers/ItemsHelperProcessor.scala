@@ -14,11 +14,10 @@ class ItemsHelperProcessor {
 
   private val CastRangeItems = Seq(
     ("CDOTA_Item_Aether_Lens", 225),
-    ("item_octarine_core", 225),
     ("CDOTA_Item_Keen_Optic", 75),
     ("CDOTA_Item_Psychic_Headband", 100),
     ("CDOTA_Item_Seer_Stone", 350),
-    ("CDOTA_Item_Telescope", 110),
+    ("CDOTA_Item_Telescope", 125),
   )
 
   @Insert

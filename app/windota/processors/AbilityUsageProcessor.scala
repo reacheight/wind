@@ -87,8 +87,8 @@ class AbilityUsageProcessor extends ProcessorBase {
 
     addUnusedOnAllyAbility("Oracle", "CDOTA_Ability_Oracle_FalsePromise", 5640, {
       case 1 => 700
-      case 2 => 850
-      case 3 => 1000
+      case 2 => 800
+      case 3 => 900
     }, checkBlink = true)
 
     addUnusedOnAllyAbility("Rubick", "CDOTA_Ability_Rubick_Telekinesis", 5448, {
@@ -98,12 +98,24 @@ class AbilityUsageProcessor extends ProcessorBase {
       case 4 => 625
     }, requireShard = true, checkBlink = true)
 
-    addUnusedOnAllyAbility("Winter_Wyvern", "CDOTA_Ability_Winter_Wyvern_Cold_Embrace", 5653, _ => 1000)
-    addUnusedOnAllyAbility("Omniknight", "CDOTA_Ability_Omniknight_Purification", 5263, _ => 550)
+    addUnusedOnAllyAbility("Winter_Wyvern", "CDOTA_Ability_Winter_Wyvern_Cold_Embrace", 5653, {
+      case 1 => 850
+      case 2 => 900
+      case 3 => 950
+      case 4 => 1000
+    })
+
+    addUnusedOnAllyAbility("Omniknight", "CDOTA_Ability_Omniknight_Purification", 5263, _ => 600)
     addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_AphoticShield", 5586, _ => 550)
-    addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_DeathCoil", 5585, _ => 575)
+    addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_DeathCoil", 5585, {
+      case 1 => 600
+      case 2 => 625
+      case 3 => 650
+      case 4 => 675
+    })
+
     addUnusedOnAllyAbility("Legion_Commander", "CDOTA_Ability_Legion_Commander_PressTheAttack", 5596, _ => 700)
-    addUnusedOnAllyAbility("ArcWarden", "CDOTA_Ability_ArcWarden_MagneticField", 5678, _ => 1050)
+    addUnusedOnAllyAbility("ArcWarden", "CDOTA_Ability_ArcWarden_MagneticField", 5678, _ => 1200)
     addUnusedOnAllyAbility("Undying", "CDOTA_Ability_Undying_SoulRip", 5443, _ => 750)
     addUnusedOnAllyAbility("Weaver", "CDOTA_Ability_Weaver_TimeLapse", 5292, _ => 500, requireScepter = true, checkBlink = true)
     addUnusedOnAllyAbility("Pudge", "CDOTA_Ability_Pudge_Dismember", 5077, _ => 300, requireShard = true, checkBlink = true)

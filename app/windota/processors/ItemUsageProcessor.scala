@@ -38,7 +38,6 @@ class ItemUsageProcessor extends ProcessorBase {
     addUnusedItem("CDOTA_Item_MantaStyle", 147)
     addUnusedItem("item_satanic", 156)
     addUnusedItem("CDOTA_Item_Bloodstone", 121)
-    addUnusedItem("item_eternal_shroud", 692)
     addUnusedItem("item_blade_mail", 127)
     addUnusedItem("CDOTA_Item_Crimson_Guard", 242)
     addUnusedItem("item_hood_of_defiance", 131)
@@ -56,24 +55,24 @@ class ItemUsageProcessor extends ProcessorBase {
       .filter(Util.isAlive)
       .filter(h => h.getHandle != hero.getHandle)
 
-    addUnusedOnAllyItem("CDOTA_Item_Mekansm", 79, 1200)
-    addUnusedOnAllyItem("CDOTA_Item_Guardian_Greaves", 231, 1200)
+    addUnusedOnAllyItem("CDOTA_Item_Mekansm", 79, 1200, true)
+    addUnusedOnAllyItem("CDOTA_Item_Guardian_Greaves", 231, 1200, true)
     addUnusedOnAllyItem("CDOTA_Item_GlimmerCape", 254, 600)
     addUnusedOnAllyItem("CDOTA_Item_Holy_Locket", 269, 500)
     addUnusedOnAllyItem("item_lotus_orb", 226, 900)
-    addUnusedOnAllyItem("CDOTA_Item_Wind_Waker", 610, 1100)
+    addUnusedOnAllyItem("CDOTA_Item_Wind_Waker", 610, 550)
     addUnusedOnAllyItem("CDOTA_Item_ForceStaff", 102, 550)
     addUnusedOnAllyItem("CDOTA_Item_Hurricane_Pike", 263, 650)
-    addUnusedOnAllyItem("CDOTA_Item_Crimson_Guard", 242, 1200)
-    addUnusedOnAllyItem("CDOTA_Item_Pipe", 90, 1200)
+    addUnusedOnAllyItem("CDOTA_Item_Crimson_Guard", 242, 1200, true)
+    addUnusedOnAllyItem("CDOTA_Item_Pipe", 90, 1200, true)
 
-    def addUnusedOnAllyItem(entityName: String, itemId: Int, castRange: Int): Unit = {
+    def addUnusedOnAllyItem(entityName: String, itemId: Int, castRange: Int, isAura: Boolean = false): Unit = {
       allies.foreach(ally => {
         val allyPlayerId = PlayerId(ally.getProperty[Int]("m_iPlayerID"))
         ItemsHelper.findUnusedItem(ally, ItemsHelper.getItems(ally), entityName)
           .filter(_ => {
             val distance = Util.getDistance(hero, ally)
-            val itemCastRange = castRange + ItemsHelper.getAdditionalCastRange(ally)
+            val itemCastRange = castRange + (if (isAura) 0 else ItemsHelper.getAdditionalCastRange(ally))
             itemCastRange >= distance
           })
           .foreach(_ => _unusedItems.addOne(UnusedItem(allyPlayerId, playerId, ItemId(itemId), gameTimeState, withBlink = false)))

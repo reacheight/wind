@@ -107,7 +107,7 @@ class ModifierProcessor extends ProcessorBase {
         val playerId = Util.getPlayerId(h)
 
         if (modifierName == ScepterModifierName) {
-          if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE)
+          if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE && !_scepter.contains(playerId ))
             _scepter.addOne(playerId)
 
           if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_REMOVED)
@@ -115,7 +115,7 @@ class ModifierProcessor extends ProcessorBase {
         }
 
         if (modifierName == ShardModifierName) {
-          if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE)
+          if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE && !_shard.contains(playerId))
             _shard.addOne(playerId)
 
           if (modifier.getEntryType == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_REMOVED)

@@ -36,6 +36,7 @@ class AbilityUsageProcessor extends ProcessorBase {
     addUnusedAbility("CDOTA_Ability_Dazzle_Shallow_Grave", 5234)
     addUnusedAbility("CDOTA_Ability_Terrorblade_Sunder", 5622)
     addUnusedAbility("CDOTA_Ability_Life_Stealer_Rage", 5249)
+    addUnusedAbility("CDOTA_Ability_Life_Stealer_Infest", 5252, requireScepter = true)
     addUnusedAbility("CDOTA_Ability_Juggernaut_BladeFury", 5028)
     addUnusedAbility("CDOTA_Ability_DarkWillow_ShadowRealm", 6341)
     addUnusedAbility("templar_assassin_refraction", 5194)
@@ -54,9 +55,27 @@ class AbilityUsageProcessor extends ProcessorBase {
     addUnusedAbility("alchemist_chemical_rage", 5369)
     addUnusedAbility("CDOTA_Ability_Zuus_Heavenly_Jump", 641)
     addUnusedAbility("sniper_concussive_grenade", 694)
+    addUnusedAbility("CDOTA_Ability_FacelessVoid_TimeWalk", 5182)
+    addUnusedAbility("CDOTA_Ability_Luna_MoonGlaive", 5223, requireShard = true)
+    addUnusedAbility("CDOTA_Ability_Morphling_Waveform", 5052)
+    addUnusedAbility("CDOTA_Ability_PhantomLancer_Juxtapose", 5067, requireShard = true)
+    addUnusedAbility("CDOTA_Ability_Ursa_Enrage", 5360)
+    addUnusedAbility("CDOTA_Ability_Ursa_Earthshock", 5357, requireShard = true)
+    addUnusedAbility("CDOTA_Ability_Enchantress_NaturesAttendants", 5269)
+    addUnusedAbility("CDOTA_Ability_Enchantress_Bunny_Hop", 320)
+    addUnusedAbility("CDOTA_Ability_Obsidian_Destroyer_AstralImprisonment", 5392) //TODO: check no bkb active
+    addUnusedAbility("CDOTA_Ability_Shadow_Demon_Disruption", 5421) //TODO: check no bkb active
+    addUnusedAbility("CDOTA_Ability_WitchDoctor_Voodoo_Switcheroo", 632)
+    addUnusedAbility("CDOTA_Ability_DarkSeer_Surge", 5257)
+    addUnusedAbility("CDOTA_Ability_Mirana_Leap", 5050)
+    addUnusedAbility("CDOTA_Ability_Pangolier_Swashbuckle", 6344)
+    addUnusedAbility("CDOTA_Ability_Phoenix_IcarusDive", 5623)
+    addUnusedAbility("CDOTA_Ability_Windrunner_Windrun", 5132)
 
-    def addUnusedAbility(entityName: String, abilityId: Int): Unit =
+    def addUnusedAbility(entityName: String, abilityId: Int, requireScepter: Boolean = false, requireShard: Boolean = false): Unit =
       AbilitiesHelper.findUnusedAbility(hero, abilities, entityName)
+        .filter(_ => !requireScepter || hasScepter(hero))
+        .filter(_ => !requireShard || hasShard(hero))
         .foreach(_ => _unusedAbilities.addOne(UnusedAbility(playerId, playerId, AbilityId(abilityId), gameTimeState, withBlink = false)))
   }
 
@@ -106,6 +125,9 @@ class AbilityUsageProcessor extends ProcessorBase {
     })
 
     addUnusedOnAllyAbility("Omniknight", "CDOTA_Ability_Omniknight_Purification", 5263, _ => 600)
+    addUnusedOnAllyAbility("Omniknight", "CDOTA_Ability_Omniknight_Martyr", 895, _ => 700)
+    addUnusedOnAllyAbility("Omniknight", "CDOTA_Ability_Omniknight_GuardianAngel", 5266, _ => Int.MaxValue)
+
     addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_AphoticShield", 5586, _ => 550)
     addUnusedOnAllyAbility("Abaddon", "CDOTA_Ability_Abaddon_DeathCoil", 5585, {
       case 1 => 600
@@ -116,10 +138,19 @@ class AbilityUsageProcessor extends ProcessorBase {
 
     addUnusedOnAllyAbility("Legion_Commander", "CDOTA_Ability_Legion_Commander_PressTheAttack", 5596, _ => 700)
     addUnusedOnAllyAbility("ArcWarden", "CDOTA_Ability_ArcWarden_MagneticField", 5678, _ => 1200)
+
     addUnusedOnAllyAbility("Undying", "CDOTA_Ability_Undying_SoulRip", 5443, _ => 750)
+    addUnusedOnAllyAbility("Undying", "CDOTA_Ability_Undying_Tombstone", 5444, _ => 500)
+
     addUnusedOnAllyAbility("Weaver", "CDOTA_Ability_Weaver_TimeLapse", 5292, _ => 500, requireScepter = true, checkBlink = true)
     addUnusedOnAllyAbility("Pudge", "CDOTA_Ability_Pudge_Dismember", 5077, _ => 300, requireShard = true, checkBlink = true)
+    addUnusedOnAllyAbility("EarthSpirit", "CDOTA_Ability_EarthSpirit_GeomagneticGrip", 5610, _ => 1100, requireShard = true, checkBlink = true)
+    addUnusedOnAllyAbility("Ogre_Magi", "CDOTA_Ability_Ogre_Magi_Smash", 648, _ => 600, requireShard = true)
     addUnusedOnAllyAbility("Snapfire", "CDOTA_Ability_Snapfire_GobbleUp", 6484, _ => 150, requireScepter = true, checkBlink = true)
+    addUnusedOnAllyAbility("Centaur", "CDOTA_Ability_Centaur_Work_Horse", 980, _ => 300, requireScepter = true, checkBlink = true)
+    addUnusedOnAllyAbility("Obsidian_Destroyer", "CDOTA_Ability_Obsidian_Destroyer_AstralImprisonment", 5392, _ => 650, checkBlink = true) //TODO: check no bkb active
+    addUnusedOnAllyAbility("Shadow_Demon", "CDOTA_Ability_Shadow_Demon_Disruption", 5421, _ => 650, checkBlink = true) //TODO: check no bkb active
+    addUnusedOnAllyAbility("DarkSeer", "CDOTA_Ability_DarkSeer_Surge", 5257, _ => 600)
 
     def addUnusedOnAllyAbility(heroName: String,
                                entityName: String,

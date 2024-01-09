@@ -62,7 +62,7 @@ object ReplayAnalyzer {
           visionProcessor, itemUsageProcessor, abilityUsageProcessor,
           midasProcessor, fightProcessor, modifierProcessor, creepwaveProcessor, cursorProcessor,
           new AbilitiesHelperProcessor, new ItemsHelperProcessor, new GameTimeHelperProcessor,
-          deathsSummaryProcessor
+          deathsSummaryProcessor, powerTreadsProcessor
         )
       } catch {
         case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
@@ -130,8 +130,8 @@ object ReplayAnalyzer {
       laneProcessor.playerLane.map { case (id, lane) => PlayerId(id) -> lane },
       rolesProcessor.roles,
       laneProcessor.laneWinner,
-      powerTreadsProcessor.abilityUsageCount.map { case (id, total) => PlayerId(id) -> (total, powerTreadsProcessor.ptOnIntAbilityUsageCount(id), powerTreadsProcessor.manaLostNoToggling(id)) },
-      powerTreadsProcessor.resourceItemUsages.map { case (id, total) => PlayerId(id) -> (total, powerTreadsProcessor.ptOnAgilityResourceItemUsages(id)) },
+      powerTreadsProcessor.abilityUsageCount.map { case (id, total) => id -> (total, powerTreadsProcessor.ptOnIntAbilityUsageCount.getOrElse(id, 0), powerTreadsProcessor.manaLostNoToggling.getOrElse(id, 0)) },
+      powerTreadsProcessor.resourceItemUsages.map { case (id, total) => id -> (total, powerTreadsProcessor.ptOnAgilityResourceItemUsages.getOrElse(id, 0)) },
       powerTreadsProcessor.ptNotOnStrength,
       summonsProcessor.summonFeedGold.map { case (id, gold) => PlayerId(id) -> gold },
       itemStockProcessor.maxSmokeStockDuration,

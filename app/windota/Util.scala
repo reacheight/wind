@@ -96,8 +96,14 @@ object Util {
     }).toMap
   }
 
-  def isOnCooldown(item: Entity): Boolean =
-    item.getProperty[Float]("m_fCooldown") > 0.0001
+  def isOnCooldown(item: Entity): Boolean = {
+    if (item.getProperty[Float]("m_flCooldownLength") > 0)
+      item.getProperty[Float]("m_fCooldown") > 0.0001
+    else if (item.getProperty[Float]("m_fAbilityChargeRestoreTimeRemaining") > 0)
+      item.getProperty[Int]("m_nAbilityCurrentCharges") == 0
+    else
+      false
+  }
 
   def hasEnoughMana(hero: Entity, item: Entity): Boolean =
     item.getProperty[Int]("m_iManaCost") <= hero.getProperty[Float]("m_flMana")

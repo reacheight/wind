@@ -4,20 +4,17 @@ import com.typesafe.scalalogging.Logger
 import skadistats.clarity.Clarity
 import skadistats.clarity.processor.runner.SimpleRunner
 import skadistats.clarity.source.MappedFileSource
-import windota.external.stratz.StratzClient
+import windota.external.stratz.{StratzClient, models}
 import windota.external.stratz.models.Position.Position
 import windota.models.Team._
-import windota.models.Lane._
 import windota.models.Role._
+import windota.models.Lane._
 import windota.models._
 import windota.models.internal.DeathSummaryData
 import windota.processors._
 import windota.processors.helpers.{AbilitiesHelperProcessor, GameTimeHelperProcessor, ItemsHelperProcessor}
 
 import java.nio.file.Path
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
 import scala.util.{Failure, Success, Using}
 
 object ReplayAnalyzer {
@@ -74,18 +71,35 @@ object ReplayAnalyzer {
       case Success(stratzMatch) => stratzMatch.players.map(p => heroProcessor.playerId(HeroId(p.heroId)) -> p.position).toMap
     }
 
+    val lanes = stratzMatchTry match {
+      case Failure(_) => Map.empty[PlayerId, windota.models.Lane.Lane]
+      case Success(stratzMatch) => stratzMatch.players.map(p => {
+        val lane = if (p.lane == windota.external.stratz.models.Lane.MidLane)
+          Middle
+        else if (p.isRadiant && p.lane == windota.external.stratz.models.Lane.SafeLane || !p.isRadiant && p.lane == windota.external.stratz.models.Lane.OffLane)
+          Bot
+        else if (p.isRadiant && p.lane == windota.external.stratz.models.Lane.OffLane || !p.isRadiant && p.lane == windota.external.stratz.models.Lane.SafeLane)
+          Top
+        else
+          Roaming
+
+        heroProcessor.playerId(HeroId(p.heroId)) -> lane
+      }).toMap
+    }
+
     val badFightsProcessor = new BadFightsProcessor(fightProcessor.fights)
     val smokeFightProcessor = new SmokeFightProcessor(fightProcessor.fights)
     val unreasonableDivesProcessor = new UnreasonableDivesProcessor(fightProcessor.fights)
     val itemBuildProcessor = new ItemBuildProcessor(positions)
-//    val unreactedLaneGanksProcessor = new UnreactedLaneGanksProcessor(fightProcessor.fights, laneProcessor.playerLane.map(pair => (PlayerId(pair._1), pair._2._1)))
+    val unreactedLaneGanksProcessor = new UnreactedLaneGanksProcessor(fightProcessor.fights, lanes)
     Using.Manager { use =>
       val source = use(new MappedFileSource(replay))(s => s.close())
       val runner = new SimpleRunner(source)
 
       try {
         runner.runWith(new ModifierProcessor, new HeroProcessor(gameInfo), badFightsProcessor, smokeFightProcessor,
-          unreasonableDivesProcessor, itemBuildProcessor, new ItemsHelperProcessor,  new GameTimeHelperProcessor
+          unreasonableDivesProcessor, unreactedLaneGanksProcessor, itemBuildProcessor,
+          new ItemsHelperProcessor,  new GameTimeHelperProcessor
         )
       } catch {
         case e =>
@@ -164,7 +178,7 @@ object ReplayAnalyzer {
       notUnblockedCamps,
       itemBuildProcessor.notPurchasedSticks,
       itemBuildProcessor.notPurchasedItemAgainstHero,
-//      unreactedLaneGanksProcessor.unreactedLaneGanks,
+      unreactedLaneGanksProcessor.unreactedLaneGanks,
       modifierProcessor.scepter.toSeq,
       modifierProcessor.shard.toSeq,
       deathsSummaryProcessor.deaths
@@ -214,7 +228,7 @@ case class AnalysisResultInternal(
                                    notUnblockedCamps: Map[PlayerId, Seq[Ward]],
                                    notPurchasedSticks: Seq[(PlayerId, PlayerId)],
                                    notPurchasedItemAgainstHero: Seq[(HeroId, String, Int, Int, Seq[PlayerId])],
-                                   //  unreactedLaneGanks: Seq[(PlayerId, Seq[PlayerId], GameTimeState, Lane)],
+                                   unreactedLaneGanks: Seq[internal.UnreactedLaneGank],
                                    scepterOwners: Seq[PlayerId],
                                    shardOwners: Seq[PlayerId],
                                    deathsSummary: Seq[DeathSummaryData],

@@ -257,10 +257,10 @@ object Main {
       println(s"${playerIds.map(id => result.heroName(id)).mkString(", ")} didn't buy $itemName VS ${Heroes.getName(heroId.id)} (no item winrate = $noItemWinrate%, item winrate = $itemWinrate%)")
     }
 
-//    if (result.unreactedLaneGanks.nonEmpty) println("\nUnreacted lane ganks:")
-//    result.unreactedLaneGanks.foreach { case (playerId, gankers, gankTime, gankLane) =>
-//      println(s"${result.heroName(playerId)} saw ${gankers.map(id => result.heroName(id)).mkString(", ")} coming on vision but didn't react to gank and died at $gankTime on $gankLane.")
-//    }
+    if (result.unreactedLaneGanks.nonEmpty) println("\nUnreacted lane ganks:")
+    result.unreactedLaneGanks.foreach { unreactedLaneGank =>
+      println(s"${result.heroName(unreactedLaneGank.target)} saw ${unreactedLaneGank.gankers.map(id => result.heroName(id)).mkString(", ")} coming on vision but didn't react to gank and died at ${unreactedLaneGank.time} on ${unreactedLaneGank.lane}.\n")
+    }
 
     result.deathsSummary.foreach(data => {
       println(s"${data.time}: ${result.heroName(data.player)} died, respawn time: ${data.respawnTime}, gold penalty: ${data.goldPenalty}, damage received:")

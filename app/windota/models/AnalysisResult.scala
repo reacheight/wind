@@ -30,7 +30,6 @@ case class NotUnblockedCamp(heroId: HeroId, blocks: Seq[CampBlock])
 case class NotPurchasedStick(heroId: HeroId, stickHeroId: HeroId)
 case class NotPurchasedItemAgainstHero(heroId: HeroId, itemName: String, noItemWinrate: Int, itemWinrate: Int, candidates: Seq[HeroId])
 case class PowerTreadsAbilityUsages(heroId: HeroId, total: Int, onInt: Int, manaLost: Float)
-case class UnreactedLaneGank(target: HeroId, gankers: Seq[HeroId], time: GameTimeState, lane: Lane)
 
 case class Analysis(
   unusedItems: Seq[UnusedItem],                        // HUD
@@ -46,7 +45,7 @@ case class Analysis(
   badSmokeFights: Seq[BadSmokeFight],                                  // bad fights panel
   lostFightsUnderTheSameWard: Seq[LostFightsUnderTheSameWard],         // bad fights panel
   unreasonableTeamDives: Seq[UnreasonableTeamDive],                    // bad fights panel
-//  unreactedLaneGanks: Seq[UnreactedLaneGank],                          // ? bad fights panel ?
+  unreactedLaneGanks: Seq[UnreactedLaneGank],                          // ? bad fights panel ?
   unreasonableHeroDive: Seq[UnreasonableHeroDive],
   summonGoldFed: Seq[SummonGoldFed],
   worthlessGlyphs: Seq[WorthlessGlyph],

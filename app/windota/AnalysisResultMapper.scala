@@ -1,7 +1,7 @@
 package windota
 
 import windota.models.Team._
-import windota.models.dto.{DeathSummary, PlayerHero, UnusedAbility, UnusedItem}
+import windota.models.dto.{DeathSummary, PlayerHero, UnreactedLaneGank, UnusedAbility, UnusedItem}
 import windota.models.{internal, _}
 
 object AnalysisResultMapper {
@@ -39,8 +39,6 @@ object AnalysisResultMapper {
 
     val powerTreadsAbilityUsages = analysisResult.abilityUsagesWithPT.filter(_._2._3 > 150).map { case (playerId, (total, onInt, manaLost)) => PowerTreadsAbilityUsages(heroId(playerId), total, onInt, manaLost)}.toSeq
 
-//    val unreactedLaneGanks = analysisResult.unreactedLaneGanks.map { case(target, gankers, time, lane) => UnreactedLaneGank(heroId(target), gankers.map(heroId), time, lane) }
-
     val scepterOwners = analysisResult.scepterOwners.map(heroId)
     val shardOwners = analysisResult.shardOwners.map(heroId)
 
@@ -58,7 +56,7 @@ object AnalysisResultMapper {
       badSmokeFights,
       lostFightsUnderTheSameWard,
       unreasonableTeamDives,
-//      unreactedLaneGanks,
+      analysisResult.unreactedLaneGanks.map(d => UnreactedLaneGank.fromInternal(d, heroId)),
       unreasonableHeroDives,
       summonGoldFed,
       worthlessGlyphs,

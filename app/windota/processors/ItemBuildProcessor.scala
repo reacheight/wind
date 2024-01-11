@@ -23,9 +23,9 @@ class ItemBuildProcessor(roles: Map[PlayerId, Position]) extends ProcessorBase {
   private val stickItemNames = List("item_magic_stick", "item_magic_wand")
 
   private val heroItemData: List[(HeroId, String, String, String, Int, Int, Entity => Boolean)] = List(
-    (HeroId(44), "CDOTA_Unit_Hero_PhantomAssassin", "item_monkey_king_bar", "Monkey King Bar", 48, 60, e => Util.isCorePosition(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != Pos3 && e.primaryAttribute != Intelligence),
-    (HeroId(10), "CDOTA_Unit_Hero_Morphling", "item_skadi", "Eye of Skadi", 45, 65, e => Util.isCorePosition(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != Pos3 && e.primaryAttribute != Intelligence),
-    (HeroId(99), "CDOTA_Unit_Hero_Bristleback", "item_silver_edge", "Silver Edge", 47, 57, e => Util.isCorePosition(roles(Util.getPlayerId(e))) && roles(Util.getPlayerId(e)) != Pos3 && e.primaryAttribute != Intelligence),
+    (HeroId(44), "CDOTA_Unit_Hero_PhantomAssassin", "item_monkey_king_bar", "Monkey King Bar", 48, 60, e => Util.isCorePosition(roles.getOrElse(Util.getPlayerId(e), Unknown)) && roles.getOrElse(Util.getPlayerId(e), Unknown) != Pos3 && e.primaryAttribute != Intelligence),
+    (HeroId(10), "CDOTA_Unit_Hero_Morphling", "item_skadi", "Eye of Skadi", 45, 65, e => Util.isCorePosition(roles.getOrElse(Util.getPlayerId(e), Unknown)) && roles.getOrElse(Util.getPlayerId(e), Unknown) != Pos3 && e.primaryAttribute != Intelligence),
+    (HeroId(99), "CDOTA_Unit_Hero_Bristleback", "item_silver_edge", "Silver Edge", 47, 57, e => Util.isCorePosition(roles.getOrElse(Util.getPlayerId(e), Unknown)) && roles.getOrElse(Util.getPlayerId(e), Unknown) != Pos3 && e.primaryAttribute != Intelligence),
   )
 
   private val _notPurchasedSticks: ListBuffer[(PlayerId, PlayerId)] = ListBuffer.empty //  (hero, stick hero)
@@ -44,13 +44,13 @@ class ItemBuildProcessor(roles: Map[PlayerId, Position]) extends ProcessorBase {
         val heroOpt = Entities.findByName(stickHeroName)
         heroOpt.foreach(hero => {
           val stickPlayerId = Util.getPlayerId(hero)
-          val stickHeroRole = roles(stickPlayerId)
+          val stickHeroRole = roles.getOrElse(stickPlayerId, Unknown)
           val stickHeroTeam = Util.getTeam(hero)
 
           if (Util.isCorePosition(stickHeroRole)) {
             val oppRole = Util.getOppositeCorePosition(stickHeroRole)
             val oppTeam = Util.getOppositeTeam(stickHeroTeam)
-            val oppHeroOpt = Entities.find(e => Util.isHero(e) && Util.getTeam(e) == oppTeam && roles(Util.getPlayerId(e)) == oppRole)
+            val oppHeroOpt = Entities.find(e => Util.isHero(e) && Util.getTeam(e) == oppTeam && roles.getOrElse(Util.getPlayerId(e), Unknown) == oppRole)
 
             oppHeroOpt.foreach(oppHero => {
               val items = ItemsHelper.getItems(oppHero)

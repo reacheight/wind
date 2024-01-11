@@ -67,7 +67,9 @@ object ReplayAnalyzer {
     }
 
     val positions = stratzMatchTry match {
-      case Failure(_) => Map.empty[PlayerId, Position]
+      case Failure(e) =>
+        logger.warn(s"Failed to get stratz match: ${e.getMessage}.")
+        Map.empty[PlayerId, Position]
       case Success(stratzMatch) => stratzMatch.players.map(p => heroProcessor.playerId(HeroId(p.heroId)) -> p.position).toMap
     }
 

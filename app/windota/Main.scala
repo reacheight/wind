@@ -175,7 +175,7 @@ object Main {
       println(s"${fight.start} - ${fight.end} ${fight.location} (${Util.getLane(fight.location)})\n" +
         s"Participants (${fight.radiantParticipants.size} radiant vs ${fight.direParticipants.size} dire): " +
         s"${fight.participants.map(h => result.heroName(h)).mkString(", ")}\n" +
-        s"Dead heroes: ${fight.dead.map(h => result.heroName(h)).mkString(", ")}\n"
+        s"Dead heroes: ${fight.dead.map(d => result.heroName(d._1)).mkString(", ")}\n"
       )
     })
 
@@ -259,7 +259,7 @@ object Main {
 
     if (result.unreactedLaneGanks.nonEmpty) println("\nUnreacted lane ganks:")
     result.unreactedLaneGanks.foreach { unreactedLaneGank =>
-      println(s"${result.heroName(unreactedLaneGank.target)} saw ${unreactedLaneGank.gankers.map(id => result.heroName(id)).mkString(", ")} coming on vision but didn't react to gank and died at ${unreactedLaneGank.time} on ${unreactedLaneGank.lane}.\n")
+      println(s"${result.heroName(unreactedLaneGank.target)} saw ${unreactedLaneGank.gankers.map(id => result.heroName(id)).mkString(", ")} coming on vision but didn't react to gank and died at ${unreactedLaneGank.gankTime} on ${unreactedLaneGank.lane}.\n")
     }
 
     result.deathsSummary.foreach(data => {

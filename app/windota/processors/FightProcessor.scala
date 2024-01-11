@@ -95,7 +95,7 @@ class FightProcessor extends ProcessorBase {
         case Some(range) => range.last.time
       }
 
-      val deadInFight = deaths.map(_._2).toSet
+      val deadInFight = deaths.map(d => (d._2, d._1)).toSeq
 
       Fight(start, end, fightLocation, heroesInFight, deadInFight)
     })

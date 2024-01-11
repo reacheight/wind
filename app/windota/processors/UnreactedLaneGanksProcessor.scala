@@ -82,7 +82,7 @@ class UnreactedLaneGanksProcessor(fights: Seq[Fight], playerLanes: Map[PlayerId,
         val gankerPlayerIds = seenGankers(idx).map(Entities.getByHandle).map(_.playerId).toSeq
         if (gankerPlayerIds.size == gankers(idx).size)
           fight.getDead(Util.getOppositeTeam(gankingTeam))
-            .foreach(id => _unreactedLaneGanks.addOne(internal.UnreactedLaneGank(id, gankerPlayerIds, fight.start, gankLane)))
+            .foreach { case (id, deathTime) => _unreactedLaneGanks.addOne(internal.UnreactedLaneGank(id, gankerPlayerIds, fight.start, deathTime, gankLane)) }
 
         currentGanks.remove(idx)
         seenGankers.remove(idx)

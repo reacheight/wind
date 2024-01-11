@@ -8,6 +8,7 @@ import { HeroAbilities } from "../../../models/HeroAbility";
 import { Item } from "../../../models/Item";
 import { UnusedItem } from "../../../models/UnusedItem";
 import { UnusedAbility } from "../../../models/UnusedAbility";
+import { UnreactedLaneGank } from "../../../models/UnreactedLaneGank";
 
 interface DeathSummaryProps {
   target: HeroId
@@ -17,9 +18,10 @@ interface DeathSummaryProps {
   items: Item[]
   unusedItems: ReadonlyArray<UnusedItem>
   unusedAbilities: ReadonlyArray<UnusedAbility>
+  unreactedLaneGanks: ReadonlyArray<UnreactedLaneGank>
 }
 
-const DeathSummary = ({ target, playersHeroes, deathSummary, abilities, items, unusedItems, unusedAbilities }: DeathSummaryProps) => {
+const DeathSummary = ({ target, playersHeroes, deathSummary, abilities, items, unusedItems, unusedAbilities, unreactedLaneGanks }: DeathSummaryProps) => {
   const targetDeathSummary = deathSummary.filter(s => s.hero === target)
   if (targetDeathSummary.length === 0)
     return null
@@ -29,7 +31,15 @@ const DeathSummary = ({ target, playersHeroes, deathSummary, abilities, items, u
       <span className={styles.title}>Death Summary</span>
       <div className={styles.summaryList}>
         <VStack align={'left'}>
-          {targetDeathSummary.map(entry => <DeathSummaryFull deathSummaryEntry={entry} playersHeroes={playersHeroes} abilities={abilities} items={items} unusedItems={unusedItems} unusedAbilities={unusedAbilities} />)}
+          {targetDeathSummary.map(entry => <DeathSummaryFull
+            deathSummaryEntry={entry}
+            playersHeroes={playersHeroes}
+            abilities={abilities}
+            items={items}
+            unusedItems={unusedItems}
+            unusedAbilities={unusedAbilities}
+            unreactedLaneGanks={unreactedLaneGanks}
+          />)}
         </VStack>
       </div>
     </div>

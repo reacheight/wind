@@ -24,6 +24,7 @@ import { UnreasonableHeroDive } from "./UnreasonableHeroDive";
 import { UnreasonableTeamDive } from "./UnreasonableTeamDive";
 import { HeroId } from "./HeroId";
 import { DeathSummary } from './DeathSummary';
+import { UnreactedLaneGank } from "./UnreactedLaneGank";
 
 export interface Analysis {
   unusedItems: ReadonlyArray<UnusedItem>;
@@ -51,4 +52,5 @@ export interface Analysis {
   scepterOwners: ReadonlyArray<HeroId>;
   shardOwners: ReadonlyArray<HeroId>;
   deathSummary: ReadonlyArray<DeathSummary>;
+  unreactedLaneGanks: ReadonlyArray<UnreactedLaneGank>;
 }

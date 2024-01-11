@@ -178,12 +178,18 @@
   color: gold;
 }
 
-.unusedItemsAndAbilities {
+.additionalAnalyzesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px 20px;
+  margin-top: 10px;
+  width: 79%;
+}
+
+.additionalAnalysis {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 5px;
-  margin-top: 10px;
-  width: 20%;
 }
 
 .unusedItemsAndAbilitiesList {
@@ -194,6 +200,7 @@
 .miniTitle {
   font-size: 15px;
   font-weight: 700;
+  color: white;
 }
 
 .unusedItemOrAbilityIcon {
@@ -201,4 +208,13 @@
   overflow: hidden;
   height: 30px;
   margin-right: 3px;
+}
+
+.additionalAnalysisTextBody {
+  padding: 8px;
+  color: #9D9FA0;
+}
+
+.insight {
+  color: #C7A324
 }

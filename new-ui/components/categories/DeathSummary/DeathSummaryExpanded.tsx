@@ -10,6 +10,9 @@ import { Item } from "../../../models/Item";
 import { calculateFullDamageReceived } from "../../../utils";
 import { UnusedItem } from "../../../models/UnusedItem";
 import { UnusedAbility } from "../../../models/UnusedAbility";
+import { UnreactedLaneGank } from "../../../models/UnreactedLaneGank";
+import { Heroes } from "../../../constants/heroes";
+import MiniIcon from "../../MiniIcon";
 
 interface DeathSummaryExpandedProps {
   deathSummaryEntry: DeathSummary
@@ -17,11 +20,13 @@ interface DeathSummaryExpandedProps {
   items: Item[]
   unusedItems: ReadonlyArray<UnusedItem>
   unusedAbilities: ReadonlyArray<UnusedAbility>
+  unreactedLaneGanks: ReadonlyArray<UnreactedLaneGank>
 }
 
-const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items, unusedItems, unusedAbilities }: DeathSummaryExpandedProps) => {
+const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items, unusedItems, unusedAbilities, unreactedLaneGanks }: DeathSummaryExpandedProps) => {
   const deathUnusedItems = unusedItems.filter(ui => ui.user === deathSummaryEntry.hero && ui.target === deathSummaryEntry.hero && ui.time === deathSummaryEntry.time)
   const deathUnusedAbilities = unusedAbilities.filter(ua => ua.user === deathSummaryEntry.hero && ua.target === deathSummaryEntry.hero && ua.time === deathSummaryEntry.time)
+  const unreactedLaneGank = unreactedLaneGanks.find(g => g.target === deathSummaryEntry.hero && g.deathTime === deathSummaryEntry.time)
 
   const deathSummaryHeroEntries = deathSummaryEntry.damageReceived.map(dr => {
     let goldEarnings = deathSummaryEntry.goldEarnings.find(e => e.hero === dr.from)
@@ -68,13 +73,25 @@ const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items, unusedItems
       <VStack align={'left'}>
         {deathSummaryHeroEntries}
       </VStack>
-      {(deathUnusedAbilities.length > 0 || deathUnusedItems.length > 0) && (
-        <div className={styles.unusedItemsAndAbilities}>
-          <span className={styles.miniTitle}>Unused items and abilities</span>
-          <div className={styles.unusedItemsAndAbilitiesList}>
-            {deathUnusedAbilities.map(ua => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getAbilityIcon(ua.ability)} width={30} height={30} /></div>)}
-            {deathUnusedItems.map(ui => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getItemIcon(ui.item)} width={40} height={30} /></div>)}
-          </div>
+      {(deathUnusedAbilities.length > 0 || deathUnusedItems.length > 0 || unreactedLaneGank) && (
+        <div className={styles.additionalAnalyzesGrid}>
+          {(deathUnusedAbilities.length > 0 || deathUnusedItems.length > 0) && (
+            <div className={styles.additionalAnalysis}>
+              <span className={styles.miniTitle}>Unused items and abilities</span>
+              <div className={styles.unusedItemsAndAbilitiesList}>
+                {deathUnusedAbilities.map(ua => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getAbilityIcon(ua.ability)} width={30} height={30} /></div>)}
+                {deathUnusedItems.map(ui => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getItemIcon(ui.item)} width={40} height={30} /></div>)}
+              </div>
+            </div>
+          )}
+          {unreactedLaneGank && (
+            <div className={styles.additionalAnalysis}>
+              <span className={styles.miniTitle}>Unreacted lane gank</span>
+              <div className={styles.additionalAnalysisTextBody}>
+                You saw {unreactedLaneGank.gankers.map(heroId => <MiniIcon heroId={heroId} />)} <span className={styles.insight}>ganking your lane</span> but <span className={styles.insight}>didn't react</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

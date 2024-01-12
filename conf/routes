@@ -1,3 +1,5 @@
+POST        /analysis/:matchId/file             controllers.AnalysisController.postAnalysisFile(matchId: Long)
+
 POST        /analysis/:matchId                  controllers.AnalysisController.postAnalysis(matchId: Long)
 
 GET         /analysis/:matchId/state            controllers.AnalysisController.getAnalysisState(matchId: Long)

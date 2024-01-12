@@ -5,16 +5,13 @@ import io.circe.syntax._
 import play.api.libs.circe.Circe
 import play.api.mvc.{BaseController, ControllerComponents}
 import windota.converters._
-import windota.external.stratz.StratzClient
-import windota.external.valve.ValveClient
 import windota.models.AnalysisStatus
-import windota.{BZip2Decompressor, MongoClient, ReplayAnalyzer}
+import windota.{MongoClient, ReplayAnalyzer}
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.{Path, Paths}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
 
 class AnalysisController @Inject()(val controllerComponents: ControllerComponents) extends BaseController with Circe {
   private val logger = Logger[AnalysisController]
@@ -31,6 +28,24 @@ class AnalysisController @Inject()(val controllerComponents: ControllerComponent
           Future { startAnalysis(matchId) }
           Created
         })
+    }
+  }
+
+  def postAnalysisFile(matchId: Long) = Action(parse.multipartFormData).async { request =>
+    MongoClient.getStatus(matchId).flatMap {
+      case Some(status) if status != AnalysisStatus.Failed => Future.successful(Created)
+      case _ =>
+        request.body
+          .file("replay")
+          .map { replay =>
+            replay.ref.copyTo(replayPath(matchId), true)
+            MongoClient.setStatus(matchId, AnalysisStatus.Processing).map(_ => {
+              Future { startAnalysis(matchId, replayPath(matchId)) }
+              Created
+            })
+          }.getOrElse {
+            Future.successful(BadRequest)
+          }
     }
   }
 
@@ -75,5 +90,12 @@ class AnalysisController @Inject()(val controllerComponents: ControllerComponent
 //        MongoClient.saveAnalysis(analysis)
 //          .flatMap(_ => MongoClient.setStatus(matchId, AnalysisStatus.Finished))
 //    }
+  }
+
+  private def startAnalysis(matchId: Long, path: Path) = {
+    val analysis = ReplayAnalyzer.analyze(path)
+    Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
+    MongoClient.saveAnalysis(analysis)
+      .flatMap(_ => MongoClient.setStatus(matchId, AnalysisStatus.Finished))
   }
 }

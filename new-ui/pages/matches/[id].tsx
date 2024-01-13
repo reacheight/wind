@@ -127,7 +127,7 @@ const Match = () => {
                 </div>}
                 <br />
                 <div>
-                    <input id="upload-file-btn" type="file" onChange={e => startAnalysisFromFile(e)} hidden={true} />
+                    <input id="upload-file-btn" type="file" onChange={e => startAnalysisFromFile(e)} accept=".dem" hidden={true} />
                     <label className={styles.uploadReplayButton} htmlFor="upload-file-btn">Upload replay</label>
                 </div>
             </div>

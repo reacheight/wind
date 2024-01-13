@@ -24,13 +24,29 @@ const Match = () => {
   const [analysis, setAnalysis] = useState<AnalysisResult>(null)
   const [analysisLoading, setAnalysisLoading] = useState<boolean>(true)
   const [isError, setIsError] = useState<boolean>(false)
+  const analysisButtonDisabled = process.env.NEXT_PUBLIC_ANALYSIS_BUTTON_DISABLED === 'true';
 
   const startAnalysis = async () => {
     setAnalysisLoading(true)
     setIsError(false)
 
-    let requestResponse = await fetch(Routes.Analysis.start(matchId), { method: 'POST' })
-    if (!requestResponse.ok) {
+    let analyzeResponse = fetch(Routes.Analysis.start(matchId), { method: 'POST' })
+    await pollAnalysisRequest(analyzeResponse)
+  }
+
+  const startAnalysisFromFile = async (e) => {
+    setAnalysisLoading(true)
+    setIsError(false)
+
+    let formData = new FormData()
+    formData.append('replay', e.target.files[0])
+    let analyzeResponse = fetch(Routes.Analysis.startFromFile(matchId), { body: formData, method: 'POST' })
+    await pollAnalysisRequest(analyzeResponse);
+  }
+
+  const pollAnalysisRequest = async (analyzeResponse: Promise<Response>) => {
+    let response = await analyzeResponse;
+    if (!response.ok) {
       setIsError(true)
       setAnalysisLoading(false)
       return
@@ -97,7 +113,20 @@ const Match = () => {
       <div className={styles.centered}>
         {analysisLoading && <Spinner />}
         {(!analysisLoading && !analysis) &&
-            <Button fontSize={'18px'} onClick={() => startAnalysis()}>Analyze</Button>
+            <div>
+                <div>
+                    <Button fontSize={'18px'} onClick={() => startAnalysis()} isDisabled={analysisButtonDisabled}>Analyze</Button>
+                </div>
+                {analysisButtonDisabled && <div className={styles.replayAnalysisWarning}>
+                    Automatic replay fetching is currently not available.<br />
+                    You can download the replay file of the match in the Dota 2 client and upload it manually.
+                </div>}
+                <br />
+                <div>
+                    <input id="upload-file-btn" type="file" onChange={e => startAnalysisFromFile(e)} hidden={true} />
+                    <label className={styles.uploadReplayButton} htmlFor="upload-file-btn">Upload replay</label>
+                </div>
+            </div>
         }
         {isError && <div>Something's went wrong.</div>}
       </div>

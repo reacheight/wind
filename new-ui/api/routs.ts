@@ -8,6 +8,7 @@ class Account {
 
 class Analysis {
   start = (matchId: string) => `${HOST}/analysis/${matchId}`
+  startFromFile = (matchId: string) => `${HOST}/analysis/${matchId}/file`
   get = (matchId: string) => `${HOST}/analysis/${matchId}`
   state = (matchId: string) => `${HOST}/analysis/${matchId}/state`
 }

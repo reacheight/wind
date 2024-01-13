@@ -27,3 +27,19 @@
   margin-left: auto;
   padding-top: 10px;
 }
+
+.uploadReplayButton {
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.08);
+  padding: 10px;
+  font-weight: 600;
+}
+
+.uploadReplayButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.replayAnalysisWarning {
+  font-size: 17px;
+}

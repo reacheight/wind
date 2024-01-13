@@ -24,11 +24,13 @@ const Match = () => {
   const [analysis, setAnalysis] = useState<AnalysisResult>(null)
   const [analysisLoading, setAnalysisLoading] = useState<boolean>(true)
   const [isError, setIsError] = useState<boolean>(false)
+  const [isWrongReplay, setIsWrongReplay] = useState<boolean>(false)
   const analysisButtonDisabled = process.env.NEXT_PUBLIC_ANALYSIS_BUTTON_DISABLED === 'true';
 
   const startAnalysis = async () => {
     setAnalysisLoading(true)
     setIsError(false)
+    setIsWrongReplay(false)
 
     let analyzeResponse = fetch(Routes.Analysis.start(matchId), { method: 'POST' })
     await pollAnalysisRequest(analyzeResponse)
@@ -37,6 +39,7 @@ const Match = () => {
   const startAnalysisFromFile = async (e) => {
     setAnalysisLoading(true)
     setIsError(false)
+    setIsWrongReplay(false)
 
     let formData = new FormData()
     formData.append('replay', e.target.files[0])
@@ -49,6 +52,7 @@ const Match = () => {
     if (!response.ok) {
       setIsError(true)
       setAnalysisLoading(false)
+      setIsWrongReplay(await response.text() === "WRONG_MATCH")
       return
     }
 
@@ -128,7 +132,8 @@ const Match = () => {
                 </div>
             </div>
         }
-        {isError && <div>Something's went wrong.</div>}
+        {isWrongReplay && <div className={styles.error}>You uploaded wrong replay. Upload replay of match <span className={styles.matchId}>{matchId}</span>.</div>}
+        {(isError && !isWrongReplay) && <div className={styles.error}>Something's went wrong.</div>}
       </div>
     </div>
   )

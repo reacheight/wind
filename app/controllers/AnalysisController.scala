@@ -39,10 +39,14 @@ class AnalysisController @Inject()(val controllerComponents: ControllerComponent
           .file("replay")
           .map { replay =>
             replay.ref.copyTo(replayPath(matchId), true)
-            MongoClient.setStatus(matchId, AnalysisStatus.Processing).map(_ => {
-              Future { startAnalysis(matchId, replayPath(matchId)) }
-              Created
-            })
+            if (!ReplayAnalyzer.isMatchReplay(matchId, replayPath(matchId))) {
+              Future.successful(BadRequest("WRONG_MATCH"))
+            } else {
+              MongoClient.setStatus(matchId, AnalysisStatus.Processing).map(_ => {
+                Future { startAnalysis(matchId, replayPath(matchId)) }
+                Created
+              })
+            }
           }.getOrElse {
             Future.successful(BadRequest)
           }

@@ -20,7 +20,12 @@ import scala.util.{Failure, Success, Using}
 object ReplayAnalyzer {
   private val logger = Logger[ReplayAnalyzer.type]
 
-  val OBS_VISION_RADIUS = 1400
+  private val OBS_VISION_RADIUS = 1400
+
+  def isMatchReplay(matchId: Long, replay: Path): Boolean = {
+    val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)
+    gameInfo.getGameInfo.getDota.getMatchId == matchId
+  }
 
   def analyze(replay: Path): AnalysisResultInternal = {
     val gameInfo = Clarity.infoForFile(replay.toAbsolutePath.toString)

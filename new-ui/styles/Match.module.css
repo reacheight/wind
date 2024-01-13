@@ -43,3 +43,12 @@
 .replayAnalysisWarning {
   font-size: 17px;
 }
+
+.error {
+  padding-top: 10px;
+  font-size: 17px;
+}
+
+.matchId {
+  font-weight: 600;
+}

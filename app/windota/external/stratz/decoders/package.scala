@@ -103,6 +103,14 @@ package object decoders {
     }
   }
 
+  implicit val decodeItems: Decoder[GetAllItemsResult] = (c: HCursor) => {
+    for {
+      items <- c.downField("data").downField("constants").downField("items").as[List[Item]]
+    } yield {
+      GetAllItemsResult(items)
+    }
+  }
+
   implicit val decodeItem: Decoder[Item] = (c: HCursor) => {
     val item = c.downField("data").downField("constants").downField("item")
     for {

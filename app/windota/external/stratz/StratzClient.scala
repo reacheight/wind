@@ -122,6 +122,20 @@ object StratzClient {
     response.body.toTry
   }
 
+  def getAllItems: Try[List[Item]] = {
+    logger.info(s"Getting items")
+
+    val query = s"{ constants { items(gameVersionId: 170) { id, displayName } } }"
+
+    val response = basicRequest
+      .get(buildQueryUrl(query))
+      .header("Authorization", authorizationToken)
+      .response(asJson[GetAllItemsResult])
+      .send(backend)
+
+    response.body.toTry.map(r => r.items)
+  }
+
   private def buildQueryUrl(query: String) = uri"https://api.stratz.com/graphql?query=$query"
   private val authorizationToken = s"Bearer ${sys.env("STRATZ_TOKEN")}"
 }

@@ -4,6 +4,7 @@ import io.circe.generic.auto._
 import io.circe.syntax._
 import play.api.libs.circe.Circe
 import play.api.mvc.{BaseController, ControllerComponents}
+import windota.constants.Items
 import windota.external.stratz.StratzClient
 import windota.external.stratz.models.Item
 
@@ -24,9 +25,7 @@ class ConstantsController @Inject()(val controllerComponents: ControllerComponen
     else {
       val ids = itemsIds.split(",").map(s => s.toInt)
       val items = ids
-        .map(id => StratzClient.getItem(id))
-        .filter(tryItem => tryItem.isSuccess)
-        .map(tryItem => tryItem.get)
+        .map(id => Item(id, Items.getDisplayName(id)))
 
       Ok(items.asJson)
     }

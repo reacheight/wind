@@ -44,7 +44,7 @@ class AccountController @Inject()(val openIdClient: OpenIdClient, val controller
       case None => Unauthorized
       case Some(id) =>
         val accountId = SteamIdConverter.steam64toSteam3(id.toLong)
-        StratzClient.getUser(accountId) match {
+        StratzClient.getUser(accountId) match { // TODO cache
           case Failure(exception) => InternalServerError(exception.getMessage)
           case Success(user) => Ok(user.asJson)
         }

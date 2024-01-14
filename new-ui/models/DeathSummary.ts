@@ -3,9 +3,11 @@
 import { DamageReceived } from './DamageReceived';
 import { GoldEarnings } from './GoldEarnings';
 import { HeroId } from './HeroId';
+import { Location } from "./Location";
 
 export interface DeathSummary {
   hero: HeroId;
+  location: Location,
   time: string;
   respawnTime: number;
   damageReceived: ReadonlyArray<DamageReceived>;

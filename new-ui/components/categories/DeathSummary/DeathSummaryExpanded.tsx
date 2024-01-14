@@ -1,5 +1,4 @@
 import { DeathSummary } from "../../../models/DeathSummary";
-import { PlayerHero } from "../../../models/PlayerHero";
 import Routes from "../../../api/routs";
 import Image from "next/image";
 import styles from "./DeathSummary.module.css"
@@ -11,7 +10,6 @@ import { calculateFullDamageReceived } from "../../../utils";
 import { UnusedItem } from "../../../models/UnusedItem";
 import { UnusedAbility } from "../../../models/UnusedAbility";
 import { UnreactedLaneGank } from "../../../models/UnreactedLaneGank";
-import { Heroes } from "../../../constants/heroes";
 import MiniIcon from "../../MiniIcon";
 
 interface DeathSummaryExpandedProps {
@@ -68,32 +66,41 @@ const DeathSummaryExpanded = ({ deathSummaryEntry, abilities, items, unusedItems
     )
   })
 
+  const xPct = ((deathSummaryEntry.location[0] / 18500) * 300)
+  const yPct = 300 - ((deathSummaryEntry.location[1] / 18500) * 300) - 35
+
   return (
     <div className={styles.expandedContainer}>
-      <VStack align={'left'}>
-        {deathSummaryHeroEntries}
-      </VStack>
-      {(deathUnusedAbilities.length > 0 || deathUnusedItems.length > 0 || unreactedLaneGank) && (
-        <div className={styles.additionalAnalyzesGrid}>
-          {(deathUnusedAbilities.length > 0 || deathUnusedItems.length > 0) && (
-            <div className={styles.additionalAnalysis}>
-              <span className={styles.miniTitle}>Unused items and abilities</span>
-              <div className={styles.unusedItemsAndAbilitiesList}>
-                {deathUnusedAbilities.map(ua => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getAbilityIcon(ua.ability)} width={30} height={30} /></div>)}
-                {deathUnusedItems.map(ui => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getItemIcon(ui.item)} width={40} height={30} /></div>)}
+      <div className={styles.deathSummaryNotMinimap}>
+        <VStack align={'left'}>
+          {deathSummaryHeroEntries}
+        </VStack>
+        {(deathUnusedAbilities.length > 0 || deathUnusedItems.length > 0 || unreactedLaneGank) && (
+          <div className={styles.additionalAnalyzesGrid}>
+            {(deathUnusedAbilities.length > 0 || deathUnusedItems.length > 0) && (
+              <div className={styles.additionalAnalysis}>
+                <span className={styles.miniTitle}>Unused items and abilities</span>
+                <div className={styles.unusedItemsAndAbilitiesList}>
+                  {deathUnusedAbilities.map(ua => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getAbilityIcon(ua.ability)} width={30} height={30} /></div>)}
+                  {deathUnusedItems.map(ui => <div className={styles.unusedItemOrAbilityIcon}><Image src={Routes.Images.getItemIcon(ui.item)} width={40} height={30} /></div>)}
+                </div>
               </div>
-            </div>
-          )}
-          {unreactedLaneGank && (
-            <div className={styles.additionalAnalysis}>
-              <span className={styles.miniTitle}>Unreacted lane gank</span>
-              <div className={styles.additionalAnalysisTextBody}>
-                You saw {unreactedLaneGank.gankers.map(heroId => <MiniIcon heroId={heroId} />)} <span className={styles.insight}>ganking your lane</span> but <span className={styles.insight}>didn't react</span>
+            )}
+            {unreactedLaneGank && (
+              <div className={styles.additionalAnalysis}>
+                <span className={styles.miniTitle}>Unreacted lane gank</span>
+                <div className={styles.additionalAnalysisTextBody}>
+                  You saw {unreactedLaneGank.gankers.map(heroId => <MiniIcon heroId={heroId} />)} <span className={styles.insight}>ganking your lane</span> but <span className={styles.insight}>didn't react</span>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
+      <div className={styles.minimapBlock}>
+        <div className={styles.minimapImage}><Image src={'/current.png'} width={300} height={300} /></div>
+        <div className={styles.minimapHeroIcon} style={{left: xPct, top: yPct}}><MiniIcon heroId={deathSummaryEntry.hero} /></div>
+      </div>
     </div>
   )
 }

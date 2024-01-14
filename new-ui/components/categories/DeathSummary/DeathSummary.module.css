@@ -94,9 +94,14 @@
 }
 
 .expandedContainer {
+  display: flex;
   padding-top: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.deathSummaryNotMinimap {
+  flex-grow: 1;
 }
 
 .deathSummaryHeroEntry {
@@ -105,7 +110,6 @@
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 5px;
-  width: 70%
 }
 
 .damageBreakdownFull {
@@ -176,6 +180,20 @@
   padding-top: 5px;
   font-weight: 600;
   color: gold;
+}
+
+.minimapBlock {
+  margin-left: auto;
+  position: relative;
+}
+
+.minimapImage {
+  width: 300px;
+  height: 300px;
+}
+
+.minimapHeroIcon {
+  position: absolute;
 }
 
 .additionalAnalyzesGrid {

@@ -5,6 +5,7 @@ import skadistats.clarity.model.CombatLogEntry
 import skadistats.clarity.processor.gameevents.OnCombatLogEntry
 import skadistats.clarity.processor.runner.Context
 import skadistats.clarity.wire.common.proto.DotaUserMessages.DOTA_COMBATLOG_TYPES
+import windota.Util
 import windota.Util.EntityExtension2
 import windota.constants.{Abilities, Items}
 import windota.extensions.EntitiesExtension
@@ -58,6 +59,7 @@ class DeathsSummaryProcessor extends ProcessorBase {
     val heroOpt = Entities.find(e => e.isHero && e.playerId == playerId)
 
     heroOpt.foreach(hero => {
+      val location = Util.getLocationNew(hero)
       val damageReceived = _damage
         .filter(d => d.target == playerId && GameTimeHelper.State.gameTime - d.time.gameTime <= DEATH_DAMAGE_WINDOW)
         .groupBy(d => d.attacker)
@@ -81,7 +83,7 @@ class DeathsSummaryProcessor extends ProcessorBase {
         .groupBy(u => u.playerId)
         .map { case (goldReceiver, updates) => goldReceiver -> updates.map(u => u.amount).sum }
 
-      _deaths += DeathSummaryData(playerId, GameTimeHelper.State, cle.getTimestamp, damageReceived, hero.getSpawnTime(GameTimeHelper.State), 0 - penalty, earnings)
+      _deaths += DeathSummaryData(playerId, location, GameTimeHelper.State, cle.getTimestamp, damageReceived, hero.getSpawnTime(GameTimeHelper.State), 0 - penalty, earnings)
       _damage.filterInPlace(d => d.target != playerId)
       _gold.clear()
     })

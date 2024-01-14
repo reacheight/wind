@@ -1,9 +1,9 @@
 package windota.models.dto
 
-import windota.models.{AbilityId, GameTimeState, HeroId, ItemId, PlayerId}
+import windota.models.{AbilityId, GameTimeState, HeroId, ItemId, Location, PlayerId}
 import windota.models.internal.{DamageAmount, DeathSummaryData}
 
-case class DeathSummary(hero: HeroId, time: GameTimeState, respawnTime: Int, damageReceived: Seq[DamageReceived], goldPenalty: Int, goldEarnings: Seq[GoldEarnings])
+case class DeathSummary(hero: HeroId, location: Location, time: GameTimeState, respawnTime: Int, damageReceived: Seq[DamageReceived], goldPenalty: Int, goldEarnings: Seq[GoldEarnings])
 case class DamageReceived(from: HeroId, attackDamage: DamageAmount, abilityDamage: Seq[AbilityDamage], itemDamage: Seq[ItemDamage])
 case class AbilityDamage(abilityId: AbilityId, damage: DamageAmount)
 case class ItemDamage(ItemId: ItemId, damage: DamageAmount)
@@ -18,6 +18,6 @@ object DeathSummary {
     }.toSeq
     val goldEarnings = data.goldEarnings.map { case (playerId, amount) => GoldEarnings(heroId(playerId), amount) }.toSeq
 
-    DeathSummary(heroId(data.player), data.time, data.respawnTime, damageReceived, data.goldPenalty, goldEarnings)
+    DeathSummary(heroId(data.player), data.location, data.time, data.respawnTime, damageReceived, data.goldPenalty, goldEarnings)
   }
 }

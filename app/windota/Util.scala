@@ -53,6 +53,20 @@ object Util {
     Location(x * 128 + vecX - 8192, y * 128 + vecY - 8192)
   }
 
+  // more correct
+  // (0, 0) lower left
+  def getLocationNew(entity: Entity): Location = {
+    if (!entity.hasProperty("CBodyComponent.m_cellX") || !entity.hasProperty("CBodyComponent.m_cellY") ||
+      !entity.hasProperty("CBodyComponent.m_vecX") || !entity.hasProperty("CBodyComponent.m_vecY")) {
+      throw new IllegalArgumentException
+    }
+
+    val (x, y) = (entity.getProperty[Int]("CBodyComponent.m_cellX"), entity.getProperty[Int]("CBodyComponent.m_cellY"))
+    val (vecX, vecY) = (entity.getProperty[Float]("CBodyComponent.m_vecX"), entity.getProperty[Float]("CBodyComponent.m_vecY"))
+
+    Location((x - 64) * 128 + vecX, (y - 64) * 128 + vecY)
+  }
+
   def getAverageLocation(locations: Seq[Location]): Location = {
     val xs = locations.map(_.X)
     val ys = locations.map(_.Y)

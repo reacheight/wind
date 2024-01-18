@@ -97,9 +97,15 @@ class AnalysisController @Inject()(val controllerComponents: ControllerComponent
   }
 
   private def startAnalysis(matchId: Long, path: Path) = {
-    val analysis = ReplayAnalyzer.analyze(path)
-    Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
-    MongoClient.saveAnalysis(analysis)
-      .flatMap(_ => MongoClient.setStatus(matchId, AnalysisStatus.Finished))
+    logger.info(s"startAnalysis in AnalysisController for matchId = $matchId.")
+
+    try {
+      val analysis = ReplayAnalyzer.analyze(path)
+      Future { Paths.get(DownloadingDirectory).toFile.listFiles().foreach(_.delete()) }
+      MongoClient.saveAnalysis(analysis)
+        .flatMap(_ => MongoClient.setStatus(matchId, AnalysisStatus.Finished))
+    } catch {
+      case e => logger.error(s"${e.getMessage}\n${e.getStackTrace.mkString("\n")}")
+    }
   }
 }

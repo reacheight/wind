@@ -9,3 +9,13 @@
   margin-right: auto;
   max-width: 1232px;
 }
+
+@media only screen and (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  .body {
+    width: 100%;
+  }
+}

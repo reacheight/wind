@@ -9,10 +9,10 @@ const Header = () => {
   if (userContext.loading)
     return null
 
-  return (<>
+  return (<div className={styles.header}>
     <Logo />
-    <div className={styles.miniprofile}><Miniprofile /></div>
-  </>)
+    <Miniprofile />
+  </div>)
 }
 
 export default Header

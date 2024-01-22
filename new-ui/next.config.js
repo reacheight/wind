@@ -11,7 +11,7 @@ const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
   images: {
-    domains: ['avatars.akamai.steamstatic.com', 'localhost', 'api.windota.xyz', 'win-dota.herokuapp.com', 'avatars.steamstatic.com'],
+    domains: ['avatars.akamai.steamstatic.com', 'localhost', 'api.windota.xyz', 'win-dota.herokuapp.com', 'avatars.steamstatic.com', '192.168.0.104'],
     minimumCacheTTL: 691200,
   },
 }

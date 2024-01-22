@@ -18,7 +18,7 @@
 .heroWin,
 .heroLose {
   font-size: 18px;
-  margin: 4px;
+  margin-left: 4px;
 }
 
 .heroWin {
@@ -38,7 +38,17 @@
   margin-right: 10px;
 }
 
+.portraitAndHero {
+  display: flex;
+  align-items: center;
+  width: 250px;
+}
+
 .kda {
-  position: absolute;
-  margin-left: 270px;
+}
+
+@media only screen and (max-width: 600px) {
+  .preview {
+    justify-content: space-between;
+  }
 }

@@ -24,10 +24,12 @@ const MatchPreview = ({ match }: MatchPreviewProps) => {
     <Link href={'/matches/' + match.id}>
       <a>
         <div className={styles.preview}>
-          <div className={styles.portrait}>
-            <Image src={Routes.Images.getHorizontalPortrait(userHero)} layout={'fill'} objectFit={'contain'}/>
+          <div className={styles.portraitAndHero}>
+            <div className={styles.portrait}>
+              <Image src={Routes.Images.getHorizontalPortrait(userHero)} layout={'fill'} objectFit={'contain'}/>
+            </div>
+            <div className={isVictory ? styles.heroWin : styles.heroLose}>{Heroes[userPlayer.heroId]}</div>
           </div>
-          <div className={isVictory ? styles.heroWin : styles.heroLose}>{Heroes[userPlayer.heroId]}</div>
           <div className={styles.kda}>
             <Kda player={userPlayer}/>
           </div>

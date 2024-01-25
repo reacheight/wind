@@ -18,30 +18,33 @@ const Matchup = ({ match }: MatchupProps) => {
   let radiantTeam = <HStack spacing={4}>{radiantHeroes}</HStack>
   let direTeam = <HStack spacing={4}>{direHeroes}</HStack>
 
-  const radiantWinner = <span className={styles.radiantWinner}>Winner</span>
-  const direWinner = <span className={styles.direWinner}>Winner</span>
-  const emptySpace = <span className={styles.empty}></span>
+  const radiantWinner = <div className={styles.radiantWinner}>Winner</div>
+  const direWinner = <div className={styles.direWinner}>Winner</div>
   const minutes = Math.floor(match.durationSeconds / 60)
   const seconds = ('0' + (match.durationSeconds % 60)).slice(-2)
 
   return (
     <div>
       <div className={styles.sides}>
-        <div className={styles.side}>
-          <div className={styles.radiant}>
-            <Image src={"/radiant.png"} width={60} height={60} />
+        <div className={styles.sidesElement}>
+          <div className={styles.side}>
+            <div className={styles.radiant}>
+              <Image src={"/radiant.png"} width={60} height={60} />
+            </div>
+            {match.didRadiantWin && radiantWinner}
           </div>
-          {match.didRadiantWin && radiantWinner}
         </div>
-        <div className={styles.duration}>
-          {!match.didRadiantWin && emptySpace}
-          <span>{minutes}:{seconds}</span>
-          {match.didRadiantWin && emptySpace}
+        <div className={styles.sidesElement}>
+          <div className={styles.duration}>
+            <span>{minutes}:{seconds}</span>
+          </div>
         </div>
-        <div className={styles.side}>
-          {!match.didRadiantWin && direWinner}
-          <div className={styles.dire}>
-            <Image src={"/dire.png"} width={60} height={60} />
+        <div className={styles.sidesElement}>
+          <div className={styles.side}>
+            {!match.didRadiantWin && direWinner}
+            <div className={styles.dire}>
+              <Image src={"/dire.png"} width={60} height={60} />
+            </div>
           </div>
         </div>
       </div>

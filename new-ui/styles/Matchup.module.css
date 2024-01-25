@@ -8,7 +8,6 @@
 
 .sides {
   display: flex;
-  justify-content: space-between;
 }
 
 .side {
@@ -25,7 +24,7 @@
 
 .radiantWinner, .direWinner {
   height: 25px;
-  width: 80px;
+  width: 70px;
   text-align: center;
   border-radius: 3px;
   color: black;
@@ -45,17 +44,20 @@
 }
 
 .duration {
-  margin: auto;
   font-weight: 600;
   font-size: 20px;
   color: rgba(255, 255, 255, 0.7);
 }
 
-.empty {
-  display: inline-block;
-  min-width: 90px;
-}
-
 .vs {
   color: rgba(255, 255, 255, 0.36);
 }
+
+.sidesElement {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.sidesElement:first-child > div { margin-right: auto; }
+.sidesElement:last-child > div { margin-left: auto; }

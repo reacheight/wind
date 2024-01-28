@@ -12,6 +12,23 @@ import scala.util.{Failure, Success, Try, Using}
 object ValveClient {
   private val logger = Logger[ValveClient.type]
 
+  def downloadReplay(url: String, filePath: Path): Try[Unit] = {
+    logger.info(s"Downloading replay for url $url.")
+
+    val tmpFile = Paths.get(s"${filePath.toString}.tmp").toFile
+    val response = quickRequest
+      .get(uri"$url")
+      .response(asFile(tmpFile))
+      .send(backend)
+
+    response.body match {
+      case Right(tmpFile) =>
+        saveFile(tmpFile, filePath)
+        Success()
+      case Left(string) => Failure(new Exception(string))
+    }
+  }
+
   def downloadReplay(location: ReplayLocation, filePath: Path): Try[Unit] = {
     logger.info(s"Downloading replay for ${location.matchId}.")
 

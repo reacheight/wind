@@ -18,7 +18,7 @@ class Matches {
 }
 
 class Players {
-  getMatches = (accountId: number) => `${HOST}/players/${accountId}/matches`
+  getMatches = (accountId: number, page: number) => `${HOST}/players/${accountId}/matches?page=${page}`
 }
 
 class Images {

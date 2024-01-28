@@ -12,8 +12,8 @@ import javax.inject.Inject
 import scala.util.{Failure, Success}
 
 class MatchesController @Inject()(val controllerComponents: ControllerComponents) extends BaseController with Circe {
-  def getMatches(accountId: Long) = Action {
-    StratzClient.getMatches(accountId) match {
+  def getMatches(accountId: Long, page: Int) = Action {
+    StratzClient.getMatches(accountId, skip = (page - 1) * 15) match {
       case Failure(exception) => InternalServerError(exception.getMessage)
       case Success(matches) => Ok(matches.asJson)
     }

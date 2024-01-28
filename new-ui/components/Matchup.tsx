@@ -15,8 +15,8 @@ const Matchup = ({ match }: MatchupProps) => {
   let radiantHeroes = radiantPlayers.map(p => <HeroMatchPreview player={p}/>)
   let direHeroes = direPlayers.map(p => <HeroMatchPreview player={p}/>)
 
-  let radiantTeam = <HStack spacing={4}>{radiantHeroes}</HStack>
-  let direTeam = <HStack spacing={4}>{direHeroes}</HStack>
+  let radiantTeam = radiantHeroes
+  let direTeam = direHeroes
 
   const radiantWinner = <div className={styles.radiantWinner}>Winner</div>
   const direWinner = <div className={styles.direWinner}>Winner</div>
@@ -49,9 +49,13 @@ const Matchup = ({ match }: MatchupProps) => {
         </div>
       </div>
       <div className={styles.matchup}>
-        {radiantTeam}
+        <div className={styles.team}>
+          {radiantTeam}
+        </div>
         <span className={styles.vs}>vs</span>
-        {direTeam}
+        <div className={styles.team}>
+          {direTeam}
+        </div>
       </div>
     </div>
   )

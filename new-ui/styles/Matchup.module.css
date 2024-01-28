@@ -1,8 +1,6 @@
 .matchup {
-  padding-top: 10px;
+  margin-top: 10px;
   display: flex;
-  justify-content: space-between;
-  border-radius: 6px;
   align-items: center;
 }
 
@@ -50,6 +48,8 @@
 }
 
 .vs {
+  margin-inline: 40px;
+  text-align: center;
   color: rgba(255, 255, 255, 0.36);
 }
 
@@ -61,3 +61,32 @@
 
 .sidesElement:first-child > div { margin-right: auto; }
 .sidesElement:last-child > div { margin-left: auto; }
+
+.heroMatchupEntry {
+  min-height: 0;
+  min-width: 0;
+}
+
+.team {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 1200px) {
+  .vs {
+    display: none;
+  }
+
+  .matchup {
+    display: block;
+    margin-inline: 10%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .matchup {
+    margin-inline: 0;
+    display: block;
+  }
+}

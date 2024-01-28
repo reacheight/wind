@@ -126,10 +126,10 @@ const Match = () => {
                     You can download the replay file of the match in the Dota 2 client and upload it manually.
                 </div>}
                 <br />
-                <div>
+                {analysisButtonDisabled && <div>
                     <input id="upload-file-btn" type="file" onChange={e => startAnalysisFromFile(e)} accept=".dem" hidden={true} />
                     <label className={styles.uploadReplayButton} htmlFor="upload-file-btn">Upload replay</label>
-                </div>
+                </div>}
             </div>
         }
         {isWrongReplay && <div className={styles.error}>You uploaded wrong replay. Upload replay of match <span className={styles.matchId}>{matchId}</span>.</div>}

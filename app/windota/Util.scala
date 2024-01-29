@@ -4,7 +4,7 @@ import skadistats.clarity.model.Entity
 import skadistats.clarity.processor.entities.Entities
 import windota.extensions.EntitiesExtension
 import windota.external.stratz.models.Position._
-import windota.models.Attribute.{Agility, Attribute, Intelligence, Strength}
+import windota.models.Attribute.{Agility, Attribute, Intelligence, Strength, Universal}
 import windota.models.Lane.Lane
 import windota.models.Role.{MidLane, OffLane, Role, SafeLane}
 import windota.models.{GameTimeState, Lane, Location, PlayerId, Team}
@@ -167,6 +167,7 @@ object Util {
         case 0 => Strength
         case 1 => Agility
         case 2 => Intelligence
+        case 3 => Universal
       }
     }
 

@@ -1,4 +1,4 @@
-wind (= win dota xd) is a web application that tries to help you to get good at Dota 2 by analyzing your matches and finding mistakes in your plays. No AI used.
+wind (= win dota xd) is a web application that tries to help you get good at Dota 2 by analyzing your matches and finding mistakes in your plays. No AI used.
 
 Currently shut down and not in development.
 

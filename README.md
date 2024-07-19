@@ -20,7 +20,7 @@ Currently shut down and not in development.
 
 ## History & Examples
 <details>
-  <summary>How ti started</summary>
+  <summary>How it started</summary>
   
   ![image](https://github.com/reacheight/wind/assets/21079607/ed40d393-8606-4719-9c0a-4f5dee9769c6)
   <img width="960" alt="image_2022-01-07_12-59-52" src="https://github.com/reacheight/wind/assets/21079607/5dbc3759-c4ce-4dab-9ccb-9c283a34a8cd">

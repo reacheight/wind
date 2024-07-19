@@ -19,8 +19,21 @@ Currently shut down and not in development.
 * Detecting not tanked lane creeps before T1 tower
 
 ## History & Examples
-![image](https://github.com/reacheight/wind/assets/21079607/ed40d393-8606-4719-9c0a-4f5dee9769c6)
-<img width="960" alt="image_2022-01-07_12-59-52" src="https://github.com/reacheight/wind/assets/21079607/5dbc3759-c4ce-4dab-9ccb-9c283a34a8cd">
-![image](https://github.com/reacheight/wind/assets/21079607/779af49b-9295-4d07-b988-b42958123f50)
-![windota](https://github.com/reacheight/wind/assets/21079607/31cad9db-30b4-4719-987d-78e031192fe0)
-![photo_2024-04-10_17-59-33](https://github.com/reacheight/wind/assets/21079607/c0981c7f-714f-4107-8ea2-5338896ca91c)
+<details>
+  <summary>How ti started</summary>
+  
+  ![image](https://github.com/reacheight/wind/assets/21079607/ed40d393-8606-4719-9c0a-4f5dee9769c6)
+  <img width="960" alt="image_2022-01-07_12-59-52" src="https://github.com/reacheight/wind/assets/21079607/5dbc3759-c4ce-4dab-9ccb-9c283a34a8cd">
+</details>
+<details>
+  <summary>Version 1</summary>
+  
+  ![image](https://github.com/reacheight/wind/assets/21079607/779af49b-9295-4d07-b988-b42958123f50)
+</details>
+<details>
+  <summary>Version 2</summary>
+  
+  ![windota](https://github.com/reacheight/wind/assets/21079607/31cad9db-30b4-4719-987d-78e031192fe0)
+  ![photo_2024-04-10_17-59-33](https://github.com/reacheight/wind/assets/21079607/c0981c7f-714f-4107-8ea2-5338896ca91c)
+</details>
+
